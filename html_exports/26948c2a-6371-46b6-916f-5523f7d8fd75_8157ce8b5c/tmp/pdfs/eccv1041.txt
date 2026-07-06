@@ -1,0 +1,833 @@
+
+
+===== PAGE 1 =====
+∞-Brush: Controllable Large Image Synthesis
+with Diffusion Models in Infinite Dimensions
+Minh-Quan Le⋆, Alexandros Graikos⋆, Srikar Yellapragada,
+Rajarsi Gupta, Joel Saltz, and Dimitris Samaras
+Stony Brook University
+{mile,agraikos,myellapragad,samaras}@cs.stonybrook.edu
+Abstract. Synthesizing high-resolution images from intricate, domain-
+specific information remains a significant challenge in generative mod-
+eling, particularly for applications in large-image domains such as dig-
+ital histopathology and remote sensing. Existing methods face critical
+limitations: conditional diffusion models in pixel or latent space cannot
+exceed the resolution on which they were trained without losing fidelity,
+and computational demands increase significantly for larger image sizes.
+Patch-based methods offer computational efficiency but fail to capture
+long-range spatial relationships due to their overreliance on local infor-
+mation. In this paper, we introduce a novel conditional diffusion model
+in infinite dimensions, ∞-Brush for controllable large image synthesis.
+We propose a cross-attention neural operator to enable conditioning in
+function space. Our model overcomes the constraints of traditional finite-
+dimensional diffusion models and patch-based methods, offering scalabil-
+ity and superior capability in preserving global image structures while
+maintaining fine details. To our best knowledge,∞-Brush is the first
+conditional diffusion model in function space, that can controllably syn-
+thesize images at arbitrary resolutions of up to4096 × 4096 pixels. The
+code is available at https://github.com/cvlab-stonybrook/infinity-brush.
+Keywords: Diffusion models · Function space models· Image synthesis
+1 Introduction
+Diffusion models are powerful generative models that have achieved remark-
+able success in synthesizing diverse and complex data, such as images and au-
+dio [23,24]. Despite their success, it is still difficult to generate high-resolution
+images, especially when it is necessary to condition them on intricate, domain-
+specific information. Practical histopathology and satellite imagery applications
+in medical diagnostics, environmental monitoring, and beyond require precise
+and controllable very large image synthesis – well beyond1024 × 1024 pixels,
+which is impractical with the current state-of-the-art (SoTA) models such as
+Stable Diffusion-XL (SDXL) [26].
+⋆ Equal contribution
+
+
+===== PAGE 2 =====
+2 M.-Q. Le et al.
+4096	×	4096
+2048	×	2048
+	Blonde hairNon­blonde	
+1024	×	1024
+∞-Brush
+Embedding
+Embedding
+256	×	256
+Fig.1: ∞-Brush is able to controllably generate images at arbitrary resolutions of up
+to 4096 × 4096, conditioned on any available auxiliary information about the images.
+The SoTA methods for controllable large image generation still exhibit sig-
+nificant limitations. We can distinguish two broad categories; the first set of
+approaches directly employs conditional diffusion models in finite latent or pixel
+space and is inherently limited by its design to generate images only at the
+resolution on which it was trained. Examples are SDXL [26] and Matryoshka
+Diffusion [11] which can produce images at a resolution of up to1024 × 1024
+pixels. While impressive, such methods cannot generate images at resolutions
+higher than those they were trained in, without a loss in quality or fidelity. Ad-
+ditionally, as the resolution increases, the computational resources required to
+train and run these models scale quadratically, making the process increasingly
+inefficient for larger image sizes.
+Thesecondstrategy,introducedbyMultiDiffusion[1]andadaptedbyGraikos
+et al. [10], involves a patch-based method that splits large image generation into
+smaller segments. This technique involves training "local" diffusion models on
+the patches from large images and performing large image synthesis using an
+outpainting algorithm. While this approach is computationally more efficient
+and produces sufficiently realistic larger images, it falls short of capturing long-
+range spatial dependencies (as discussed in the supplementary). This limitation
+stems from the heavy reliance on local information, as the generation of each
+patch is predominantly influenced by the local conditioning and not affected by
+the information of far away patches.
+The previously mentioned methods operate in finite image or latent space
+and cannot significantly exceed the training image sizes during generation. This
+makes training the models directly on the entire large images a necessity, lead-
+ing to insurmountable computational costs. Recently, Bond-Tayloret al. [2] have
+demonstrated that by representing images as functions in Hilbert spaceH they
+can synthesize arbitrarily-large images while training on fixed-size inputs. How-
+
+
+===== PAGE 3 =====
+∞-Brush 3
+ever, their models can not be conditioned for controllable image generation,
+which is necessary to efficiently utilize the model in downstream applications,
+such as data augmentation.
+In this work, we propose a novel conditional diffusion model,∞-Brush, for
+controllable large image synthesis in function space. Our model learns to synthe-
+size images as continuous functions at arbitrarily sampled coordinates, enabling
+the generation of images at any desired resolution.
+To condition the infinite-dimensional diffusion models we propose a cross-
+attention neural operator in function space. This operator is necessary since
+naively trying to condition the diffusion process using existing cross-attention
+operations on fixed pixel grids is inadequate. Similar to how synthesizing images
+in finite dimensions cannot capture long-range and intricate details, applying
+cross-attention on a fixed grid will result in the loss of fine detail. In our experi-
+ments, we compare our proposed neural operator to conventional cross-attention
+and show how we can better capture fine details across all image scales.
+The ∞-Diff [2] model samples 25% of the image pixels during training. Di-
+rectly applying it to large images is infeasible due to memory constraints. In-
+stead, we show that we can train our single, conditional model on much smaller
+subsets of pixels(0.4%) from each large image without loss in generation quality.
+This enables us to apply the infinite-dimensional diffusion model on large image
+datasets, where images can be up to4096 × 4096 pixels.
+In our experiments, we first demonstrate our infinite-dimensional condition-
+ing mechanism, the cross-attention neural operator, by performing conditional
+image generation on CelebA-HQ [18]. We then showcase large image genera-
+tion, where we train models on histopathology and satellite image datasets and
+demonstrate how our method∞-Brush outperforms patch-based generation [10]
+in terms of maintaining global structure without sacrificing local fidelity. In these
+large image domains, the4096×4096 resolution that we achieve is not attainable
+by any existing model [1,10,26]. Figure 1 illustrates that∞-Brush is able to
+controllably synthesize images at arbitrary resolutions of up to4096 × 4096.
+In summary, our contributions are as follows:
+– Weproposeacross-attentionneuraloperatorinfunctionspace.Thisoperator
+allows for the incorporation of external information during image generation.
+– We use this operator to build a conditional denoiser in function space as part
+of ∞-Brush, the first conditional diffusion model in function space.
+– We ensure tractable training of our model on very large images by only
+training on 0.4% subsets of pixels while inferring at arbitrary resolutions.
+– We show how our method generates images at the hencetofore infeasible size
+of 4096×4096 pixels while maintaining both global structure and fine details.
+2 Related Work
+Controllable Generation with Diffusion Models.Diffusion models [14,21,
+32] synthesize data by reversing a diffusion process. Latent Diffusion Models
+(LDMs) [30] operate in a lower-dimensional latent space rather than pixel space,
+
+
+===== PAGE 4 =====
+4 M.-Q. Le et al.
+significantly reducing the computational load and enabling the generation of
+high-quality images. Controllable generation is achieved by conditioning on de-
+sired attributes, such as class-conditioning [24], gradient-based guidance [8], and
+classifier-free guidance [15].
+Large Image Generation.SDXL [26] makes a step towards large image gener-
+ation with its ability to generate higher-resolution images. However, controllable
+generation with SDXL cannot scale to large images because it is constrained to
+synthesize images only at the resolution on which it was trained (1024 × 1024),
+leading to a quadratic increase in computational demands with resolution. Our
+diffusion model, ∞-Brush, learns to controllably synthesize images in function
+space which enables us to generate large images at any desired resolution of up
+to 4096 × 4096 by only training on subsets of65536 pixels.
+The patch-based approach for controllable generation, exemplified by Mul-
+tiDiffusion [1] and adapted in [10], efficiently generates large images by syn-
+thesizing individual patches that are later combined. Despite its computational
+efficiency and ability to produce realistic images, this method struggles to cap-
+ture long-range spatial dependencies due to its use of only local information. In
+contrast, our model operates on theentirety of the image, as represented by a
+function, maintaining large-scale structures and long-range dependencies.
+DiffusionModelsinInfiniteDimensions. Kerriganet al.[19]introducedthe
+concept of applying diffusion models to functional data, pioneering the idea that
+generative models can operate beyond the confines of finite-dimensional spaces.
+Building on the ideas of infinite-dimensional diffusion, Limet al. [22] and∞-Diff
+[2] specifically address the generation of images represented in function space.
+However, the methods cannot be conditioned for controllable image generation.
+To the best of our knowledge, our∞-Brush with a novel cross-attention neural
+operator is the first conditional diffusion model in infinite dimensions designed
+for controllable large image synthesis.
+3 Preliminaries
+3.1 Notation and Data
+Let (X , A, µ) be a measure space whereX ⊆Rdx, A is a σ-algebra on the setX
+and µisameasureon (X , A).Let HbeaseparableHilbertspaceoverthedomain
+X, equipped with its Borelσ-algebra B(H). For simplicity, we consider the case
+where H is the space ofL2 functions H = L2(X , µ), which is equipped with its
+inner product ⟨f , g⟩L2(X ,µ) =
+R
+X fgdµ. It is worth noting that our method is
+agnostic to the choice ofH and can be applied to other spaces.
+Assuming that we have a dataset of the formD = {(uk, ek)}1≤k≤D, where
+each uj ∈ His an i.i.d. draw from an unknown probability measureQdata on H
+and ej is a control component of the corresponding functionuj. In our experi-
+ment settings, ej can be a label or an embedding vector (from vision-language
+or self-supervised models) with finite dimensions.
+In practice, it is difficult to represent the function directly and instead, for
+an input function uj, we discretize it on the mesh xj = {x(i)
+j }1≤i≤N ⊂ X,
+
+
+===== PAGE 5 =====
+∞-Brush 5
+which is a discrete subset on X with corresponding discretized observations
+uj
+ 
+x(i)
+j
+	
+1≤i≤N, being the output of functionuj at the i-th observation point.
+3.2 Gaussian Measures on Hilbert Spaces
+Let Q be a probability measure on(H, B(H)). IfQ is Gaussian, then there exists
+a mean elementm ∈ Hand a covariance operatorC : H → H, such that
+Z
+H
+⟨u, x⟩Q(dx) = ⟨m, u⟩, ∀u ∈ H, (1)
+Z
+H
+⟨u1, x − m⟩⟨u2, x − m⟩Q(dx) = ⟨Cu1, u2⟩, ∀u1, u2 ∈ H. (2)
+The covariance operator C is symmetric, positive semi-definite, compact, and
+has finite traceTr(C) < +∞. Conversely, letC be a positive, symmetric, trace
+class operator inH and let m ∈ H, then there exists a Gaussian measure inH
+with mean m and covarianceC [6]. From now on, we will denoteQ = N (m, C)
+for such a Gaussian measure.
+3.3 Diffusion Models in Function Space
+Here we briefly describe diffusion probabilistic models in function spaceH [2,19,
+22], which is constructed similarly to that of DDPMs [14]. Note that the key dif-
+ference is that diffusion models in function space operate in infinite dimensions.
+Forward process.The forward process of a diffusion model in function space is
+defined as a discrete-time Markov chain that incrementally perturbs probability
+measure Qdata towards a Gaussian measureN (m, C) with a zero mean and a
+specified covariance operator C. It is a time-indexed process where each step
+ut is obtained by applying a transformation to the previous steput−1, which
+involves a scaling factor √1 − βtut−1 related to the variance schedule β, and
+adding scaled Gaussian noise√βtξt with ξt ∼ N(0, C):
+ut =
+p
+1 − βtut−1 +
+p
+βtξt t = 1, 2, . . . , T. (3)
+Similar to diffusion models in finite dimensions, the forward process in function
+space also admits sampling ut at an arbitrary timestep t in closed form. For
+¯αt = Qt
+i=1(1 − βt), we have:
+Q (ut|u0) = N
+ 
+ut; √¯αtu0, (1 − ¯αt)C
+
+. (4)
+Reverseprocess. Thereverseprocessinthediffusionmodeliterativelydenoises
+from the Gaussian measure N (m, C) back to the probability measure Q0 =
+Qdata. This is achieved by sampling from the reverse-time transition measures
+Q (ut−1|ut), approximated by a Gaussian measure with parametersθ due to the
+intractable normalization constant of the Bayes’ rule:
+Pθ (ut−1|ut) = N (ut−1; mθ(ut, t), Cθ(ut, t)) (5)
+
+
+===== PAGE 6 =====
+6 M.-Q. Le et al.
+Likewise, we are able to derive a closed-form representation of the forward pro-
+cess posteriors, which are tractable when conditioned onu0:
+Q (ut−1|ut, u0) = N
+
+ut−1; ˜ mt(ut, u0), ˜βtC
+
+, (6)
+where ˜ mt(ut, u0) =
+√ ¯αt−1βt
+1− ¯αt
+u0 +
+√1−βt(1− ¯αt−1)
+1− ¯αt
+ut and ˜βt = 1− ¯αt−1
+1− ¯αt
+βt.
+Training objective.Similar to DDPM in finite dimensions, the reparameteri-
+zation is used to achieve better training, which results in a simplified loss:
+Lsimple =
+
+C−1/2 (ξt − ξθ(ut, t))
+
+
+2
+H
+. (7)
+3.4 Neural Operators
+Neuraloperators[4,12,20]areatypeofneuralnetworktailoredtolearnmappings
+between infinite-dimensional function spaces. In the context of diffusion models
+in infinite dimensions, a denoiser is parameterized by a neural operator Gθ :
+U ∗ → U, which learns to map from noisy function spaceU ∗ to denoised function
+space U. With u ∈ U∗ and s ∈ U, we access their pointwise evaluations by
+discretizing them on the meshx = {x(i)}1≤i≤N ⊂ X. Neural operators include
+multiple operator layers akin to those in a finite-dimensional neural network
+v0 7→ v1 7→ · · · 7→vL, where layer vl 7→ vl+1 is built upon a local linear
+operator, a non-local integral kernel operator, and a bias function:
+vl+1(x(i)) = σl+1
+
+Wlvl(x(i)) + (Kl(u; ϕ)vl)(x(i)) + bl(x(i))
+
+, (8)
+with Kl(u; ϕ)being an integral kernel operator aggregating information spatially.
+4 The Proposed Method
+We propose a novel conditional diffusion model in function spaceH. Based on the
+background provided, we now formulate the forward and reverse process and the
+training objective of our conditional diffusion model in infinite dimensions. Fur-
+thermore, we present a novel architecture to parameterize the denoising process
+with a conditional denoiser equipped with cross-attention neural operators.
+4.1 Conditional Diffusion Models in Function Space
+In the context of image generation, we discretize the functionuj on the mesh
+xj = {x(i)
+j }1≤i≤N ⊂ Xby sampling N coordinates of each image, which results
+in non-smooth input space. To achieve a smoother function representation, a
+smoothing operator [16,28] A : H → H, e.g. a truncated Gaussian kernel, is
+applied to approximate the rough inputs within the function spaceH.
+Forward process.The forward process of our conditional diffusion model in
+infinite dimensions is equivalent to that of an unconditional diffusion model in
+
+
+===== PAGE 7 =====
+∞-Brush 7
+function space, which gradually perturbs the probability measureQ0 = Qdata
+towards a Gaussian measure N (m, C) and enables sampling at any arbitrary
+timestep t with ¯αt = Qt
+i=1(1 − βt):
+Q (ut|u0) = N
+ 
+ut; √¯αtAu0, (1 − ¯αt)ACAT 
+. (9)
+Reverse process.We use a variational approach to approximate posterior mea-
+sures with a variational family of measures onH and incorporate the conditional
+embedding e to control the generation process. We model the underlying poste-
+rior measure Q(ut−1|ut) with a conditional Gaussian measure:
+Pθ(ut−1|ut, e) = N
+ 
+ut−1; mθ(ut, e, t), ACθ(ut, e, t)AT 
+. (10)
+Proposition 1 (Learning Objective).The cross-entropy of conditional dif-
+fusion models in function space has a variational upper bound of
+LCE = −EQ log Pθ(u0|e) ≤ EQ
+"
+KL(Q(uT |u0) ∥ Pθ(uT ))| {z }
+LT
+− log Pθ(u0|u1, e)| {z }
+L0
++
+TX
+t=2
+KL(Q(ut−1|ut, u0) ∥ Pθ(ut−1|ut, e)| {z }
+Lt−1
+#
+. (11)
+Proof. Please refer to the Supplementary Material for the full proof. ⊓ ⊔
+To compute the KL divergence between probability measuresKL(Q ∥ P),
+we need to utilize a measure-theoretic definition of the KL divergence, which is
+stated in the following lemmas [6].
+Lemma 1 (Measure Equivalence - The Feldman-Hájek Theorem).Let
+Q = N (m1, C1) and P = N (m2, C2) be Gaussian measures on H. They are
+equivalent if and only if(i) : C1/2
+1 (H) = C1/2
+2 (H) = H0, (ii) : m1−m2 ∈ H0, and
+(iii) : The operator(C−1/2
+1 C1/2
+2 )(C−1/2
+1 C1/2
+2 )∗ − I is a Hilbert-Schmidt operator
+on the closureH0.
+Lemma 2 (The Radon-Nikodym Derivative).Let Q = N (m1, C1) and
+P = N (m2, C2) be Gaussian measures on H. If P and Q are equivalent and
+C1 = C2 = C, then P-a.s. the Radon-Nikodym derivativedQ/dP is given by
+dQ
+dP (f) = exp
+C−1/2 (m1 − m2) , C−1/2 (f − m2) − 1
+2∥C−1/2(m1 − m2)∥2 ∀f ∈ H.
+(12)
+Proof. The proof of both lemmas is in the Supplementary Material. ⊓ ⊔
+
+
+===== PAGE 8 =====
+8 M.-Q. Le et al.
+Lemma 1 states the three conditions for the equivalence of two Gaussian
+measures. Lemma 2, a consequence of the Feldman-Hájek theorem, provides the
+Radon-Nikodym derivative formula for Gaussian measures onH.
+To train the diffusion model in functional space we have to minimize the
+upper bound of Proposition 1, which requires us to compute the KL divergence
+between the measuresQ, P. In order to satisfy Lemma 1, which will enable us to
+use Lemma 2 to compute the KL divergence, we make the following assumption:
+Assumption 1 Let Q = N ( ˜ mt(ut, u0), ˜βtC) and Pθ = N (mθ(ut, e, t), ˜βtC)
+be Gaussian measures on H. With a conditional component e, which can be
+an element of finite-dimensional space Rd or Hilbert space H, there exists a
+parameter set θ such that the difference in mean elements of the two measures
+falls within the scaled covariance space:
+˜ mt(ut, u0) − mθ(ut, e, t) ∈ ( ˜βtC)1/2(H). (13)
+By making this assumption we satisfy all three conditions of Lemma 1:(i) :
+C1/2
+1 (H) = C1/2
+2 (H) = ( ˜βtC)1/2(H) = H0; (ii) : m1 − m2 ∈ H0 is directly
+satisfied from Assumption 1; (iii) : ( C−1/2
+1 C1/2
+2 )(C−1/2
+1 C1/2
+2 )∗ − I = I − I is
+the zero operator, which is trivially a Hilbert-Schmidt operator as its Hilbert-
+Schmidt norm is 0. As a consequence, Q and P are equivalent, allowing us to
+utilize the Radon-Nikodym derivative from Lemma 2.
+Theorem 1 (Conditional Diffusion Optimality in Function Space).
+Given the specified conditions in Assumption 1, the minimization of the learning
+objective in Proposition 1 is equivalent to obtaining the parameter setθ∗ that is
+the solution to the problem
+θ∗ = arg min
+θ
+Eu0∼Qdata,t∼[1,T ]λt
+
+C−1/2  
+Aξ − ξθ(√ ¯αtAu0 +
+√
+1 − ¯αtAξ, e, t)
+
+
+2
+H
+,
+(14)
+where ξ ∼ N(0, C), A : H → Hdenotes a smoothing operator,e ∈ (Rd ∪H) is a
+conditional component,ξθ : {1, 2, . . . , T} ×(Rd ∪ H) × H → His a parameterized
+mapping, λt = β2
+t /2 ˜βt(1 − βt)(1 − ¯αt) ∈ R is a time-dependent constant.
+Proof. Please refer to the Supplementary Material for the full proof. ⊓ ⊔
+4.2 Conditional Denoiser with Cross-Attention Neural Operators
+Our ∞-Brushutilizes a hierarchical denoiser architecture including asparse level
+forefficientlycapturingfine-graineddetailsanda grid levelforglobalinformation
+(Fig. 2). We discretize the noisy functionsu ∈ Hand denoised functionss ∈ H
+by randomly selecting a subset of coordinatesx = {x(i)}1≤i≤N ⊂ X. At the
+sparse level, we successively apply a sparse neural operator, our cross-attention
+neural operator, and self-attention on pointwise evaluations of the function.
+The computational complexity of the vanilla attention is quadraticO(N 2d)
+w.r.t. the sequence length, or number of function samples (in this caseN), and
+linear w.r.t. their dimensiond. For learning operators in infinite dimensions,N
+
+
+===== PAGE 9 =====
+∞-Brush 9
+		∫		∫
+Timestep embedding𝐭∈ℝ! Condition embedding𝐞∈ℝ! Coordinate embedding 𝐜∈ℝ"×!
+EncoderEncoderEncoder𝐾$𝑉$ 𝐾"𝑉" 𝐾%𝑉%
+		∫
+k-NNLerp k-NNLerp	⨁	⨁
+	⨁
+Sparse
+Neural Operator
+Self
+-
+Attention 
+Neural Operator𝑄Cross-AttentionNeural Operator		∫ 		∫		∫		∫
+Noisy function𝐮∈𝓗 Denoised function𝐬∈𝓗
+Fig.2: Given a noisy functionu ∈ H, we discretize it by randomly selecting a subset of
+coordinates x = {x(i)}1≤i≤N ⊂ Xthen feed it into our conditional denoiser returning a
+denoised function s ∈ H. The conditional denoiser architecture of∞-Brush includes a
+sparse level and a grid level. The sparse level (in blue) utilizes a sparse neural operator,
+a cross-attention neural operator, and a self-attention neural operator, focusing on
+capturing fine-grained details. The grid level (in pink) targets global information. We
+use k-NN linear interpolation to transform the sparse points to a regularly spaced grid.
+could go up to millions of points (e.g. when generating 4096 × 4096 images,
+N ≈ 16 million points). We address that problem by proposing a cross-attention
+neural operator of linear complexity with respect toN.
+Specifically in the cross-attention neural operator, suppose we haveL condi-
+tional embeddings {Yl ∈ RNl×d}1≤l≤L. In our∞-Brush, L = 3 representing the
+diffusion timestep embeddingt, condition embeddinge, and coordinate embed-
+ding c. First, we compute the queriesQ = ( qi), keys Kl = ( kl
+i) = YlWk, and
+values Vl = (vl
+i) = YlWv, then normalize allqi and ki to be ˜qi = softmax(qi)
+and ˜ki = softmax(ki). Finally, cross-attention is
+zl = ˜qt + 1
+L
+LX
+l=1
+NlX
+i=1
+αl
+t
+
+˜qt · ˜kl
+i
+
+vl
+i = ˜qt + 1
+L
+LX
+l=1
+αl
+t ˜qt ·
+ NlX
+i=1
+˜kl
+i ⊙ vl
+i
+!
+, (15)
+where αl
+t = 1/ PNl
+j=1 ˜qt · ˜kj is the normalization coefficient. The key difference
+with vanilla attention is that we first multiply pointwise vectors˜kl
+i and vl
+i, and
+compute the dot product with˜qt afterward. Hence, the complexity of Eq. 15 is
+O((N + P
+l Nl)d2), which is linear w.r.t. the number of pointsN.
+The output of the sparse level is linearly interpolated to a regularly spaced
+grid using k-Nearest Neighbors, which is the input to the grid-level model. The
+grid data points are passed to a grid-based, finite-dimensional UNO architecture
+[2,22] that is utilized to aggregate global information. The UNO architecture is
+basedonthewidespreadUNetmodel,whichhasbeenwidelystudiedtocondition
+
+
+===== PAGE 10 =====
+10 M.-Q. Le et al.
+finite-dimensional diffusion models [30]. Following that literature, we use the
+vanilla cross-attention at the bottleneck of the UNet denoiser to integrate the
+conditional information at the grid level. In the experiments, we show that since
+the coarse interpolation at the grid level is not a complete representation of the
+function, the conditioning needs to be applied to both finite-dimensional (grid)
+and infinite-dimensional (sparse) levels to attain high-quality results.
+5 Experiments
+5.1 Experimental Settings
+Datasets. We utilize the CelebA-HQ dataset [18] as a testbed for our cross-
+attention neural operator. We use30, 000 images at1024 × 1024 resolution along
+withthefacialattribute blonde/non-blonde hairtotrainourconditionaldiffusion
+model and compare with the unconditional version [2].
+For large image datasets, following the evaluation of [10], we utilize digital
+histopathology images from The Genome Cancer Atlas (TCGA) [3] and satellite
+imagery from the National Agriculture Imagery Program (NAIP) [34]. We use
+the BRCA subset of TCGA which contains breast cancer histopathology images.
+We select20×patches of sizes4096×4096and 1024×1024, equivalent in scope to
+patchesfrom 1.25×and 5×magnifications,respectively.Toprovideconditioning,
+we resize these images to256 × 256 and extract embeddings from Quilt [17].
+We utilize the NAIP images from the Chesapeake Land Cover dataset [29],
+by extracting 1024 × 1024 non-overlapping patches, resulting in35, 000 satellite
+images. We train a Vision Transformer (ViT-B/16) [9] on the resized224 × 224
+pixel versions of these images using the self-supervised DINO algorithm [5]. We
+extract the learned DINO embeddings to train our conditional diffusion model
+on pairs of1024 × 1024 images and corresponding SSL embeddings.
+Evaluation metrics.Following the standard evaluation metrics of MultiDiffu-
+sion[1]and[10]forlargeimagesynthesis,weevaluateourmethod’simagequality
+on both global structure and fine detail via FID scores [13] using the Clean-FID
+implementation [25]. For global structure, we calculate CLIP FID [27] between
+the resized version of generated large images and real images. For fine detail, we
+randomly take 256 × 256 crops from both synthesized and real large images and
+measure FID (Crop FID) between the two sets of patches.
+5.2 Implementation Details
+We train our ∞-Brush from scratch for all experiments. At each training it-
+eration, we randomly select a subset of256∗256 = 65536 pixels from the im-
+age. Regarding the denoiser architecture, we leverage the implementation of the
+Sparse Neural Operator [20], the unconditional UNO [2], and the general neural
+operator [12]. For faster runtime and memory efficiency, we implement our cross-
+attention neural operator using FlashAttention-2 [7]. The model is trained using
+the Adam optimizer with a learning rate of5e − 5 and β1 = 0.9, β2 = 0.99, along
+
+
+===== PAGE 11 =====
+∞-Brush 11
+Blonde hairNon-blonde
+Fig.3: Large images (1024 × 1024) generated from our∞-Brush, conditioned on the
+facial attribute blonde/non-blonde hair.
+Table 1:The CLIP FID scores of our∞-Brush model against ∞-Diff showcases our
+model’s capability in conditionally generating celebrity faces on the CelebA-HQ dataset
+based on the facial attribute of hair color (blonde vs. non-blonde).
+Dataset # Images Method Training Config. CLIP FID
+CelebA-HQ
+(1024 × 1024) 30k ∞-Diff [2] Unconditional 9.44
+∞ -Brush blonde vs. non-blonde hair 8.38
+with an exponential moving average (EMA) rate of0.995. During inference, we
+apply DDIM [33] with50 steps for all experiments. All∞-Brush models were
+trained on 4 NVIDIA A100 GPUs, with a batch size of20 per GPU.
+5.3 Experimental Results
+FacialAttributeConditionalGeneration. Wefirstvalidateourcross-attention
+neural operator as an efficient conditioning mechanism for infinite-dimensional
+diffusion models by adding control to the generation of CelebA-HQ images.
+We synthesize 3, 000 images, maintaining the same ratio of blonde/non-
+blonde as in the entire dataset, and calculate the CLIP FID to assess quality.
+We compare between our conditional∞-Brush and the unconditional∞-Diff [2].
+As shown in Table 1, our method outperforms the unconditional model, while
+also allowing us to control the attribute used as conditioning. Figure 3 shows
+examples of large images (1024 × 1024) generated from ∞-Brush, conditioned
+on theblonde/non-blonde attribute.
+Controllable(Very)LargeImageGeneration. Weprovideexperimentalre-
+sults of controllable generation of large (1024×1024) and very large (4096×4096)
+images and compare to conditional diffusion models in finite dimensions [26] and
+a patch-based approach [10]. In addition, we perform an ablation study to eval-
+uate the significance of our cross-attention neural operator. We further compare
+the computing resources required for the three different model categories.
+Our very large image experiments on the TCGA-BRCA dataset, which has
+57k image patches at a resolution of4096 × 4096 pixels, reveal that ∞-Brush
+excels at capturing the global structure of images, as indicated by the better
+
+
+===== PAGE 12 =====
+12 M.-Q. Le et al.
+Synthetic
+Reference
+4096 1024 1024
+Fig.4: Very large (4096 × 4096) and large ( 1024 × 1024) images generated from
+∞-Brush, and the corresponding reference real images used to generate them. Given a
+single embedding vector of a downsampled256 × 256 real image, ∞-Brush can synthe-
+size images of up to4096 × 4096 and preserve global structures of the reference image.
+Table 2: Performance on controllable very large image synthesis on TCGA-BRCA
+dataset at4096 × 4096 resolution. ∞-Brush outperforms the patch-based approach [10]
+in terms of global structure (CLIP FID) while achieving acceptable local details (Crop
+FID). SDXL [26] cannot be trained directly on images of4096 × 4096 images. Addi-
+tionally, an ablation study on the cross-attention neural operator shows improvement
+in FID metrics when the proposed mechanism is used. This emphasizes its critical role
+in the model’s ability to synthesize high-resolution images effectively.
+Dataset #Images Method Training Config.CLIP FIDCrop FID
+BRCA1.25×
+(4096×4096) 57k
+Graikoset al. [10] 976k patches of
+1024×1024 2.75 11.30
+∞-Brush 256∗256pixels of
+57k full-size images
+2.63 14.76
+∞-Brush 3.81 16.28✗Cross-attention neural operator
+CLIP FID score (Table 2). The model’s performance in finer details, reflected
+in the Crop FID, is slightly worse than the patch-based approach.∞-Brush is
+trainedonbatchesofjust 65536 ≈ 0.4%ofthepixelsfromthefullimages,offering
+a substantial reduction in complexity, while maintaining both global structure
+andfinerdetails;seeFig.4forqualitativeresultsofgenerated 4096×4096images.
+We can also partially attribute our better CLIP FID and worse Crop FID
+to the different conditioning provided to our model. The4096 × 4096 images
+are first downsampled to256 × 256 and a single embedding vector is extracted
+to capture information from the entire image. In comparison, the patch-based
+approach of [10] employs16 local conditions that describe each of the16 patches
+that form the image, helping the model to focus more on the local appearance.
+SDXL [26] would need to be trained on4096 × 4096 images which is infeasi-
+ble with most current hardware setups. Thus, we resort to smaller patches from
+TCGA-BRCA and NAIP, at1024 × 1024 resolution, to compare with SDXL and
+the patch-based method of [10]. Table 3 shows that our model attains strong
+global structure fidelity with superior CLIP FID scores, particularly on the
+BRCA dataset (3.74 vs. 6.64). Despite this, our approach results in higher Crop
+
+
+===== PAGE 13 =====
+∞-Brush 13
+Table 3:Performance on controllable large image synthesis on BRCA5× and NAIP
+dataset at1024×1024 resolution. ∞-Brush outperforms other methods in global struc-
+ture accuracy, with a marginal trade-off in fine detail as reflected in Crop FID.
+Dataset # Images Method Training Config.CLIP FIDCrop FID
+BRCA5×
+(1024× 1024) 976k
+SDXL [26] 976k full-size images 6.64 6.98
+Graikoset al. [10] 15M patches of
+256 × 256 7.43 15.51
+∞-Brush 256∗256pixels of
+976k full-size images 3.74 17.87
+NAIP
+(1024× 1024) 35k
+SDXL [26] 35k full-size images 10.90 11.50
+Graikoset al. [10] 667k patches of
+256 × 256 6.86 43.76
+∞-Brush 256∗256pixels of
+35k full-size images 6.32 48.65
+FID scores, suggesting a trade-off in capturing fine details. While SDXL is able
+to train at this resolution, it is important to note that∞-Brush achieves similar
+performance with only a subset of the pixels, because of its highly efficient train-
+ing process. Fig. 4 showcases qualitative results of generated1024 × 1024 images
+from our model. Note that SDXL was pre-trained on LAION-5B, a5 billion
+image caption pair dataset [31], whereas our model was trained from scratch.
+Effectiveness of the Cross-Attention Neural Operator.We evaluate the
+cross-attention neural operator’s advantage in the∞-Brushmodel by comparing
+its performance on the TCGA-BRCA4096 × 4096 dataset with and without this
+operator. When the neural operator is removed, we use vanilla cross-attention
+between the conditioning vector and the UNet’s bottleneck layer. In Table 2,
+we observe a significant improvement in both CLIP FID and Crop FID scores
+whenthecross-attentionneuraloperatorisemployed.Theimprovedscoresaffirm
+the operator’s usefulness in synthesizing high-resolution4096×4096 images. The
+vanilla cross-attention only applies conditioning on a regular grid of coordinates,
+which cannot capture fine details between coarse grid points.
+ComputingResourceEvaluation. Weanalyzethecomputingresourcesneeded
+for training various image generation models on a single NVIDIA A100 40GB
+GPU. As detailed in Table 4, the training time and memory requirements for
+diffusion models in finite dimensions, such as SDXL, increase substantially when
+scaling from 1024 × 1024 to 4096 × 4096, making training infeasible on stan-
+dard hardware. Conversely, the patch-based approach, while able to train at
+higher resolutions by dividing images into smaller patches, exhibits a parame-
+ter increase and reduced batch size. Our conditional diffusion model in function
+space maintains a consistent maximum batch size, significantly lower parameter
+count, and per epoch training time across resolutions (12 hours vs. 300 hours
+and 140 hours), demonstrating our method’s superior scalability to sizes beyond
+the reach of existing methods.
+
+
+===== PAGE 14 =====
+14 M.-Q. Le et al.
+Table 4: Computing resources requirements for different diffusion models. our
+∞-Brush maintains a constant parameter count and batch size across resolutions,
+highlighting its efficiency and scalability for controllable large image generation.
+Method #Params. Training at1024× 1024 Training at4096× 4096
+Max batch sizeEpoch timeMax batch size Epoch time
+SDXL [26] 3.5B 4 140hr O.O.M 1000hr (estimated)
+currently infeasible
+Graikoset al. [10] 860M 100 45hr 4 300hr
+∞-Brush 450M 20 12hr 20 12hr
+6 Limitations
+Although ∞-Brush images exhibit better global structure consistency and main-
+tain a degree of fine detail, they are not better than other methods in terms
+of local details. We highlight a few key reasons which we hypothesize hinder
+our model’s performance. Our model has the smallest parameter count, with
+just half the parameters of the model of [10]. We expect model sizes to scale
+as more works focus on infinite-dimensional diffusion models and performance
+to increase, as was observed in regular, finite diffusion models. Additionally,
+both SDXL and [10] utilize pre-trained models as initialization, whereas, ours is
+trained from scratch as no infinite-dimensional pre-trained models are available,
+leading to worse performance in smaller datasets.
+7 Conclusion
+In conclusion,∞-Brush presents a necessary leap forward in the domain of con-
+ditional large image generation, particularly for applications demanding high-
+resolution and domain-specific conditional generation. This paper has demon-
+strated that our approach effectively addresses the scalability limitations inher-
+ent in previous diffusion models while retaining a high degree of control over the
+generated output. By proposing a novel conditional diffusion model in function
+space, complemented by a cross-attention neural operator, we achieve not only
+state-of-the-art fidelity in the global structure of the images but also maintain
+acceptable detail in higher-resolution images without the excessive computa-
+tional costs typically associated with such tasks. In future work, we plan to
+design local neural operators to capture fine details and transfer knowledge from
+finite-dimensional diffusion models for powerful initialization.
+Acknowledgments
+This research was partially supported by NCI awards 1R21CA258493-01A1,
+5U24CA215109, UH3CA225021, U24CA180924, NSF grants IIS-2123920, IIS-
+2212046, Stony Brook Profund 2022 seed funding, and generous support from
+Bob Beals and Betsy Barton.
+
+
+===== PAGE 15 =====
+∞-Brush 15
+References
+1. Bar-Tal, O., Yariv, L., Lipman, Y., Dekel, T.: Multidiffusion: Fusing diffusion paths
+for controlled image generation. In: Krause, A., Brunskill, E., Cho, K., Engelhardt,
+B., Sabato, S., Scarlett, J. (eds.) International Conference on Machine Learning,
+ICML 2023, 23-29 July 2023, Honolulu, Hawaii, USA. Proceedings of Machine
+Learning Research, vol. 202, pp. 1737–1752. PMLR (2023),https://proceedings.
+mlr.press/v202/bar-tal23a.html 2, 3, 4, 10
+2. Bond-Taylor, S., Willcocks, C.G.: ∞-diff: Infinite resolution diffusion with sub-
+sampled mollified states. arXiv preprint arXiv:2303.18242 (2023) 2, 3, 4, 5, 9, 10,
+11
+3. Cancer Genome Atlas Research Network, J., et al.: The cancer genome atlas pan-
+cancer analysis project. Nat. Genet45(10), 1113–1120 (2013) 10
+4. Cao, S.: Choose a transformer: Fourier or galerkin. In: Beygelzimer, A., Dauphin,
+Y., Liang, P., Vaughan, J.W. (eds.) Advances in Neural Information Processing
+Systems (2021), https://openreview.net/forum?id=ssohLcmn4-r 6
+5. Caron, M., Touvron, H., Misra, I., Jégou, H., Mairal, J., Bojanowski, P., Joulin,
+A.: Emerging properties in self-supervised vision transformers. In: Proceedings of
+the IEEE/CVF international conference on computer vision. pp. 9650–9660 (2021)
+10
+6. Da Prato, G., Zabczyk, J.: Stochastic Equations in Infinite Dimensions. Encyclo-
+pedia of Mathematics and its Applications, Cambridge University Press, 2 edn.
+(2014) 5, 7
+7. Dao, T.: Flashattention-2: Faster attention with better parallelism and work par-
+titioning. In: The Twelfth International Conference on Learning Representations
+(2024), https://openreview.net/forum?id=mZn2Xyh9Ec 10
+8. Dhariwal, P., Nichol, A.: Diffusion models beat gans on image synthesis. Advances
+in neural information processing systems34, 8780–8794 (2021) 4
+9. Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner,
+T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S., et al.: An image is
+worth 16x16 words: Transformers for image recognition at scale. arXiv preprint
+arXiv:2010.11929 (2020) 10
+10. Graikos, A., Yellapragada, S., Le, M.Q., Kapse, S., Prasanna, P., Saltz, J., Sama-
+ras, D.: Learned representation-guided diffusion models for large-image generation.
+arXiv preprint arXiv:2312.07330 (2023) 2, 3, 4, 10, 11, 12, 13, 14
+11. Gu, J., Zhai, S., Zhang, Y., Susskind, J.M., Jaitly, N.: Matryoshka diffusion models.
+In: The Twelfth International Conference on Learning Representations (2023) 2
+12. Hao, Z., Wang, Z., Su, H., Ying, C., Dong, Y., Liu, S., Cheng, Z., Song, J., Zhu, J.:
+Gnot: a general neural operator transformer for operator learning. In: Proceedings
+of the 40th International Conference on Machine Learning. ICML’23, JMLR.org
+(2023) 6, 10
+13. Heusel,M.,Ramsauer,H.,Unterthiner,T.,Nessler,B.,Hochreiter,S.:Ganstrained
+by a two time-scale update rule converge to a local nash equilibrium. Advances in
+neural information processing systems30 (2017) 10
+14. Ho, J., Jain, A., Abbeel, P.: Denoising diffusion probabilistic models. Advances in
+neural information processing systems33, 6840–6851 (2020) 3, 5
+15. Ho, J., Salimans, T.: Classifier-free diffusion guidance. arXiv preprint
+arXiv:2207.12598 (2022) 4
+16. Hoogeboom, E., Salimans, T.: Blurring diffusion models. In: The Eleventh Inter-
+national Conference on Learning Representations (2023),https://openreview.
+net/forum?id=OjDkC57x5sz 6
+
+
+===== PAGE 16 =====
+16 M.-Q. Le et al.
+17. Ikezogwo, W.O., Seyfioglu, M.S., Ghezloo, F., Geva, D.S.C., Mohammed, F.S.,
+Anand, P.K., Krishna, R., Shapiro, L.: Quilt-1m: One million image-text pairs for
+histopathology. arXiv preprint arXiv:2306.11207 (2023) 10
+18. Karras, T., Aila, T., Laine, S., Lehtinen, J.: Progressive growing of GANs for
+improved quality, stability, and variation. In: International Conference on Learning
+Representations (2018), https://openreview.net/forum?id=Hk99zCeAb 3, 10
+19. Kerrigan, G., Ley, J., Smyth, P.: Diffusion generative models in infinite dimen-
+sions. In: Ruiz, F., Dy, J., van de Meent, J.W. (eds.) Proceedings of The 26th
+International Conference on Artificial Intelligence and Statistics. Proceedings of
+Machine Learning Research, vol. 206, pp. 9538–9563. PMLR (25–27 Apr 2023),
+https://proceedings.mlr.press/v206/kerrigan23a.html 4, 5
+20. Kovachki, N., Li, Z., Liu, B., Azizzadenesheli, K., Bhattacharya, K., Stuart, A.,
+Anandkumar, A.: Neural operator: Learning maps between function spaces with
+applications to pdes. Journal of Machine Learning Research24(89), 1–97 (2023),
+http://jmlr.org/papers/v24/21-1524.html 6, 10
+21. Le, M.Q., Nguyen, T.V., Le, T.N., Do, T.T., Do, M.N., Tran, M.T.: Maskdiff:
+Modeling mask distribution with diffusion probabilistic model for few-shot instance
+segmentation. Proceedings of the AAAI Conference on Artificial Intelligence38(3),
+2874–2881 (Mar 2024). https://doi.org/10.1609/aaai.v38i3.28068 , https:
+//ojs.aaai.org/index.php/AAAI/article/view/28068 3
+22. Lim, J.H., Kovachki, N.B., Baptista, R., Beckham, C., Azizzadenesheli, K., Kos-
+saifi, J., Voleti, V., Song, J., Kreis, K., Kautz, J., Pal, C., Vahdat, A., Anandkumar,
+A.: Score-based diffusion models in function space (2023) 4, 5, 9
+23. Liu, H., Chen, Z., Yuan, Y., Mei, X., Liu, X., Mandic, D., Wang, W., Plumb-
+ley, M.D.: Audioldm: Text-to-audio generation with latent diffusion models. arXiv
+preprint arXiv:2301.12503 (2023) 1
+24. Nichol, A.Q., Dhariwal, P.: Improved denoising diffusion probabilistic models. In:
+International Conference on Machine Learning. pp. 8162–8171. PMLR (2021) 1, 4
+25. Parmar, G., Zhang, R., Zhu, J.Y.: On aliased resizing and surprising subtleties in
+gan evaluation. In: CVPR (2022) 10
+26. Podell, D., English, Z., Lacey, K., Blattmann, A., Dockhorn, T., Müller, J., Penna,
+J., Rombach, R.: Sdxl: Improving latent diffusion models for high-resolution image
+synthesis. arXiv preprint arXiv:2307.01952 (2023) 1, 2, 3, 4, 11, 12, 13, 14
+27. Radford, A., Kim, J.W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G.,
+Askell, A., Mishkin, P., Clark, J., et al.: Learning transferable visual models from
+natural language supervision. In: International conference on machine learning. pp.
+8748–8763. PMLR (2021) 10
+28. Rissanen, S., Heinonen, M., Solin, A.: Generative modelling with inverse heat dis-
+sipation. In: The Eleventh International Conference on Learning Representations
+(2023), https://openreview.net/forum?id=4PJUBT9f2Ol 6
+29. Robinson, C., Hou, L., Malkin, K., Soobitsky, R., Czawlytko, J., Dilkina, B., Jojic,
+N.: Large scale high-resolution land cover mapping with multi-resolution data. In:
+Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition.
+pp. 12726–12735 (2019) 10
+30. Rombach, R., Blattmann, A., Lorenz, D., Esser, P., Ommer, B.: High-resolution
+image synthesis with latent diffusion models. In: Proceedings of the IEEE/CVF
+conference on computer vision and pattern recognition. pp. 10684–10695 (2022) 3,
+10
+31. Schuhmann, C., Beaumont, R., Vencu, R., Gordon, C., Wightman, R., Cherti, M.,
+Coombes, T., Katta, A., Mullis, C., Wortsman, M., et al.: Laion-5b: An open large-
+
+
+===== PAGE 17 =====
+∞-Brush 17
+scale dataset for training next generation image-text models. Advances in Neural
+Information Processing Systems35, 25278–25294 (2022) 13
+32. Sohl-Dickstein, J., Weiss, E., Maheswaranathan, N., Ganguli, S.: Deep unsuper-
+vised learning using nonequilibrium thermodynamics. In: Bach, F., Blei, D. (eds.)
+Proceedings of the 32nd International Conference on Machine Learning. Proceed-
+ings of Machine Learning Research, vol. 37, pp. 2256–2265. PMLR, Lille, France
+(07–09 Jul 2015), https://proceedings.mlr.press/v37/sohl- dickstein15.
+html 3
+33. Song,J.,Meng,C.,Ermon,S.:Denoisingdiffusionimplicitmodels.In:International
+Conference on Learning Representations (2020) 11
+34. USGS: National agriculture imagery program (NAIP) (2023), https://www.
+usgs.gov/centers/eros/science/usgs- eros- archive- aerial- photography-
+national-agriculture-imagery-program-naip 10

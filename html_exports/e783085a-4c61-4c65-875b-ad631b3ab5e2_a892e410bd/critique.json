@@ -1,0 +1,26 @@
+{
+  "kind": "critique-panel",
+  "score": 4.2,
+  "axes": {
+    "clarity": {
+      "score": 4.4,
+      "notes": "The nine-slide structure maps directly to the requested launch topics and keeps one main idea per slide."
+    },
+    "hierarchy": {
+      "score": 4.3,
+      "notes": "Large product-led headlines, clear metrics, and focused tables create a strong reading path for media, channel, and sales audiences."
+    },
+    "typography": {
+      "score": 4.1,
+      "notes": "Display and body typography use an Apple-like system stack with deck-scale sizes and compact labels for navigation and footers."
+    },
+    "motion": {
+      "score": 3.8,
+      "notes": "Transitions are limited to a restrained slide fade; this fits a premium product launch deck without distracting from source-backed claims."
+    },
+    "brand": {
+      "score": 4.4,
+      "notes": "The dark product-stage canvas, titanium tones, and sparse blue accent match the supplied PDF's launch imagery without embedding screenshots."
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "kind": "critique-panel",
+  "score": 4,
+  "axes": {
+    "clarity": {
+      "score": 5,
+      "notes": "The deck follows the beginner progression from key-value basics through creation, access, mutation, conditionals, loops, nesting, and comprehension."
+    },
+    "hierarchy": {
+      "score": 4,
+      "notes": "Each slide has one headline, one teaching point, and either a code example or editable visual explanation."
+    },
+    "typography": {
+      "score": 4,
+      "notes": "Large classroom-readable headings and monospace code panels are used throughout; long output wraps in dedicated panels."
+    },
+    "motion": {
+      "score": 4,
+      "notes": "Navigation is simple and predictable with keyboard controls, persisted position, and copy interactions for runnable code."
+    },
+    "brand": {
+      "score": 4,
+      "notes": "The visual system is intentionally instructional: light canvas, blue concept accent, green value/output states, and amber exercise callouts."
+    }
+  },
+  "verification": {
+    "static": [
+      "HTML parser accepted index.html.",
+      "Found 12 data-screen-label slides.",
+      "Found two copyable runnable Python examples.",
+      "Required dictionary topics are present.",
+      "No non-ASCII characters detected."
+    ],
+    "rendered_preview": "Unavailable in this run because no in-app browser surface was exposed."
+  }
+}

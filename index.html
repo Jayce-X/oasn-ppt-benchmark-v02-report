@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OASN PPT 基准测试 v0.2 多智能体汇总报告</title>
+  <style>
+    :root { color-scheme: light; --ink:#111827; --muted:#5b6677; --line:#d7dee8; --bg:#f7f9fc; --panel:#ffffff; --blue:#2563eb; --green:#0f766e; --amber:#a16207; --red:#b91c1c; --violet:#6d28d9; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; background:var(--bg); color:var(--ink); }
+    header { padding: 34px 42px 22px; background:#fff; border-bottom:1px solid var(--line); }
+    h1 { margin:0 0 10px; font-size:30px; letter-spacing:0; }
+    h2 { margin:0; font-size:23px; letter-spacing:0; }
+    h3 { margin:0 0 12px; font-size:17px; }
+    h4 { margin:0 0 8px; font-size:16px; }
+    p { line-height:1.55; }
+    main { padding: 24px 42px 60px; }
+    .subtitle, .muted, small { color:var(--muted); }
+    .summary-card, .notice, .prompt-card, .rubric-card, .agent-card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px; }
+    .summary-card strong { display:block; font-size:28px; margin-bottom:4px; }
+    .notice { border-left:5px solid var(--amber); margin: 14px 0 24px; }
+    table { border-collapse:collapse; width:100%; }
+    .matrix { background:#fff; border:1px solid var(--line); }
+    .matrix th, .matrix td { border:1px solid var(--line); vertical-align:top; padding:12px; }
+    .matrix th { width: 220px; text-align:left; background:#fbfdff; }
+    .matrix th.matrix-prompt { width: 360px; min-width:360px; }
+    .matrix th.matrix-prompt div { margin:4px 0 6px; }
+    .matrix th.matrix-prompt small { display:block; line-height:1.38; font-size:12px; font-weight:600; }
+    .overall-section { margin: 22px 0 30px; background:#fff; border:1px solid var(--line); border-radius:8px; padding:18px; }
+    .table-scroll { overflow-x:auto; border:1px solid var(--line); }
+    .case-result { min-width: 1120px; background:#fff; }
+    .overall { min-width: 1420px; background:#fff; }
+    .case-result th, .case-result td, .overall th, .overall td { border-bottom:1px solid var(--line); border-right:1px solid var(--line); padding:12px; vertical-align:top; text-align:left; }
+    .case-result th, .overall th { background:#eef2f7; color:#5b6677; font-weight:700; white-space:nowrap; }
+    .case-result td, .overall td { font-size:14px; }
+    .original-prompt { margin:0 0 12px; white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; line-height:1.55; color:#1f2937; background:#f8fafc; border:1px solid var(--line); border-radius:6px; padding:12px; }
+    .pill { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 8px; color:#64748b; margin-left:6px; font-size:12px; white-space:nowrap; }
+    .cell { min-width:190px; font-size:13px; }
+    .cell .note { margin:8px 0; color:#334155; }
+    .badge { display:inline-block; border-radius:999px; padding:3px 8px; font-size:12px; font-weight:700; border:1px solid currentColor; }
+    .badge.fresh { color:var(--green); }
+    .badge.historical { color:var(--blue); }
+    .badge.reference { color:var(--violet); }
+    .badge.partial { color:var(--amber); }
+    .badge.no_output { color:var(--red); }
+    .badge.blocked { color:var(--red); }
+    .badge.missing { color:var(--red); }
+    .score { font-weight:700; margin-top:8px; }
+    .thumb { width:170px; max-height:120px; object-fit:cover; display:block; margin-top:8px; border:1px solid var(--line); }
+    .table-thumb { width:150px; max-height:96px; object-fit:contain; display:block; margin-top:8px; border:1px solid var(--line); background:#fff; }
+    .case { margin-top:34px; padding-top:24px; border-top:2px solid #cbd5e1; }
+    .case-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:14px; }
+    .case-grid { display:grid; grid-template-columns: minmax(320px, 1.1fr) minmax(320px, .9fr); gap:16px; align-items:start; }
+    .input-preview { width:100%; max-height:560px; object-fit:contain; border:1px solid var(--line); margin-top:12px; background:#fff; }
+    .source-name { color:var(--muted); font-size:13px; }
+    .rubric td { border-top:1px solid var(--line); padding:7px 8px; vertical-align:top; font-size:13px; }
+    .rubric td:first-child { width:86px; font-weight:700; }
+    .rubric td:nth-child(2) { width:96px; color:var(--muted); }
+    .agent-grid { display:grid; grid-template-columns: repeat(4, minmax(220px, 1fr)); gap:14px; }
+    .agent-card p { margin:7px 0; font-size:13px; color:#334155; }
+    .agent-card.blocked, .agent-card.missing, .agent-card.no_output { opacity:.78; }
+    .detail-shot { width:100%; max-height:240px; object-fit:contain; border:1px solid var(--line); background:#fff; margin-top:8px; }
+    a { color:#1d4ed8; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    @media (max-width: 1100px) { main, header { padding-left:20px; padding-right:20px; } .case-grid, .agent-grid { grid-template-columns:1fr; } .matrix { display:block; overflow-x:auto; } }
+    </style>
+</head>
+<body>
+  <header>
+    <h1>OASN PPT 基准测试 v0.2 多智能体汇总报告</h1>
+    <p class="subtitle">基于本地运行产物生成。Manus max 已按要求省略；这里只展示 Manus lite。</p>
+  </header>
+  <main>
+    
+    <section class="overall-section">
+      <h2>总榜 / 100</h2>
+      <div class="table-scroll">
+        <table class="overall">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>总分</th><th>事实依据<br><small>/16</small></th><th>覆盖度<br><small>/8</small></th><th>叙事<br><small>/8</small></th><th>视觉<br><small>/22</small></th><th>图表<br><small>/18</small></th><th>可编辑性<br><small>/14</small></th><th>修改稳定性<br><small>/8</small></th><th>效率<br><small>/6</small></th></tr></thead>
+          <tbody><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td><strong>99</strong></td><td>16</td><td>8</td><td>8</td><td>21</td><td>18</td><td>14</td><td>8</td><td>6</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td><strong>93</strong></td><td>14</td><td>8</td><td>8</td><td>20</td><td>17</td><td>13</td><td>7</td><td>6</td></tr><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td><strong>92</strong></td><td>16</td><td>7</td><td>8</td><td>18</td><td>18</td><td>12</td><td>7</td><td>6</td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td><strong>18</strong></td><td>2</td><td>1</td><td>1</td><td>2</td><td>5</td><td>3</td><td>2</td><td>2</td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td><strong>18</strong></td><td>5</td><td>2</td><td>2</td><td>3</td><td>3</td><td>2</td><td>0</td><td>1</td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td><strong>14</strong></td><td>3</td><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td><td>0</td><td>1</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    
+
+    <h2>结果矩阵</h2>
+    <table class="matrix">
+      <thead><tr><th>提示词摘要</th><th>WorkBuddy</th><th>Manus 1.6 Lite</th><th>Codex（ppt master）</th><th>OpenClaw（ppt master glm5.2）</th><th>OpenDesign</th><th>OpenAgents（ppt master glm5.2）</th></tr></thead>
+      <tbody><tr><th class="matrix-prompt"><a href="#CASE-GEN-001">CASE-GEN-001</a><div>商业计划书</div><small>基于 Fancy&#x27;s Foods / Whipped Dream 商业计划 PDF，生成 10 页英文投资人/渠道伙伴路演 PPT。必须覆盖市场问题、产品差异、餐厅验证、分阶段扩张、冷冻杯装与压力罐分销、竞争优势、制造/合作计划、财务预测、风险预案和投资/合作诉求；至少 3 页要有可编辑图表/表格，事实必须来自 PDF。</small></th><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">8/10</div><div class="note">任务：商业计划路演。结论：基本完成；页数不符。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-001_247b38a907.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-001_workbuddy/montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-001_workbuddy/montage.png" alt="CASE-GEN-001 workbuddy screenshot"></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">9/10</div><div class="note">任务：商业计划路演。结论：部分内容缺少来源支撑。</div><div class="links"><a href="downloads/manus_lite_CASE-GEN-001_c7b9936271.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-001_manus_lite/montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-001_manus_lite/montage.png" alt="CASE-GEN-001 manus_lite screenshot"></td><td class="cell fresh"><span class="badge fresh">正式流程前结果</span><div class="score">9/10</div><div class="note">任务：商业计划路演。结论：基本完成；视觉偏表格化。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-001_07623f2724.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-001_pptmaster/montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-001_pptmaster/montage.png" alt="CASE-GEN-001 pptmaster screenshot"></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">10/10</div><div class="note">任务：商业计划路演。结论：完成关键要求。</div><div class="links"><a href="downloads/openclaw_CASE-GEN-001_e32be63b96.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-GEN-001_openclaw/CASE-GEN-001_openclaw_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-001_openclaw/CASE-GEN-001_openclaw_montage.png" alt="CASE-GEN-001 openclaw screenshot"></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">9/10</div><div class="note">任务：商业计划路演。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/opendesign_CASE-GEN-001_aecd0ee6e7.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-001_opendesign/montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-001_opendesign/montage.png" alt="CASE-GEN-001 opendesign screenshot"></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">9/10</div><div class="note">任务：商业计划路演。结论：基本完成；视觉偏表格化。</div><div class="links"><a href="downloads/openagents_CASE-GEN-001_2de0a47985.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-001_openagents/CASE-GEN-001_openagents_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-001_openagents/CASE-GEN-001_openagents_montage.png" alt="CASE-GEN-001 openagents screenshot"></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-002">CASE-GEN-002</a><div>产品发布</div><small>基于 Apple iPhone 16 Pro 发布资料，生成面向产品发布、媒体和渠道销售的英文产品发布 PPT。要求高级消费电子发布会风格，突出产品定位、相机控制、A18 Pro、Apple Intelligence、材料/尺寸、价格/上市信息等源文档事实，不能编造销量、市场份额或未披露指标。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">7/8</div><div class="note">任务：产品发布演示文稿。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-002_ea71cb4c4f.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-002_workbuddy/CASE-GEN-002_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-002_workbuddy/CASE-GEN-002_montage.png" alt="CASE-GEN-002 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX</span><div class="note">任务：产品发布演示文稿。结论：未产出可评分 PPTX。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">8/8</div><div class="note">任务：产品发布演示文稿。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-002_8c44d5453c.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-GEN-002_pptmaster/CASE-GEN-002_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-002_pptmaster/CASE-GEN-002_pptmaster_montage.png" alt="CASE-GEN-002 pptmaster screenshot"></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">8/8</div><div class="note">任务：产品发布演示文稿。结论：完成关键要求。</div><div class="links"><a href="downloads/openclaw_CASE-GEN-002_5032869ee1.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-GEN-002_openclaw/CASE-GEN-002_openclaw_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-002_openclaw/CASE-GEN-002_openclaw_montage.png" alt="CASE-GEN-002 openclaw screenshot"></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">7/8</div><div class="note">任务：产品发布演示文稿。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="html_exports/e783085a-4c61-4c65-875b-ad631b3ab5e2_a892e410bd/index.html">产出</a> · <a href="assets/evidence/CASE-GEN-002_opendesign/CASE-GEN-002_contact.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-002_opendesign/CASE-GEN-002_contact.png" alt="CASE-GEN-002 opendesign screenshot"></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/8</div><div class="note">任务：产品发布演示文稿。结论：部分内容缺少来源支撑。</div><div class="links"><a href="downloads/openagents_CASE-GEN-002_84b35990e7.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-002_openagents/CASE-GEN-002_openagents_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-002_openagents/CASE-GEN-002_openagents_montage.png" alt="CASE-GEN-002 openagents screenshot"></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-003">CASE-GEN-003</a><div>课程备课</div><small>基于 Python 课程章节 PDF，生成课堂教学用 PPT。面向初学者，要求把概念、例子、练习和教学节奏组织成可授课课件，强调清晰递进、可读代码/示例和教师可直接使用的结构。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">6/6</div><div class="note">任务：课堂教学课件。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-003_bbac47ca5e.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-003_workbuddy/CASE-GEN-003_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-003_workbuddy/CASE-GEN-003_montage.png" alt="CASE-GEN-003 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：课堂教学课件。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">6/6</div><div class="note">任务：课堂教学课件。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-003_dde18fe049.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-GEN-003_pptmaster/CASE-GEN-003_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-003_pptmaster/CASE-GEN-003_pptmaster_montage.png" alt="CASE-GEN-003 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：课堂教学课件。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">5/6</div><div class="note">任务：课堂教学课件。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="html_exports/5b60b07a-6c27-47f8-930e-a507846519b8_d0dbdd6f3d/index.html">产出</a> · <a href="assets/evidence/CASE-GEN-003_opendesign/CASE-GEN-003_contact.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-003_opendesign/CASE-GEN-003_contact.png" alt="CASE-GEN-003 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：课堂教学课件。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-004">CASE-GEN-004</a><div>传播活动简报</div><small>基于世界食品安全日传播工具包 PDF，生成机构/公共传播简报 PPT。受众是活动、利益相关方和传播团队，要求权威但易懂，覆盖目标、关键信息、行动建议、传播资产和执行要点。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">6/6</div><div class="note">任务：公共传播简报。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-004_1dabddc99c.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-004_workbuddy/CASE-GEN-004_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-004_workbuddy/CASE-GEN-004_montage.png" alt="CASE-GEN-004 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：公共传播简报。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">6/6</div><div class="note">任务：公共传播简报。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-004_4ec393d6c9.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-GEN-004_pptmaster/CASE-GEN-004_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-004_pptmaster/CASE-GEN-004_pptmaster_montage.png" alt="CASE-GEN-004 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：公共传播简报。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">6/6</div><div class="note">任务：公共传播简报。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="html_exports/oasn-case-gen-004-wfsd-campaign-briefing-benchmark-dfc9_f55b0a8f01/index.html">产出</a> · <a href="assets/evidence/CASE-GEN-004_opendesign/CASE-GEN-004_contact.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-004_opendesign/CASE-GEN-004_contact.png" alt="CASE-GEN-004 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：公共传播简报。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-005">CASE-GEN-005</a><div>学术论文报告</div><small>基于 ECCV 学术论文 PDF，生成研究生读书会/会议报告 PPT。要求压缩问题、方法、实验、结果、局限和讨论，保留论文事实、图表/结果关系和学术语气。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">7/7</div><div class="note">任务：学术论文报告。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-005_9a04f1588d.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-005_workbuddy/CASE-GEN-005_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-005_workbuddy/CASE-GEN-005_montage.png" alt="CASE-GEN-005 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：学术论文报告。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">7/7</div><div class="note">任务：学术论文报告。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-005_654b142519.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-GEN-005_pptmaster/CASE-GEN-005_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-005_pptmaster/CASE-GEN-005_pptmaster_montage.png" alt="CASE-GEN-005 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：学术论文报告。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">6/7</div><div class="note">任务：学术论文报告。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="html_exports/26948c2a-6371-46b6-916f-5523f7d8fd75_8157ce8b5c/index.html">产出</a> · <a href="assets/evidence/CASE-GEN-005_opendesign/CASE-GEN-005_contact.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-005_opendesign/CASE-GEN-005_contact.png" alt="CASE-GEN-005 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：学术论文报告。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-EDIT-006">CASE-EDIT-006</a><div>局部字体修改</div><small>在给定 PPTX 中只修改目标页的局部字体排版：按指定页/标题或文本区域调整字号/排版，同时必须保持非目标页和非目标元素稳定，不新增/删除页面。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">3/3</div><div class="note">任务：局部字体编辑。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/workbuddy_CASE-EDIT-006_38a50f536d.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-006_workbuddy/CASE-EDIT-006_workbuddy_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-006_workbuddy/CASE-EDIT-006_workbuddy_before_after.png" alt="CASE-EDIT-006 workbuddy screenshot"></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">3/3</div><div class="note">任务：局部字体编辑。结论：完成关键要求。</div><div class="links"><a href="downloads/manus_lite_CASE-EDIT-006_65930d56d8.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-006_manus_lite/CASE-EDIT-006_manus_lite_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-006_manus_lite/CASE-EDIT-006_manus_lite_before_after.png" alt="CASE-EDIT-006 manus_lite screenshot"></td><td class="cell fresh"><span class="badge fresh">正式原生编辑流程新跑结果</span><div class="score">3/3</div><div class="note">任务：局部字体编辑。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-EDIT-006_da824778bd.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-EDIT-006_pptmaster/CASE-EDIT-006_pptmaster_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-006_pptmaster/CASE-EDIT-006_pptmaster_before_after.png" alt="CASE-EDIT-006 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：局部字体编辑。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">3/3</div><div class="note">任务：局部字体编辑。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/output_a43e2632a3.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-006_opendesign/CASE-EDIT-006_opendesign_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-006_opendesign/CASE-EDIT-006_opendesign_before_after.png" alt="CASE-EDIT-006 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：局部字体编辑。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-EDIT-007">CASE-EDIT-007</a><div>文本转图表</div><small>把页面内的文本数据转换为原生可编辑的 PowerPoint 折线图。要求数据、年份、序列、坐标轴/标签准确，图表不是截图，视觉上与原 PPT 协调，并保持非目标内容不被破坏。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">6/6</div><div class="note">任务：文本转原生图表。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/workbuddy_CASE-EDIT-007_2de6c610e7.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-007_workbuddy/CASE-EDIT-007_workbuddy_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-007_workbuddy/CASE-EDIT-007_workbuddy_before_after.png" alt="CASE-EDIT-007 workbuddy screenshot"></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">6/6</div><div class="note">任务：文本转原生图表。结论：完成关键要求。</div><div class="links"><a href="downloads/manus_lite_CASE-EDIT-007_d04dec4c42.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-007_manus_lite/CASE-EDIT-007_manus_lite_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-007_manus_lite/CASE-EDIT-007_manus_lite_before_after.png" alt="CASE-EDIT-007 manus_lite screenshot"></td><td class="cell fresh"><span class="badge fresh">正式原生编辑流程新跑结果</span><div class="score">6/6</div><div class="note">任务：文本转原生图表。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-EDIT-007_89c3bc1ce5.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-EDIT-007_pptmaster/CASE-EDIT-007_pptmaster_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-007_pptmaster/CASE-EDIT-007_pptmaster_before_after.png" alt="CASE-EDIT-007 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：文本转原生图表。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">5/6</div><div class="note">任务：文本转原生图表。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/output_75a7b8cb0d.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-007_opendesign/CASE-EDIT-007_opendesign_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-007_opendesign/CASE-EDIT-007_opendesign_before_after.png" alt="CASE-EDIT-007 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：文本转原生图表。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-EDIT-008R">CASE-EDIT-008R</a><div>原始指标仪表盘</div><small>把一个原始指标堆叠/仪表盘草稿 PPTX 改造成高管仪表盘。要求从表格数据生成更高级的数据可视化布局，包含 KPI、趋势、分群、留存、收入等核心洞察；图表/表格必须是原生可编辑对象，不能只做简单换色。</small></th><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">8/8</div><div class="note">任务：高管仪表盘重构。结论：完成关键要求。</div><div class="links"><a href="downloads/workbuddy_CASE-EDIT-008R_57966483bc.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-008R_workbuddy/CASE-EDIT-008R_workbuddy_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-008R_workbuddy/CASE-EDIT-008R_workbuddy_before_after.png" alt="CASE-EDIT-008R workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：高管仪表盘重构。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式原生编辑流程新跑结果</span><div class="score">8/8</div><div class="note">任务：高管仪表盘重构。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-EDIT-008R_dea1549712.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-EDIT-008R_pptmaster/CASE-EDIT-008R_pptmaster_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-008R_pptmaster/CASE-EDIT-008R_pptmaster_before_after.png" alt="CASE-EDIT-008R pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：高管仪表盘重构。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">8/8</div><div class="note">任务：高管仪表盘重构。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/opendesign_CASE-EDIT-008R_e29d54a46b.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-008R_opendesign/CASE-EDIT-008R_opendesign_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-008R_opendesign/CASE-EDIT-008R_opendesign_before_after.png" alt="CASE-EDIT-008R opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：高管仪表盘重构。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-EDIT-009">CASE-EDIT-009</a><div>视觉重设计</div><small>把教育类岩石识别 PPTX 做视觉 redesign。要求提升 diagram craft、层级、布局和教学可读性，同时保持原有内容语义，不做无关主题大改。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">4/5</div><div class="note">任务：视觉重设计。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/workbuddy_CASE-EDIT-009_a58dc1583f.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-009_workbuddy/CASE-EDIT-009_workbuddy_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-009_workbuddy/CASE-EDIT-009_workbuddy_before_after.png" alt="CASE-EDIT-009 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX</span><div class="note">任务：视觉重设计。结论：未产出可评分 PPTX。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式原生编辑流程新跑结果</span><div class="score">5/5</div><div class="note">任务：视觉重设计。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-EDIT-009_4f2c15ebb3.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-EDIT-009_pptmaster/CASE-EDIT-009_pptmaster_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-009_pptmaster/CASE-EDIT-009_pptmaster_before_after.png" alt="CASE-EDIT-009 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：视觉重设计。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">4/5</div><div class="note">任务：视觉重设计。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/output_db8166052f.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-009_opendesign/CASE-EDIT-009_opendesign_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-009_opendesign/CASE-EDIT-009_opendesign_before_after.png" alt="CASE-EDIT-009 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：视觉重设计。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-EDIT-010">CASE-EDIT-010</a><div>截图重建为可编辑对象</div><small>把 title slide 中的截图式/扁平内容重建为可编辑 PowerPoint 对象。要求 title、subtitle、学校文字、crest/logo 等成为独立可编辑元素，视觉尽量贴近原图。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">1/4</div><div class="note">任务：截图重建为可编辑页。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/workbuddy_CASE-EDIT-010_a88a71ae53.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-010_workbuddy/CASE-EDIT-010_workbuddy_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-010_workbuddy/CASE-EDIT-010_workbuddy_before_after.png" alt="CASE-EDIT-010 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：截图重建为可编辑页。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式原生编辑流程新跑结果</span><div class="score">4/4</div><div class="note">任务：截图重建为可编辑页。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/pptmaster_CASE-EDIT-010_2f8a4ac2b6.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-EDIT-010_pptmaster/CASE-EDIT-010_pptmaster_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-010_pptmaster/CASE-EDIT-010_pptmaster_before_after.png" alt="CASE-EDIT-010 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：截图重建为可编辑页。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">4/4</div><div class="note">任务：截图重建为可编辑页。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/output_e70c7d5162.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-010_opendesign/CASE-EDIT-010_opendesign_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-010_opendesign/CASE-EDIT-010_opendesign_before_after.png" alt="CASE-EDIT-010 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：截图重建为可编辑页。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-EDIT-011">CASE-EDIT-011</a><div>多轮级联编辑</div><small>多轮级联编辑：在现有 PPT 上连续执行图表、布局、参考文献/进度条/引用等局部修改；每一轮必须保留前序修改，不应破坏页数、主题或非目标元素。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">7/8</div><div class="note">任务：多轮级联编辑。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/final_0ebc9ff154.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-011_workbuddy/CASE-EDIT-011_workbuddy_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-011_workbuddy/CASE-EDIT-011_workbuddy_before_after.png" alt="CASE-EDIT-011 workbuddy screenshot"></td><td class="cell partial"><span class="badge partial">仅部分结果</span><div class="note">任务：多轮级联编辑。结论：只有部分结果；不是完整最终稿。</div><div class="links"><a href="downloads/CASE-EDIT-011_turn1_manus_c9561f6294.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-EDIT-011_manus_lite/CASE-EDIT-011_manus_lite_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-011_manus_lite/CASE-EDIT-011_manus_lite_before_after.png" alt="CASE-EDIT-011 manus_lite screenshot"></td><td class="cell fresh"><span class="badge fresh">正式原生编辑流程新跑结果</span><div class="score">8/8</div><div class="note">任务：多轮级联编辑。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-EDIT-011_239c9e7595.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-EDIT-011_pptmaster/CASE-EDIT-011_pptmaster_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-011_pptmaster/CASE-EDIT-011_pptmaster_before_after.png" alt="CASE-EDIT-011 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：多轮级联编辑。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">7/8</div><div class="note">任务：多轮级联编辑。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/final_b15a357984.pptx">产出</a> · <a href="assets/evidence/CASE-EDIT-011_opendesign/CASE-EDIT-011_opendesign_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-EDIT-011_opendesign/CASE-EDIT-011_opendesign_before_after.png" alt="CASE-EDIT-011 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：多轮级联编辑。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-MT-012">CASE-MT-012</a><div>PPTC 多轮编辑</div><small>4 轮 PPTC 风格编辑任务，页码索引从 0 开始：改指定标题字体颜色、改背景、调整图片旋转/宽度，最后把第 3 号页面的第 0 张图片旋转更新为 60 度而不是叠加旋转；所有前序修改保持稳定。</small></th><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">4/4</div><div class="note">任务：PPTC 四轮编辑。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/final_b1d78d13ea.pptx">产出</a> · <a href="assets/evidence/CASE-MT-012_workbuddy/CASE-MT-012_workbuddy_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-MT-012_workbuddy/CASE-MT-012_workbuddy_before_after.png" alt="CASE-MT-012 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：PPTC 四轮编辑。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式原生编辑流程新跑结果</span><div class="score">4/4</div><div class="note">任务：PPTC 四轮编辑。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-MT-012_17e85cf4ba.pptx">产出</a> · <span class="muted">日志未公开</span> · <a href="assets/evidence/CASE-MT-012_pptmaster/CASE-MT-012_pptmaster_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-MT-012_pptmaster/CASE-MT-012_pptmaster_before_after.png" alt="CASE-MT-012 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：PPTC 四轮编辑。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell historical"><span class="badge historical">历史产物 / 按 v0.2 折算</span><div class="score">4/4</div><div class="note">任务：PPTC 四轮编辑。结论：历史产物；按 v0.2 折算。</div><div class="links"><a href="downloads/final_215e10b16d.pptx">产出</a> · <a href="assets/evidence/CASE-MT-012_opendesign/CASE-MT-012_opendesign_before_after.png">前后对比</a></div><img class="thumb" src="assets/evidence/CASE-MT-012_opendesign/CASE-MT-012_opendesign_before_after.png" alt="CASE-MT-012 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：PPTC 四轮编辑。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-013">CASE-GEN-013</a><div>凹面镜光路</div><small>基于纯 Markdown 源材料生成凹面镜光路复杂概念讲解 PPT。重点测试物理原理、光线图、符号/公式与图形一致性，以及面向学习者的解释层次。</small></th><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：凹面镜技术讲解。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-013_5da1990e0a.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-013_workbuddy/CASE-GEN-013_workbuddy_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-013_workbuddy/CASE-GEN-013_workbuddy_montage.png" alt="CASE-GEN-013 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：凹面镜技术讲解。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">5/5</div><div class="note">任务：凹面镜技术讲解。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-013_b869b43a09.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-013_pptmaster/CASE-GEN-013_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-013_pptmaster/CASE-GEN-013_pptmaster_montage.png" alt="CASE-GEN-013 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：凹面镜技术讲解。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：凹面镜技术讲解。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/opendesign_CASE-GEN-013_5400bb0b56.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-013_opendesign/CASE-GEN-013_opendesign_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-013_opendesign/CASE-GEN-013_opendesign_montage.png" alt="CASE-GEN-013 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：凹面镜技术讲解。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-014">CASE-GEN-014</a><div>热泵系统讲解</div><small>基于纯 Markdown 源材料生成蒸汽压缩热泵工程结构讲解 PPT。重点测试组件关系、状态流、模式对比、能量流与结构图表达。</small></th><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：热泵系统讲解。结论：完成关键要求。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-014_15113b5c5b.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-014_workbuddy/CASE-GEN-014_workbuddy_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-014_workbuddy/CASE-GEN-014_workbuddy_montage.png" alt="CASE-GEN-014 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX</span><div class="note">任务：热泵系统讲解。结论：未产出可评分 PPTX。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">5/5</div><div class="note">任务：热泵系统讲解。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-014_18bcfe1639.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-014_pptmaster/CASE-GEN-014_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-014_pptmaster/CASE-GEN-014_pptmaster_montage.png" alt="CASE-GEN-014 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：热泵系统讲解。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：热泵系统讲解。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/opendesign_CASE-GEN-014_cf3a7634cc.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-014_opendesign/CASE-GEN-014_opendesign_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-014_opendesign/CASE-GEN-014_opendesign_montage.png" alt="CASE-GEN-014 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：热泵系统讲解。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-015">CASE-GEN-015</a><div>Transformer 自注意力</div><small>基于纯 Markdown 源材料生成 Transformer 自注意力抽象算法讲解 PPT。重点测试矩阵流程、Q/K/V、注意力热力图、机制解释和抽象概念可视化。</small></th><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：自注意力机制讲解。结论：完成关键要求。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-015_759ea085ea.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-015_workbuddy/CASE-GEN-015_workbuddy_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-015_workbuddy/CASE-GEN-015_workbuddy_montage.png" alt="CASE-GEN-015 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：自注意力机制讲解。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">5/5</div><div class="note">任务：自注意力机制讲解。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-015_97ca19c7e7.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-015_pptmaster/CASE-GEN-015_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-015_pptmaster/CASE-GEN-015_pptmaster_montage.png" alt="CASE-GEN-015 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：自注意力机制讲解。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：自注意力机制讲解。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/opendesign_CASE-GEN-015_26b228b9c5.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-015_opendesign/CASE-GEN-015_opendesign_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-015_opendesign/CASE-GEN-015_opendesign_montage.png" alt="CASE-GEN-015 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：自注意力机制讲解。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-016">CASE-GEN-016</a><div>产品增长指标</div><small>基于 CSV 和说明文档生成产品增长指标复盘 PPT。重点测试数据分析、图表选择、多指标推导、基于来源的结论和仪表盘/叙事组织。</small></th><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：增长数据复盘。结论：完成关键要求。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-016_88348679d7.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-016_workbuddy/CASE-GEN-016_workbuddy_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-016_workbuddy/CASE-GEN-016_workbuddy_montage.png" alt="CASE-GEN-016 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：增长数据复盘。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">5/5</div><div class="note">任务：增长数据复盘。结论：完成关键要求。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-016_f919893fa8.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-016_pptmaster/CASE-GEN-016_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-016_pptmaster/CASE-GEN-016_pptmaster_montage.png" alt="CASE-GEN-016 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：增长数据复盘。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：增长数据复盘。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/opendesign_CASE-GEN-016_fbc81c9819.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-016_opendesign/CASE-GEN-016_opendesign_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-016_opendesign/CASE-GEN-016_opendesign_montage.png" alt="CASE-GEN-016 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：增长数据复盘。结论：OpenAgents 批次未提供该用例产物。</div></td></tr><tr><th class="matrix-prompt"><a href="#CASE-GEN-017">CASE-GEN-017</a><div>结账实验复盘</div><small>基于 CSV 和说明文档生成结账页改版实验复盘 PPT。重点测试 A/B 测试决策叙事、分群视图、护栏指标、统计/业务解释和可视化质量。</small></th><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：A/B 实验复盘。结论：部分内容缺少来源支撑。</div><div class="links"><a href="downloads/workbuddy_CASE-GEN-017_4bf7a3fad4.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-017_workbuddy/CASE-GEN-017_workbuddy_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-017_workbuddy/CASE-GEN-017_workbuddy_montage.png" alt="CASE-GEN-017 workbuddy screenshot"></td><td class="cell no_output"><span class="badge no_output">无 PPTX / 额度不足</span><div class="note">任务：A/B 实验复盘。结论：未产出 PPTX；受额度限制。</div><div class="links"><span class="muted">日志未公开</span></div></td><td class="cell fresh"><span class="badge fresh">正式流程新跑结果</span><div class="score">5/5</div><div class="note">任务：A/B 实验复盘。结论：部分内容缺少来源支撑。</div><div class="links"><a href="downloads/pptmaster_CASE-GEN-017_2d4ffd9eb1.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-017_pptmaster/CASE-GEN-017_pptmaster_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-017_pptmaster/CASE-GEN-017_pptmaster_montage.png" alt="CASE-GEN-017 pptmaster screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：A/B 实验复盘。结论：当前只要求 OpenClaw 跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行。</div></td><td class="cell fresh"><span class="badge fresh">v0.2 新跑结果</span><div class="score">5/5</div><div class="note">任务：A/B 实验复盘。结论：内容可用；PPTX 可编辑性不足。</div><div class="links"><a href="downloads/opendesign_CASE-GEN-017_94c46d5c16.pptx">产出</a> · <a href="assets/evidence/CASE-GEN-017_opendesign/CASE-GEN-017_opendesign_montage.png">截图</a></div><img class="thumb" src="assets/evidence/CASE-GEN-017_opendesign/CASE-GEN-017_opendesign_montage.png" alt="CASE-GEN-017 opendesign screenshot"></td><td class="cell missing"><span class="badge missing">缺失</span><div>任务：A/B 实验复盘。结论：OpenAgents 批次未提供该用例产物。</div></td></tr></tbody>
+    </table>
+
+    
+    <section class="case" id="CASE-GEN-001">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-001 · 商业计划书</h2>
+          <p class="subtitle">最高 10 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 Fancy&#x27;s Foods business plan PDF，生成一份 10 页的投资人路演 PPT。
+
+目标听众：早期投资人和潜在渠道合作方。
+输出语言：英文。
+风格：professional, data-driven, clean investor pitch。
+
+必须覆盖：
+1. problem / market context
+2. product and flavored whipped cream differentiation
+3. customer validation and restaurant background
+4. target market and phased expansion
+5. distribution strategy: frozen tubs and pressurized cans
+6. competitive advantage
+7. manufacturing / partnership plan
+8. financial projections, including positive cash flow and 10.88% ROE in year one if supported by the source
+9. risks and contingency plan
+10. investment / partnership ask
+
+要求：
+- 所有事实、数字、产品品类、财务指标必须来自 PDF，不要自行编造。
+- 至少 3 页要把 source 中的数字做成可编辑 chart/table，而不是截图。
+- 每页标题要能串成完整 pitch narrative。
+- 输出一个可编辑 .pptx。</pre>
+          <p class="source-name">输入：SampleFoodBusinessPlanOklahomaState.pdf</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-001/SampleFoodBusinessPlanOklahomaState_input_montage.png" alt="CASE-GEN-001 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-001</td><td>事实依据</td><td>PPT 是否始终把 Fancy&#x27;s Foods / Whipped Dream 识别为调味奶油顶料业务，并基于来源商业计划书把输出定位为投资人或合作伙伴路演？</td></tr>
+<tr><td>G-002</td><td>事实依据</td><td>产品口味、包装形式、保质期/验证主张和餐厅背景是否可追溯到 Fancy&#x27;s Foods PDF，且没有未经支持的牵引力或渠道主张？</td></tr>
+<tr><td>G-003</td><td>事实依据</td><td>市场扩张、分销、制造、财务和风险表述是否限制在 PDF 支持的事实和数字内，包括使用到的一年正现金流和 10.88% 股本回报率？</td></tr>
+<tr><td>C-001</td><td>覆盖度</td><td>10 页投资人 PPT 是否实质覆盖全部 10 个指定简报部分？</td></tr>
+<tr><td>N-001</td><td>叙事</td><td>页标题和内容是否形成连贯的投资人路演叙事，而不是来源摘要顺序或泛泛章节标签？</td></tr>
+<tr><td>V-001</td><td>视觉</td><td>商业计划 PPT 是否保持投资人级别的视觉层级、可读密度、一致设计系统，并且没有明显空白、溢出、裁切或重叠问题？</td></tr>
+<tr><td>CH-001</td><td>图表</td><td>商业计划 PPT 是否至少有 3 页包含基于来源数字的可编辑图表或表格，而不是截图或装饰性占位？</td></tr>
+<tr><td>CH-002</td><td>图表</td><td>财务和数字图表/表格的值是否有来源支持或可直接推导，并带有有意义标签、单位和投资人相关结论？</td></tr>
+<tr><td>E-001</td><td>可编辑性</td><td>输出是否是真正可编辑的 PPTX，标题、正文、图表/表格和主要形状是独立可编辑对象，而不是扁平化页面图片？</td></tr>
+<tr><td>EF-001</td><td>效率</td><td>智能体是否在生成预算内产出完整有效 PPTX，且无需评测端修复或反复重跑？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>2分27秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-001_247b38a907.pptx">PPTX</a></td><td><strong>8/10</strong></td><td><a href="cell_eval_reports/CASE-GEN-001_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-001_workbuddy/montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-001_workbuddy/montage.png" alt="CASE-GEN-001 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/manus_lite_CASE-GEN-001_c7b9936271.pptx">PPTX</a></td><td><strong>9/10</strong></td><td><a href="cell_eval_reports/CASE-GEN-001_manus_lite.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-001_manus_lite/montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-001_manus_lite/montage.png" alt="CASE-GEN-001 Manus 1.6 Lite screenshot"></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-001_07623f2724.pptx">PPTX</a></td><td><strong>9/10</strong></td><td><a href="cell_eval_reports/CASE-GEN-001_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-001_pptmaster/montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-001_pptmaster/montage.png" alt="CASE-GEN-001 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>19分7秒</td><td>未记录</td><td><a href="downloads/openclaw_CASE-GEN-001_e32be63b96.pptx">PPTX</a></td><td><strong>10/10</strong></td><td><a href="cell_eval_reports/CASE-GEN-001_openclaw.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-001_openclaw/CASE-GEN-001_openclaw_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-001_openclaw/CASE-GEN-001_openclaw_montage.png" alt="CASE-GEN-001 OpenClaw（ppt master glm5.2） screenshot"></td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/opendesign_CASE-GEN-001_aecd0ee6e7.pptx">PPTX</a></td><td><strong>9/10</strong></td><td><a href="cell_eval_reports/CASE-GEN-001_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-001_opendesign/montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-001_opendesign/montage.png" alt="CASE-GEN-001 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/openagents_CASE-GEN-001_2de0a47985.pptx">PPTX</a></td><td><strong>9/10</strong></td><td><a href="cell_eval_reports/CASE-GEN-001_openagents.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-001_openagents/CASE-GEN-001_openagents_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-001_openagents/CASE-GEN-001_openagents_montage.png" alt="CASE-GEN-001 OpenAgents（ppt master glm5.2） screenshot"></td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-002">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-002 · 产品发布</h2>
+          <p class="subtitle">最高 8 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 Apple iPhone 16 Pro / iPhone 16 Pro Max 发布资料，生成一份 9 页产品发布 PPT。
+
+目标听众：消费者科技媒体、渠道伙伴、销售团队。
+输出语言：英文。
+风格：premium product launch, crisp, visually strong。
+
+必须覆盖：
+1. product positioning
+2. Apple Intelligence
+3. A18 Pro chip
+4. larger displays
+5. Camera Control
+6. pro camera capabilities
+7. battery-life improvement
+8. design / durability / environment
+9. pricing / pre-order call to action if source supports it
+
+要求：
+- 不要使用 PDF 以外的未经验证信息。
+- 至少 1 页做 feature comparison table。
+- 至少 1 页用视觉方式表达 camera / creativity use cases。
+- 输出一个可编辑 .pptx。</pre>
+          <p class="source-name">输入：Apple_debuts_iPhone_16_Pro_and_iPhone_16_Pro_Max_A.pdf</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-002/Apple_debuts_iPhone_16_Pro_and_iPhone_16_Pro_Max_A_input_montage.png" alt="CASE-GEN-002 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-004</td><td>事实依据</td><td>PPT 是否正确把 Apple iPhone 16 Pro 和 iPhone 16 Pro Max 作为发布主题，并且只使用来源支持的产品事实？</td></tr>
+<tr><td>G-005</td><td>事实依据</td><td>Apple Intelligence、A18 Pro、Camera Control、专业相机、电池、钛金属和环保相关表述是否遵守来源约束，且没有夸大可用性或能力？</td></tr>
+<tr><td>C-002</td><td>覆盖度</td><td>产品发布 PPT 是否覆盖 Apple 发布要求的定位、Apple Intelligence、A18 Pro、相机、显示屏、价格/上市、环保、受众和竞争框架？</td></tr>
+<tr><td>N-002</td><td>叙事</td><td>PPT 是否讲出高级产品发布故事，把受众、功能层级和购买/定位逻辑连接起来？</td></tr>
+<tr><td>V-002</td><td>视觉</td><td>产品发布 PPT 是否使用高级、产品相关的视觉层级和媒体/素材，适合 Apple 发布会场景？</td></tr>
+<tr><td>V-003</td><td>视觉</td><td>产品发布 PPT 是否跨页面保持字体、间距、颜色和规格/功能布局的一致与可读？</td></tr>
+<tr><td>CH-003</td><td>图表</td><td>产品发布 PPT 是否包含结构化、来源支持的功能对比或规格表，且没有编造竞品规格？</td></tr>
+<tr><td>E-002</td><td>可编辑性</td><td>产品发布文本、功能表/对比、主要形状和媒体位置是否在 PPTX 中可编辑？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>5分59秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-002_ea71cb4c4f.pptx">PPTX</a></td><td><strong>7/8</strong></td><td><a href="cell_eval_reports/CASE-GEN-002_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-002_workbuddy/CASE-GEN-002_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-002_workbuddy/CASE-GEN-002_montage.png" alt="CASE-GEN-002 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX</strong></td><td><a href="cell_eval_reports/CASE-GEN-002_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-002_8c44d5453c.pptx">PPTX</a></td><td><strong>8/8</strong></td><td><a href="cell_eval_reports/CASE-GEN-002_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-002_pptmaster/CASE-GEN-002_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-002_pptmaster/CASE-GEN-002_pptmaster_montage.png" alt="CASE-GEN-002 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>15分21秒</td><td>未记录</td><td><a href="downloads/openclaw_CASE-GEN-002_5032869ee1.pptx">PPTX</a></td><td><strong>8/8</strong></td><td><a href="cell_eval_reports/CASE-GEN-002_openclaw.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-002_openclaw/CASE-GEN-002_openclaw_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-002_openclaw/CASE-GEN-002_openclaw_montage.png" alt="CASE-GEN-002 OpenClaw（ppt master glm5.2） screenshot"></td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="html_exports/e783085a-4c61-4c65-875b-ad631b3ab5e2_a892e410bd/index.html">产出</a></td><td><strong>7/8</strong></td><td><a href="cell_eval_reports/CASE-GEN-002_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-002_opendesign/CASE-GEN-002_contact.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-002_opendesign/CASE-GEN-002_contact.png" alt="CASE-GEN-002 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/openagents_CASE-GEN-002_84b35990e7.pptx">PPTX</a></td><td><strong>5/8</strong></td><td><a href="cell_eval_reports/CASE-GEN-002_openagents.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-002_openagents/CASE-GEN-002_openagents_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-002_openagents/CASE-GEN-002_openagents_montage.png" alt="CASE-GEN-002 OpenAgents（ppt master glm5.2） screenshot"></td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-003">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-003 · 课程备课</h2>
+          <p class="subtitle">最高 6 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 Python 教材 chapter 10，生成一份 12 页课堂教学 PPT，主题是 Python dictionaries。
+
+目标听众：Python beginner students。
+输出语言：英文。
+风格：clear teaching deck, code-friendly, classroom-ready。
+
+必须覆盖：
+1. dictionary basics: key-value pairs
+2. creating dictionaries with {} and dict()
+3. accessing items
+4. mutability
+5. conditionals with dictionaries
+6. looping / iteration
+7. nested dictionaries
+8. dictionary comprehension
+9. at least 2 runnable code examples
+10. at least 2 classroom exercises
+
+要求：
+- 不要把教材没有讲到的高级主题作为主线。
+- 代码需要可读，等宽字体，不能溢出。
+- 每个概念页都要有一个短例子或 visual explanation。
+- 输出一个可编辑 .pptx。</pre>
+          <p class="source-name">输入：chapter-10.pdf</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-003/chapter-10_input_montage.png" alt="CASE-GEN-003 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-006</td><td>事实依据</td><td>课程 PPT 是否使用给定来源概念和有效 Python 语法准确解释 Python 字典？</td></tr>
+<tr><td>G-007</td><td>事实依据</td><td>PPT 是否避免偏题或无来源支持的 Python 内容，并让例子扎根于字典课程？</td></tr>
+<tr><td>C-003</td><td>覆盖度</td><td>课程 PPT 是否覆盖从基础、例子、练习到学习者检查的字典课程路径？</td></tr>
+<tr><td>N-003</td><td>叙事</td><td>课程 PPT 是否从概念到例子再到练习逐步推进，让学习者能跟上？</td></tr>
+<tr><td>V-004</td><td>视觉</td><td>课程 PPT 是否为定义、代码、例子和练习使用可读的教学布局？</td></tr>
+<tr><td>E-003</td><td>可编辑性</td><td>课程文本、代码片段、例子和练习是否作为结构化 PowerPoint 对象可编辑？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>4分6秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-003_bbac47ca5e.pptx">PPTX</a></td><td><strong>6/6</strong></td><td><a href="cell_eval_reports/CASE-GEN-003_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-003_workbuddy/CASE-GEN-003_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-003_workbuddy/CASE-GEN-003_montage.png" alt="CASE-GEN-003 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-GEN-003_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-003_dde18fe049.pptx">PPTX</a></td><td><strong>6/6</strong></td><td><a href="cell_eval_reports/CASE-GEN-003_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-003_pptmaster/CASE-GEN-003_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-003_pptmaster/CASE-GEN-003_pptmaster_montage.png" alt="CASE-GEN-003 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-003_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="html_exports/5b60b07a-6c27-47f8-930e-a507846519b8_d0dbdd6f3d/index.html">产出</a></td><td><strong>5/6</strong></td><td><a href="cell_eval_reports/CASE-GEN-003_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-003_opendesign/CASE-GEN-003_contact.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-003_opendesign/CASE-GEN-003_contact.png" alt="CASE-GEN-003 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-003_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-004">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-004 · 传播活动简报</h2>
+          <p class="subtitle">最高 6 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 FAO / WHO World Food Safety Day 2024 communication toolkit，生成一份 10 页 campaign briefing PPT。
+
+目标听众：政府、食品企业、NGO campaign partners。
+输出语言：英文。
+风格：public-health campaign briefing, authoritative but accessible。
+
+必须覆盖：
+1. campaign theme: Food safety: prepare for the unexpected
+2. why food safety emergencies matter
+3. target audiences: governments, food businesses, consumers
+4. 600 million people annually affected by foodborne illnesses, if supported by the source
+5. INFOSAN network&#x27;s role
+6. recommended actions for each stakeholder group
+7. campaign messages and activation ideas
+8. partner-ready call to action
+
+要求：
+- 必须保持 FAO/WHO 公共卫生传播语气，不要变成商业广告。
+- 任何统计数字必须来自 source。
+- 至少 1 页做 stakeholder action matrix。
+- 输出一个可编辑 .pptx。</pre>
+          <p class="source-name">输入：wfsd2024-communication-toolkit.pdf</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-004/wfsd2024-communication-toolkit_input_montage.png" alt="CASE-GEN-004 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-008</td><td>事实依据</td><td>传播简报是否准确认定 2024 年世界食品安全日、日期/主题、牵头机构和来源支持的全球食品安全统计？</td></tr>
+<tr><td>G-009</td><td>事实依据</td><td>利益相关方行动、INFOSAN 引用和传播信息是否扎根于来源，而不是泛泛公共卫生建议？</td></tr>
+<tr><td>C-004</td><td>覆盖度</td><td>传播活动 PPT 是否覆盖主题、应急背景、利益相关方行动、激活创意、渠道/素材和面向公众的信息纪律？</td></tr>
+<tr><td>N-004</td><td>叙事</td><td>传播简报是否从紧迫性和主题推进到利益相关方行动与执行计划？</td></tr>
+<tr><td>V-005</td><td>视觉</td><td>传播 PPT 是否具备清晰的公共传播层级、利益相关方分组和可直接使用的激活页？</td></tr>
+<tr><td>EF-002</td><td>效率</td><td>智能体是否在生成预算内为 CASE-GEN-004 产出完整有效 PPTX，且无需评测端修复？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>3分6秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-004_1dabddc99c.pptx">PPTX</a></td><td><strong>6/6</strong></td><td><a href="cell_eval_reports/CASE-GEN-004_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-004_workbuddy/CASE-GEN-004_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-004_workbuddy/CASE-GEN-004_montage.png" alt="CASE-GEN-004 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-GEN-004_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-004_4ec393d6c9.pptx">PPTX</a></td><td><strong>6/6</strong></td><td><a href="cell_eval_reports/CASE-GEN-004_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-004_pptmaster/CASE-GEN-004_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-004_pptmaster/CASE-GEN-004_pptmaster_montage.png" alt="CASE-GEN-004 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-004_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="html_exports/oasn-case-gen-004-wfsd-campaign-briefing-benchmark-dfc9_f55b0a8f01/index.html">产出</a></td><td><strong>6/6</strong></td><td><a href="cell_eval_reports/CASE-GEN-004_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-004_opendesign/CASE-GEN-004_contact.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-004_opendesign/CASE-GEN-004_contact.png" alt="CASE-GEN-004 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-004_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-005">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-005 · 学术论文报告</h2>
+          <p class="subtitle">最高 7 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 ECCV 2024 paper PDF，生成一份 8 页 lab reading group presentation。
+
+目标听众：computer vision graduate students。
+输出语言：英文。
+风格：academic, concise, method-first。
+
+必须覆盖：
+1. paper title / authors / venue
+2. research problem and motivation
+3. key method idea
+4. model / pipeline / algorithm overview
+5. experimental setup
+6. main quantitative results
+7. qualitative examples or figure-based explanation if source contains them
+8. limitations / discussion questions
+
+要求：
+- 所有 claim 必须能追溯到 paper。
+- 不要把 abstract 直接拆成 8 页。
+- 至少 1 页要复现或重新绘制 paper 中的重要 method/experiment 图示，不能只是截图堆叠。
+- 输出一个可编辑 .pptx。</pre>
+          <p class="source-name">输入：deckbench_eccv1041_paper.pdf</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-005/deckbench_eccv1041_paper_input_montage.png" alt="CASE-GEN-005 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-010</td><td>事实依据</td><td>学术 PPT 是否正确识别论文，并准确概括研究问题、动机和 Infinity Brush 方法？</td></tr>
+<tr><td>G-011</td><td>事实依据</td><td>实验主张、数字结果、对比和局限是否有来源支持且没有夸大？</td></tr>
+<tr><td>C-005</td><td>覆盖度</td><td>学术 PPT 是否覆盖来源身份、问题、方法、实验、结果、局限和讨论启示？</td></tr>
+<tr><td>N-005</td><td>叙事</td><td>学术 PPT 是否形成从问题到方法、证据、局限和讨论的研究报告论证？</td></tr>
+<tr><td>V-006</td><td>视觉</td><td>学术 PPT 是否把图、示意图和结果表整合成适合研究报告的可读页面？</td></tr>
+<tr><td>CH-004</td><td>图表</td><td>研究结果图表/表格是否准确对应 Infinity Brush 论文，并标注指标、数据集和方法，便于读者解读？</td></tr>
+<tr><td>E-004</td><td>可编辑性</td><td>学术报告标题、解释文本、关键示意图和结果表/图是否在 PPTX 中可维护？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>5分10秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-005_9a04f1588d.pptx">PPTX</a></td><td><strong>7/7</strong></td><td><a href="cell_eval_reports/CASE-GEN-005_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-005_workbuddy/CASE-GEN-005_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-005_workbuddy/CASE-GEN-005_montage.png" alt="CASE-GEN-005 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-GEN-005_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-005_654b142519.pptx">PPTX</a></td><td><strong>7/7</strong></td><td><a href="cell_eval_reports/CASE-GEN-005_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-005_pptmaster/CASE-GEN-005_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-005_pptmaster/CASE-GEN-005_pptmaster_montage.png" alt="CASE-GEN-005 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-005_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="html_exports/26948c2a-6371-46b6-916f-5523f7d8fd75_8157ce8b5c/index.html">产出</a></td><td><strong>6/7</strong></td><td><a href="cell_eval_reports/CASE-GEN-005_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-005_opendesign/CASE-GEN-005_contact.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-005_opendesign/CASE-GEN-005_contact.png" alt="CASE-GEN-005 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-005_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-EDIT-006">
+      <div class="case-head">
+        <div>
+          <h2>CASE-EDIT-006 · 局部字体修改</h2>
+          <p class="subtitle">最高 3 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">On slide 8, increase the font size of all text by 2 points, but do not change the main title.</pre>
+          <p class="source-name">输入：FontSizePlus2Slide8TestA.pptx</p>
+          <img class="input-preview" src="assets/input_previews/CASE-EDIT-006/FontSizePlus2Slide8TestA_input_montage.png" alt="CASE-EDIT-006 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>E-005</td><td>可编辑性</td><td>局部字体修改后，目标文本是否仍是可编辑文本，而不是被栅格化或转成不可编辑图片？</td></tr>
+<tr><td>R-001</td><td>修改稳定性</td><td>编辑是否只把要求的字体修改应用到精确目标页/文本对象？</td></tr>
+<tr><td>R-002</td><td>修改稳定性</td><td>局部字体修改是否保留非目标页内容、布局、主题、图片和页数？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>1分13秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-EDIT-006_38a50f536d.pptx">PPTX</a></td><td><strong>3/3</strong></td><td><a href="cell_eval_reports/CASE-EDIT-006_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-006_workbuddy/CASE-EDIT-006_workbuddy_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-006_workbuddy/CASE-EDIT-006_workbuddy_before_after.png" alt="CASE-EDIT-006 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/manus_lite_CASE-EDIT-006_65930d56d8.pptx">PPTX</a></td><td><strong>3/3</strong></td><td><a href="cell_eval_reports/CASE-EDIT-006_manus_lite.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-006_manus_lite/CASE-EDIT-006_manus_lite_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-006_manus_lite/CASE-EDIT-006_manus_lite_before_after.png" alt="CASE-EDIT-006 Manus 1.6 Lite screenshot"></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-EDIT-006_da824778bd.pptx">PPTX</a></td><td><strong>3/3</strong></td><td><a href="cell_eval_reports/CASE-EDIT-006_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-006_pptmaster/CASE-EDIT-006_pptmaster_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-006_pptmaster/CASE-EDIT-006_pptmaster_before_after.png" alt="CASE-EDIT-006 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-006_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/output_a43e2632a3.pptx">PPTX</a></td><td><strong>3/3</strong></td><td><a href="cell_eval_reports/CASE-EDIT-006_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-006_opendesign/CASE-EDIT-006_opendesign_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-006_opendesign/CASE-EDIT-006_opendesign_before_after.png" alt="CASE-EDIT-006 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-006_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-EDIT-007">
+      <div class="case-head">
+        <div>
+          <h2>CASE-EDIT-007 · 文本转图表</h2>
+          <p class="subtitle">最高 6 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">On slide 8, convert the text data showing uninsured rates into a line chart with markers. Also, create a custom legend for the chart on the right.</pre>
+          <p class="source-name">输入：LineGraph_TestA.pptx</p>
+          <img class="input-preview" src="assets/input_previews/CASE-EDIT-007/LineGraph_TestA_input_montage.png" alt="CASE-EDIT-007 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>V-007</td><td>视觉</td><td>编辑后的页面是否以清晰布局、可读标签和与原风格融合的视觉方式呈现新图表？</td></tr>
+<tr><td>CH-005</td><td>图表</td><td>编辑是否把所有要求的文本数据点正确提取到图表数据中？</td></tr>
+<tr><td>CH-006</td><td>图表</td><td>编辑是否按要求把文本数据转换成带标记点的原生可编辑折线图？</td></tr>
+<tr><td>CH-007</td><td>图表</td><td>图表数值、坐标轴、图例和标签是否与提示词中的文本数据一致？</td></tr>
+<tr><td>E-006</td><td>可编辑性</td><td>生成的折线图是否可编辑，图表数据和标签是否可供后续 PowerPoint 修改？</td></tr>
+<tr><td>EF-003</td><td>效率</td><td>智能体是否在单轮编辑预算内完成 CASE-EDIT-007 并返回有效修改后的 PPTX？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>1分39秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-EDIT-007_2de6c610e7.pptx">PPTX</a></td><td><strong>6/6</strong></td><td><a href="cell_eval_reports/CASE-EDIT-007_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-007_workbuddy/CASE-EDIT-007_workbuddy_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-007_workbuddy/CASE-EDIT-007_workbuddy_before_after.png" alt="CASE-EDIT-007 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/manus_lite_CASE-EDIT-007_d04dec4c42.pptx">PPTX</a></td><td><strong>6/6</strong></td><td><a href="cell_eval_reports/CASE-EDIT-007_manus_lite.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-007_manus_lite/CASE-EDIT-007_manus_lite_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-007_manus_lite/CASE-EDIT-007_manus_lite_before_after.png" alt="CASE-EDIT-007 Manus 1.6 Lite screenshot"></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-EDIT-007_89c3bc1ce5.pptx">PPTX</a></td><td><strong>6/6</strong></td><td><a href="cell_eval_reports/CASE-EDIT-007_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-007_pptmaster/CASE-EDIT-007_pptmaster_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-007_pptmaster/CASE-EDIT-007_pptmaster_before_after.png" alt="CASE-EDIT-007 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-007_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/output_75a7b8cb0d.pptx">PPTX</a></td><td><strong>5/6</strong></td><td><a href="cell_eval_reports/CASE-EDIT-007_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-007_opendesign/CASE-EDIT-007_opendesign_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-007_opendesign/CASE-EDIT-007_opendesign_before_after.png" alt="CASE-EDIT-007 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-007_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-EDIT-008R">
+      <div class="case-head">
+        <div>
+          <h2>CASE-EDIT-008R · 原始指标仪表盘</h2>
+          <p class="subtitle">最高 8 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">On slide 1, replace the raw Q2 growth metrics dump with a polished executive dashboard.
+
+Use the table and notes on slide 1 as the source of truth. Keep slides 2 and 3 unchanged.
+
+Dashboard requirements:
+1. Add KPI cards for total Q2 revenue, total paid conversions, and blended CAC per paid conversion.
+2. Create an editable monthly revenue chart for Apr, May, and Jun.
+3. Create an editable channel efficiency view that compares revenue, paid conversions, CAC, and M30 retention.
+4. Add one concise recommendation callout that distinguishes Referral, Search, Paid Social, and Partner.
+5. Use the brand guardrail on slide 2 for color and visual style.
+
+Constraints:
+- Do not add or delete slides.
+- Do not invent data or use values outside slide 1.
+- Charts should be native PowerPoint charts or structured editable visuals, not screenshots.
+- The final slide should look like an executive dashboard, not a recolored table.</pre>
+          <p class="source-name">输入：RevenueRetentionDashboard_RawData_TestA.pptx</p>
+          <img class="input-preview" src="assets/input_previews/CASE-EDIT-008R/RevenueRetentionDashboard_RawData_TestA_input_montage.png" alt="CASE-EDIT-008R 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>N-006</td><td>叙事</td><td>修改后的页面是否像高管仪表盘，带有清晰的 Q2 表现结论和建议，而不是原始表格换皮？</td></tr>
+<tr><td>V-008</td><td>视觉</td><td>第 1 页是否变成包含 KPI 卡、图表层级和清晰建议标注的高管仪表盘？</td></tr>
+<tr><td>V-009</td><td>视觉</td><td>重设计后的仪表盘是否遵循第 2 页品牌约束，并且没有严重溢出、标签重叠或不可读图表元素？</td></tr>
+<tr><td>CH-008</td><td>图表</td><td>仪表盘 KPI 卡或摘要指标是否根据原始表格正确计算，包括 Q2 收入、付费转化和 blended CAC？</td></tr>
+<tr><td>CH-009</td><td>图表</td><td>仪表盘图表是否准确呈现 4、5、6 月收入，并区分 Search、Paid Social、Referral 和 Partner？</td></tr>
+<tr><td>CH-010</td><td>图表</td><td>仪表盘建议是否正确使用 CAC 和留存证据，尤其是在出现 Referral 强、Paid Social 弱时反映这些洞察？</td></tr>
+<tr><td>E-007</td><td>可编辑性</td><td>重设计后的仪表盘 KPI 块、图表、标签和建议标注是否是可编辑的 PowerPoint 对象？</td></tr>
+<tr><td>R-003</td><td>修改稳定性</td><td>CASE-EDIT-008R 是否把第 1 页改成仪表盘，同时保留第 2、3 页并让 PPT 保持 3 页？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>9分53秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-EDIT-008R_57966483bc.pptx">PPTX</a></td><td><strong>8/8</strong></td><td><a href="cell_eval_reports/CASE-EDIT-008R_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-008R_workbuddy/CASE-EDIT-008R_workbuddy_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-008R_workbuddy/CASE-EDIT-008R_workbuddy_before_after.png" alt="CASE-EDIT-008R WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-EDIT-008R_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-EDIT-008R_dea1549712.pptx">PPTX</a></td><td><strong>8/8</strong></td><td><a href="cell_eval_reports/CASE-EDIT-008R_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-008R_pptmaster/CASE-EDIT-008R_pptmaster_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-008R_pptmaster/CASE-EDIT-008R_pptmaster_before_after.png" alt="CASE-EDIT-008R Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-008R_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/opendesign_CASE-EDIT-008R_e29d54a46b.pptx">PPTX</a></td><td><strong>8/8</strong></td><td><a href="cell_eval_reports/CASE-EDIT-008R_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-008R_opendesign/CASE-EDIT-008R_opendesign_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-008R_opendesign/CASE-EDIT-008R_opendesign_before_after.png" alt="CASE-EDIT-008R OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-008R_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-EDIT-009">
+      <div class="case-head">
+        <div>
+          <h2>CASE-EDIT-009 · 视觉重设计</h2>
+          <p class="subtitle">最高 5 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">Overhaul this presentation to be more professional and visually engaging. Redesign the title slide with a modern two-column layout. On the second slide, organize the rock types into a clear three-column format with images and summarized descriptions. Finally, transform the text-heavy rock cycle on the third slide into a clean, visual diagram.</pre>
+          <p class="source-name">输入：EducationalRockRecognition_TestA.pptx</p>
+          <img class="input-preview" src="assets/input_previews/CASE-EDIT-009/CASE-EDIT-009_input_montage.png" alt="CASE-EDIT-009 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>V-010</td><td>视觉</td><td>重设计标题页是否在保留岩石识别主题的同时，形成更强、更干净的开场？</td></tr>
+<tr><td>V-011</td><td>视觉</td><td>重设计内容页是否用更清晰的结构、分组和视觉可扫读性组织岩石识别信息？</td></tr>
+<tr><td>V-012</td><td>视觉</td><td>视觉重设计是否在目标 PPT 中形成一致设计系统，而不是孤立的一次性页面样式？</td></tr>
+<tr><td>V-013</td><td>视觉</td><td>视觉素材、图标或示意图是否与岩石/地质/识别相关，并且整合方式不误导观众？</td></tr>
+<tr><td>V-014</td><td>视觉</td><td>视觉重设计后的 PPT 是否没有明显面向客户可见的布局缺陷？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>2分38秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-EDIT-009_a58dc1583f.pptx">PPTX</a></td><td><strong>4/5</strong></td><td><a href="cell_eval_reports/CASE-EDIT-009_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-009_workbuddy/CASE-EDIT-009_workbuddy_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-009_workbuddy/CASE-EDIT-009_workbuddy_before_after.png" alt="CASE-EDIT-009 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX</strong></td><td><a href="cell_eval_reports/CASE-EDIT-009_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-EDIT-009_4f2c15ebb3.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-EDIT-009_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-009_pptmaster/CASE-EDIT-009_pptmaster_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-009_pptmaster/CASE-EDIT-009_pptmaster_before_after.png" alt="CASE-EDIT-009 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-009_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/output_db8166052f.pptx">PPTX</a></td><td><strong>4/5</strong></td><td><a href="cell_eval_reports/CASE-EDIT-009_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-009_opendesign/CASE-EDIT-009_opendesign_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-009_opendesign/CASE-EDIT-009_opendesign_before_after.png" alt="CASE-EDIT-009 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-009_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-EDIT-010">
+      <div class="case-head">
+        <div>
+          <h2>CASE-EDIT-010 · 截图重建为可编辑对象</h2>
+          <p class="subtitle">最高 4 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">On slide 12, there is a screenshot of a title slide. Recreate this screenshot as a new, fully editable slide. Use the &#x27;Title Slide&#x27; layout, extract the text and the crest from the image, and place them as separate, editable elements.</pre>
+          <p class="source-name">输入：UB_Title_Screenshot_TestA.pptx</p>
+          <img class="input-preview" src="assets/input_previews/CASE-EDIT-010/CASE-EDIT-010_input_montage.png" alt="CASE-EDIT-010 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>V-015</td><td>视觉</td><td>重建后的可编辑页面是否足够贴近截图，同时提升可维护性？</td></tr>
+<tr><td>E-008</td><td>可编辑性</td><td>截图转可编辑任务是否用可编辑重建对象替换截图，而不是保留截图作为页面主体？</td></tr>
+<tr><td>E-009</td><td>可编辑性</td><td>截图中可见文本是否以合理字体、字号和位置保真度重建为可编辑文本？</td></tr>
+<tr><td>E-010</td><td>可编辑性</td><td>主要形状、图标、校徽/身份标记和布局元素是否被重建或拆分，使页面可维护？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>2分24秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-EDIT-010_a88a71ae53.pptx">PPTX</a></td><td><strong>1/4</strong></td><td><a href="cell_eval_reports/CASE-EDIT-010_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-010_workbuddy/CASE-EDIT-010_workbuddy_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-010_workbuddy/CASE-EDIT-010_workbuddy_before_after.png" alt="CASE-EDIT-010 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-EDIT-010_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-EDIT-010_2f8a4ac2b6.pptx">PPTX</a></td><td><strong>4/4</strong></td><td><a href="cell_eval_reports/CASE-EDIT-010_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-010_pptmaster/CASE-EDIT-010_pptmaster_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-010_pptmaster/CASE-EDIT-010_pptmaster_before_after.png" alt="CASE-EDIT-010 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-010_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/output_e70c7d5162.pptx">PPTX</a></td><td><strong>4/4</strong></td><td><a href="cell_eval_reports/CASE-EDIT-010_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-010_opendesign/CASE-EDIT-010_opendesign_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-010_opendesign/CASE-EDIT-010_opendesign_before_after.png" alt="CASE-EDIT-010 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-010_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-EDIT-011">
+      <div class="case-head">
+        <div>
+          <h2>CASE-EDIT-011 · 多轮级联编辑</h2>
+          <p class="subtitle">最高 8 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">Turn 1:
+Please apply a consistent, professional theme to this presentation. Change all slide titles to a dark blue and all body text to a dark gray. Preserve the original content.
+
+Turn 2:
+On slide 4, replace the static image of the bar chart with an actual, editable column chart. Keep the chart data faithful to the original image. Arrange the new chart and its explanatory text clearly.
+
+Turn 3:
+On slide 5, rearrange the images and their captions for a better flow. Also add a progress bar at the bottom of every slide, and add a new &quot;Bibliography&quot; slide at the very end with the source URL climate.copernicus.eu. Preserve the numeric citation markers on the original slides.</pre>
+          <p class="source-name">输入：climate_original.pptx</p>
+          <img class="input-preview" src="assets/input_previews/CASE-EDIT-011/climate_original_input_montage.png" alt="CASE-EDIT-011 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>V-016</td><td>视觉</td><td>多轮编辑改动是否与 PPT 视觉融合，且没有造成主题断裂、布局破坏或图表不可读？</td></tr>
+<tr><td>CH-011</td><td>图表</td><td>多轮编辑是否把目标内容替换为要求的原生柱状图，同时保留必要页面内容？</td></tr>
+<tr><td>CH-012</td><td>图表</td><td>CASE-EDIT-011 的图表数值和标签是否忠于要求数据，且没有被后续编辑扭曲？</td></tr>
+<tr><td>E-011</td><td>可编辑性</td><td>多轮级联编辑后，修改文本、主题元素、图表和主要形状是否仍可编辑、可维护？</td></tr>
+<tr><td>R-004</td><td>修改稳定性</td><td>CASE-EDIT-011 中，Turn 1 是否在目标范围应用要求的主题/样式修改，且没有造成意外全局破坏？</td></tr>
+<tr><td>R-005</td><td>修改稳定性</td><td>Turn 2 是否完成其要求修改，同时保留 Turn 1 的所有成功修改？</td></tr>
+<tr><td>R-006</td><td>修改稳定性</td><td>Turn 3 是否完成其要求修改，同时保留 Turn 1 和 Turn 2 的成功状态？</td></tr>
+<tr><td>EF-004</td><td>效率</td><td>智能体是否在多轮编辑预算内完成 CASE-EDIT-011 级联编辑，并产出有效最终 PPTX？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>未记录</td><td>未记录</td><td><a href="downloads/final_0ebc9ff154.pptx">PPTX</a></td><td><strong>7/8</strong></td><td><a href="cell_eval_reports/CASE-EDIT-011_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-011_workbuddy/CASE-EDIT-011_workbuddy_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-011_workbuddy/CASE-EDIT-011_workbuddy_before_after.png" alt="CASE-EDIT-011 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/CASE-EDIT-011_turn1_manus_c9561f6294.pptx">PPTX</a></td><td><strong>仅部分结果</strong></td><td><a href="cell_eval_reports/CASE-EDIT-011_manus_lite.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-011_manus_lite/CASE-EDIT-011_manus_lite_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-011_manus_lite/CASE-EDIT-011_manus_lite_before_after.png" alt="CASE-EDIT-011 Manus 1.6 Lite screenshot"></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-EDIT-011_239c9e7595.pptx">PPTX</a></td><td><strong>8/8</strong></td><td><a href="cell_eval_reports/CASE-EDIT-011_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-011_pptmaster/CASE-EDIT-011_pptmaster_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-011_pptmaster/CASE-EDIT-011_pptmaster_before_after.png" alt="CASE-EDIT-011 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-011_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/final_b15a357984.pptx">PPTX</a></td><td><strong>7/8</strong></td><td><a href="cell_eval_reports/CASE-EDIT-011_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-EDIT-011_opendesign/CASE-EDIT-011_opendesign_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-EDIT-011_opendesign/CASE-EDIT-011_opendesign_before_after.png" alt="CASE-EDIT-011 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-EDIT-011_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-MT-012">
+      <div class="case-head">
+        <div>
+          <h2>CASE-MT-012 · PPTC 多轮编辑</h2>
+          <p class="subtitle">最高 4 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">Turn 1:
+For this task, slide_index is zero-based. Set the font color of title textbox 0 on slide indexes 1, 3, 6, 7, 10, 13, and 15 to black.
+
+Turn 2:
+Set the background of slide indexes 0, 1, and 2 to white.
+
+Turn 3:
+On slide index 3, rotate picture 0 to 75 degrees and set its width to 8. On slide index 4, set picture 0 and picture 1 width to 8.
+
+Turn 4:
+On slide index 3, update picture 0 rotation to 60 degrees.</pre>
+          <p class="source-name">输入：pptc_long_session0_initial.pptx</p>
+          <img class="input-preview" src="assets/input_previews/CASE-MT-012/pptc_long_session0_initial_input_montage.png" alt="CASE-MT-012 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>R-007</td><td>修改稳定性</td><td>在 4 轮 PPTC 风格任务中，标题颜色和背景修改是否应用到指定 0-based 页码，并在后续轮次中保持？</td></tr>
+<tr><td>R-008</td><td>修改稳定性</td><td>在 PPTC 风格任务中，图片宽度和旋转是否正确应用，包括 Turn 4 将第 3 号页 picture 0 更新为 60 度而不是叠加旋转？</td></tr>
+<tr><td>EF-005</td><td>效率</td><td>CASE-MT-012 中，每一轮是否在单轮预算内产出有效中间 PPTX 或状态更新？</td></tr>
+<tr><td>EF-006</td><td>效率</td><td>完整 CASE-MT-012 四轮会话是否在会话预算内完成，并产出有效最终 PPTX？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>未记录</td><td>未记录</td><td><a href="downloads/final_b1d78d13ea.pptx">PPTX</a></td><td><strong>4/4</strong></td><td><a href="cell_eval_reports/CASE-MT-012_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-MT-012_workbuddy/CASE-MT-012_workbuddy_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-MT-012_workbuddy/CASE-MT-012_workbuddy_before_after.png" alt="CASE-MT-012 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-MT-012_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-MT-012_17e85cf4ba.pptx">PPTX</a></td><td><strong>4/4</strong></td><td><a href="cell_eval_reports/CASE-MT-012_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-MT-012_pptmaster/CASE-MT-012_pptmaster_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-MT-012_pptmaster/CASE-MT-012_pptmaster_before_after.png" alt="CASE-MT-012 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-MT-012_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/final_215e10b16d.pptx">PPTX</a></td><td><strong>4/4</strong></td><td><a href="cell_eval_reports/CASE-MT-012_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-MT-012_opendesign/CASE-MT-012_opendesign_before_after.png">前后对比</a><img class="table-thumb" src="assets/evidence/case_table_CASE-MT-012_opendesign/CASE-MT-012_opendesign_before_after.png" alt="CASE-MT-012 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-MT-012_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-013">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-013 · 凹面镜光路</h2>
+          <p class="subtitle">最高 5 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 concave mirror ray optics source notes，生成一份 8 页英文教学 PPT。
+
+目标听众：high-school / early undergraduate physics students。
+输出语言：英文。
+风格：diagram-led physics explainer, clean, precise, classroom-ready。
+
+必须覆盖：
+1. What a concave mirror is, including principal axis, vertex V, focal point F, and center of curvature C.
+2. The three main principal ray rules.
+3. Mirror equation and magnification equation.
+4. A worked example with f = 10 cm and do = 30 cm.
+5. Object-position cases: beyond C, at C, between F and C, at F, inside F.
+6. At least one step-by-step ray diagram.
+7. Common misconceptions.
+8. A short recap or check-your-understanding slide.
+
+要求：
+- Ray diagrams must use editable lines/arrows/shapes and meaningful labels.
+- Do not paste a single textbook screenshot as the main explanation.
+- The diagram directions must be physically meaningful, not decorative.
+- Output an editable .pptx.</pre>
+          <p class="source-name">输入：concave_mirror_ray_optics.md</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-013/text_input_preview.png" alt="CASE-GEN-013 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-012</td><td>事实依据</td><td>PPT 是否按来源正确呈现凹面镜定义、方程、光线规则、物距情形和 worked example？</td></tr>
+<tr><td>C-006</td><td>覆盖度</td><td>PPT 是否覆盖定义、光线规则、方程、物距结果、worked example 和面向学习者的解释？</td></tr>
+<tr><td>V-017</td><td>视觉</td><td>凹面镜 PPT 是否包含可读光线图，标签、箭头方向、物/像方向正确，并有足够空间用于教学？</td></tr>
+<tr><td>V-018</td><td>视觉</td><td>PPT 是否按设置、光线规则、情形和 worked example 的顺序组织图示/表格，帮助学习者递进理解？</td></tr>
+<tr><td>E-012</td><td>可编辑性</td><td>凹面镜光线图是否由可编辑线条、箭头、标签和形状构成，而不是纯截图图示？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>7分46秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-013_5da1990e0a.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-013_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-013_workbuddy/CASE-GEN-013_workbuddy_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-013_workbuddy/CASE-GEN-013_workbuddy_montage.png" alt="CASE-GEN-013 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-GEN-013_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-013_b869b43a09.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-013_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-013_pptmaster/CASE-GEN-013_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-013_pptmaster/CASE-GEN-013_pptmaster_montage.png" alt="CASE-GEN-013 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-013_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/opendesign_CASE-GEN-013_5400bb0b56.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-013_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-013_opendesign/CASE-GEN-013_opendesign_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-013_opendesign/CASE-GEN-013_opendesign_montage.png" alt="CASE-GEN-013 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-013_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-014">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-014 · 热泵系统讲解</h2>
+          <p class="subtitle">最高 5 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 vapor-compression heat pump source notes，生成一份 9 页英文讲解 PPT。
+
+目标听众：facilities team / junior engineering audience。
+输出语言：英文。
+风格：clear systems explainer, structured, technical but accessible。
+
+必须覆盖：
+1. What a heat pump does: moving heat using work input.
+2. Five components: evaporator, compressor, condenser, expansion valve, reversing valve.
+3. Heating-mode refrigerant state sequence.
+4. Heating vs cooling mode comparison.
+5. COP_heating and COP_cooling formulas.
+6. Why COP can be greater than 1.
+7. A qualitative pressure-enthalpy or temperature-state diagram.
+8. Cold-weather capacity limitation.
+9. One practical troubleshooting / operating implication slide.
+
+要求：
+- At least 3 slides should use editable diagrams rather than prose-only explanations.
+- Use arrows to distinguish refrigerant flow, heat flow, and work input.
+- Do not imply that the system creates heat from nothing.
+- Output an editable .pptx.</pre>
+          <p class="source-name">输入：heat_pump_vapor_compression.md</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-014/text_input_preview.png" alt="CASE-GEN-014 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-013</td><td>事实依据</td><td>PPT 是否准确解释蒸汽压缩热泵组件、制热/制冷模式、COP 公式，以及 COP 为什么可以大于 1？</td></tr>
+<tr><td>C-007</td><td>覆盖度</td><td>PPT 是否覆盖组件、制冷剂状态变化、制热/制冷模式、COP 和实际解读？</td></tr>
+<tr><td>V-019</td><td>视觉</td><td>热泵 PPT 是否包含清晰组件流向图，展示制冷剂路径、热流、做功输入和组件作用？</td></tr>
+<tr><td>V-020</td><td>视觉</td><td>PPT 是否用视觉方式比较制热和制冷模式，清楚显示相同点、差异和方向性？</td></tr>
+<tr><td>E-013</td><td>可编辑性</td><td>热泵组件流向图是否由分离的组件、箭头和标签构成，便于编辑？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>6分54秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-014_15113b5c5b.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-014_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-014_workbuddy/CASE-GEN-014_workbuddy_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-014_workbuddy/CASE-GEN-014_workbuddy_montage.png" alt="CASE-GEN-014 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX</strong></td><td><a href="cell_eval_reports/CASE-GEN-014_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-014_18bcfe1639.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-014_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-014_pptmaster/CASE-GEN-014_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-014_pptmaster/CASE-GEN-014_pptmaster_montage.png" alt="CASE-GEN-014 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-014_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/opendesign_CASE-GEN-014_cf3a7634cc.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-014_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-014_opendesign/CASE-GEN-014_opendesign_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-014_opendesign/CASE-GEN-014_opendesign_montage.png" alt="CASE-GEN-014 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-014_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-015">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-015 · Transformer 自注意力</h2>
+          <p class="subtitle">最高 5 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 transformer self-attention source notes，生成一份 10 页英文 technical explainer PPT。
+
+目标听众：product engineers who know basic machine learning but are new to transformers。
+输出语言：英文。
+风格：technical explainer, visual, precise, not marketing。
+
+必须覆盖：
+1. Tokens to embeddings and X shape.
+2. Q, K, V projections and what query/key/value mean.
+3. Scaled dot-product attention formula.
+4. Toy dimension example with n = 4, d_model = 6, num_heads = 2, d_k = 3.
+5. Score matrix and row-wise softmax.
+6. Weighted sum of V.
+7. Multi-head split, parallel heads, concat, output projection.
+8. Causal masking.
+9. Residual connection and layer normalization context.
+10. What self-attention is not: it is not the entire transformer.
+
+要求：
+- Include an editable pipeline diagram.
+- Include a 4-by-4 attention heatmap or matrix visualization.
+- Include a multi-head split/concat diagram.
+- Avoid unsupported training, scaling, or model-performance claims.
+- Output an editable .pptx.</pre>
+          <p class="source-name">输入：transformer_self_attention.md</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-015/text_input_preview.png" alt="CASE-GEN-015 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-014</td><td>事实依据</td><td>PPT 是否准确解释 Transformer 自注意力公式、玩具维度、Q/K/V 角色、softmax 加权和 causal mask 约束？</td></tr>
+<tr><td>C-008</td><td>覆盖度</td><td>PPT 是否覆盖 Q/K/V 投影、分数计算、softmax、加权 value、多头 split/concat、热力图解读和 causal mask？</td></tr>
+<tr><td>V-021</td><td>视觉</td><td>自注意力 PPT 是否包含可读的 4×4 热力图或矩阵可视化，帮助解释 token 间注意力？</td></tr>
+<tr><td>V-022</td><td>视觉</td><td>PPT 是否包含清晰的 split/project/score/softmax/weighted-sum/multi-head 流程图，适合产品工程师理解？</td></tr>
+<tr><td>E-014</td><td>可编辑性</td><td>自注意力流程图和热力图/矩阵是否足够可编辑，可供后续教学或产品团队修改？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>3分59秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-015_759ea085ea.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-015_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-015_workbuddy/CASE-GEN-015_workbuddy_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-015_workbuddy/CASE-GEN-015_workbuddy_montage.png" alt="CASE-GEN-015 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-GEN-015_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-015_97ca19c7e7.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-015_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-015_pptmaster/CASE-GEN-015_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-015_pptmaster/CASE-GEN-015_pptmaster_montage.png" alt="CASE-GEN-015 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-015_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/opendesign_CASE-GEN-015_26b228b9c5.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-015_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-015_opendesign/CASE-GEN-015_opendesign_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-015_opendesign/CASE-GEN-015_opendesign_montage.png" alt="CASE-GEN-015 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-015_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-016">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-016 · 产品增长指标</h2>
+          <p class="subtitle">最高 5 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 product growth metrics CSV 和 data visualization notes，生成一份 7 页英文 growth review PPT。
+
+目标听众：CEO, Head of Growth, Product Lead。
+输出语言：英文。
+风格：executive analytics deck, compact, chart-forward, decision-oriented。
+
+必须覆盖：
+1. Executive summary with 3-4 KPI cards.
+2. Funnel from visits to signups to activated users to paid conversions.
+3. Monthly revenue trend from Jan to Jun 2026.
+4. Revenue composition or stacked view by channel.
+5. Channel efficiency view using CAC per paid conversion and paid conversions or revenue.
+6. Retention / churn signal using retained_m30_pct and churned_paid_users.
+7. Recommended next actions by channel.
+
+要求：
+- Use source data only; do not invent forecast months, channels, or targets.
+- At least 4 slides must include editable native charts or structured editable visualizations.
+- Every chart needs units, labels, and one visible takeaway.
+- Output an editable .pptx.</pre>
+          <p class="source-name">输入：product_growth_metrics_q1_q2_2026.csv, data_viz_notes.md</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-016/text_input_preview.png" alt="CASE-GEN-016 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-015</td><td>事实依据</td><td>增长复盘 PPT 是否只使用给定 CSV/说明，避免编造月份、渠道、KPI、预测或因果解释？</td></tr>
+<tr><td>N-007</td><td>叙事</td><td>增长 PPT 是否从总览动能推进到漏斗/渠道诊断和后续行动，形成指标驱动叙事？</td></tr>
+<tr><td>CH-013</td><td>图表</td><td>KPI 卡和漏斗视觉是否数值正确，包括访问、注册、激活用户、付费转化及相关比率？</td></tr>
+<tr><td>CH-014</td><td>图表</td><td>月度收入和渠道视觉是否按月、按渠道正确汇总 2026 年 1-6 月数据？</td></tr>
+<tr><td>CH-015</td><td>图表</td><td>CAC 和留存/流失视觉是否根据来源定义计算，并使用正确标签？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>5分18秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-016_88348679d7.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-016_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-016_workbuddy/CASE-GEN-016_workbuddy_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-016_workbuddy/CASE-GEN-016_workbuddy_montage.png" alt="CASE-GEN-016 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-GEN-016_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-016_f919893fa8.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-016_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-016_pptmaster/CASE-GEN-016_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-016_pptmaster/CASE-GEN-016_pptmaster_montage.png" alt="CASE-GEN-016 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-016_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/opendesign_CASE-GEN-016_fbc81c9819.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-016_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-016_opendesign/CASE-GEN-016_opendesign_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-016_opendesign/CASE-GEN-016_opendesign_montage.png" alt="CASE-GEN-016 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-016_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+    <section class="case" id="CASE-GEN-017">
+      <div class="case-head">
+        <div>
+          <h2>CASE-GEN-017 · 结账实验复盘</h2>
+          <p class="subtitle">最高 5 分</p>
+        </div>
+      </div>
+      <div class="case-grid">
+        <div class="prompt-card">
+          <h3>原始提示词</h3>
+          <pre class="original-prompt">请基于我上传的 checkout experiment CSV 和 data visualization notes，生成一份 6 页英文 experiment readout PPT。
+
+目标听众：Product, Growth, Design, Engineering leadership。
+输出语言：英文。
+风格：data-driven decision memo, rigorous, concise。
+
+必须覆盖：
+1. Experiment setup: Control vs Redesign, segments, metrics.
+2. Overall purchase conversion rate and checkout completion rate comparison.
+3. Segment-level conversion comparison.
+4. Revenue per session and gross revenue comparison.
+5. Guardrails: refund rate, support-ticket rate, and page-load latency.
+6. Recommendation slide: launch / hold / iterate, with caveats.
+
+要求：
+- Do not claim statistical significance unless the source provides a test result.
+- Keep conversion rate and checkout completion rate clearly separate.
+- At least 3 slides must include editable native charts or structured editable visualizations.
+- Output an editable .pptx.</pre>
+          <p class="source-name">输入：checkout_experiment_results.csv, data_viz_notes.md</p>
+          <img class="input-preview" src="assets/input_previews/CASE-GEN-017/text_input_preview.png" alt="CASE-GEN-017 输入预览">
+        </div>
+        <div class="rubric-card">
+          <h3>v0.2 打分项</h3>
+          <table class="rubric"><tbody><tr><td>G-016</td><td>事实依据</td><td>实验复盘是否准确使用给定 control/redesign 数据、分群和护栏指标，且没有无依据的统计显著性主张？</td></tr>
+<tr><td>N-008</td><td>叙事</td><td>实验复盘是否用转化、收入、分群和护栏指标支持清晰的发布/暂缓/迭代决策？</td></tr>
+<tr><td>CH-016</td><td>图表</td><td>整体购买转化、结账完成率和每会话收入是否为 Control 与 Redesign 正确计算并展示？</td></tr>
+<tr><td>CH-017</td><td>图表</td><td>图表或结构化视觉是否包含分群结果，以及退款、支持工单和/或页面加载延迟等护栏指标？</td></tr>
+<tr><td>CH-018</td><td>图表</td><td>是否至少有 3 个实验图表或结构化可视化可编辑、可读，并配有有意义的结论？</td></tr></tbody></table>
+        </div>
+      </div>
+      <h3>用例结果表</h3>
+      
+      <div class="table-scroll">
+        <table class="case-result">
+          <thead><tr><th>智能体</th><th>语言模型（主键）</th><th>图像模型（主键）</th><th>耗时</th><th>令牌消耗/费用</th><th>产出</th><th>综合评分</th><th>详细评分（评估报告）</th><th>截图</th></tr></thead>
+          <tbody><tr><td><strong>WorkBuddy</strong></td><td>Auto</td><td>Auto</td><td>2分13秒</td><td>未记录</td><td><a href="downloads/workbuddy_CASE-GEN-017_4bf7a3fad4.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-017_workbuddy.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-017_workbuddy/CASE-GEN-017_workbuddy_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-017_workbuddy/CASE-GEN-017_workbuddy_montage.png" alt="CASE-GEN-017 WorkBuddy screenshot"></td></tr><tr><td><strong>Manus 1.6 Lite</strong></td><td>1.6 lite</td><td>unknown</td><td>未记录</td><td>未记录</td><td><span class="muted">日志未公开</span></td><td><strong>无 PPTX / 额度不足</strong></td><td><a href="cell_eval_reports/CASE-GEN-017_manus_lite.md">md</a></td><td><span class="muted">日志未公开</span></td></tr><tr><td><strong>Codex（ppt master）</strong></td><td>gpt-5.5 extra high</td><td>nb</td><td>未记录</td><td>未记录</td><td><a href="downloads/pptmaster_CASE-GEN-017_2d4ffd9eb1.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-017_pptmaster.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-017_pptmaster/CASE-GEN-017_pptmaster_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-017_pptmaster/CASE-GEN-017_pptmaster_montage.png" alt="CASE-GEN-017 Codex（ppt master） screenshot"></td></tr><tr><td><strong>OpenClaw（ppt master glm5.2）</strong></td><td>glm5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-017_openclaw.md">md</a></td><td>缺失</td></tr><tr><td><strong>OpenDesign</strong></td><td>default</td><td>unknown</td><td>未记录</td><td>未记录</td><td><a href="downloads/opendesign_CASE-GEN-017_94c46d5c16.pptx">PPTX</a></td><td><strong>5/5</strong></td><td><a href="cell_eval_reports/CASE-GEN-017_opendesign.md">md</a></td><td><a href="assets/evidence/case_table_CASE-GEN-017_opendesign/CASE-GEN-017_opendesign_montage.png">截图</a><img class="table-thumb" src="assets/evidence/case_table_CASE-GEN-017_opendesign/CASE-GEN-017_opendesign_montage.png" alt="CASE-GEN-017 OpenDesign screenshot"></td></tr><tr><td><strong>OpenAgents（ppt master glm5.2）</strong></td><td>GLM-5.2</td><td>nb</td><td>未记录</td><td>未记录</td><td>缺失</td><td><strong>缺失</strong></td><td><a href="cell_eval_reports/CASE-GEN-017_openagents.md">md</a></td><td>缺失</td></tr></tbody>
+        </table>
+      </div>
+    
+    </section>
+    
+  </main>
+</body>
+</html>
