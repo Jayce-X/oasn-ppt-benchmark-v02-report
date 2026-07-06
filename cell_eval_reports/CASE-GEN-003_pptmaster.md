@@ -1,0 +1,52 @@
+# CASE-GEN-003 详细评分 - Codex（ppt master）
+
+状态：正式流程新跑结果
+分数：6/6
+
+## 摘要
+
+正式 ppt-master 流程通过了这个用例的全部检查。内容能回到来源，结构完整；这个用例要求的视觉、图表和可编辑对象也都达标。
+
+产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/CASE-GEN-003/pptmaster_CASE-GEN-003.pptx`
+
+截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/pptmaster/CASE-GEN-003/CASE-GEN-003_pptmaster_montage.png`
+
+日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/official_runs/20260703_110830/projects/pptmaster_v02_case_gen_003_20260703_110830_ppt169_20260703/official_workflow_receipt.md`
+
+## 打分项结果
+
+### G-006（事实依据）: 通过
+
+课程 PPT 是否使用给定来源概念和有效 Python 语法准确解释 Python 字典？
+
+通过。
+
+### G-007（事实依据）: 通过
+
+PPT 是否避免偏题或无来源支持的 Python 内容，并让例子扎根于字典课程？
+
+通过。
+
+### C-003（覆盖度）: 通过
+
+课程 PPT 是否覆盖从基础、例子、练习到学习者检查的字典课程路径？
+
+通过。
+
+### N-003（叙事）: 通过
+
+课程 PPT 是否从概念到例子再到练习逐步推进，让学习者能跟上？
+
+通过。
+
+### V-004（视觉）: 通过
+
+课程 PPT 是否为定义、代码、例子和练习使用可读的教学布局？
+
+通过。
+
+### E-003（可编辑性）: 通过
+
+课程文本、代码片段、例子和练习是否作为结构化 PowerPoint 对象可编辑？
+
+通过。

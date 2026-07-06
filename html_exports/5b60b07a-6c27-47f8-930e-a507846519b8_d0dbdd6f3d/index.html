@@ -1,0 +1,1175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python Dictionaries - Teaching Deck</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --paper: #ffffff;
+      --ink: #172033;
+      --muted: #5d687a;
+      --line: #d7dee9;
+      --blue: #2563eb;
+      --green: #0f9f6e;
+      --amber: #d38b16;
+      --red: #c2413b;
+      --code-bg: #101828;
+      --code-ink: #eef5ff;
+      --code-dim: #9fb2cf;
+      --shadow: 0 24px 80px rgba(23, 32, 51, 0.16);
+      --font-display: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --font-body: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --font-mono: "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Consolas, ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      overflow: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .deck-viewport {
+      position: fixed;
+      inset: 0;
+      display: block;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 14% 9%, rgba(37, 99, 235, 0.11), transparent 26%),
+        linear-gradient(135deg, #f8fafc 0%, #edf3fb 100%);
+    }
+
+    #stage {
+      position: absolute;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: top left;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      padding: 72px 84px 76px;
+      background: var(--paper);
+      overflow: hidden;
+    }
+
+    .slide.active {
+      display: grid;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(37, 99, 235, 0.045) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(37, 99, 235, 0.035) 1px, transparent 1px);
+      background-size: 96px 96px;
+      mask-image: linear-gradient(90deg, black 0%, transparent 58%);
+    }
+
+    .kicker {
+      margin: 0 0 18px;
+      color: var(--blue);
+      font-family: var(--font-mono);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 1120px;
+      font-family: var(--font-display);
+      font-size: 84px;
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 60px;
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 31px;
+      line-height: 1.2;
+    }
+
+    .lead {
+      max-width: 900px;
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 33px;
+      line-height: 1.35;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 23px;
+      line-height: 1.36;
+    }
+
+    .note {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .two-col {
+      position: relative;
+      z-index: 1;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 58px;
+      align-items: stretch;
+    }
+
+    .three-col {
+      position: relative;
+      z-index: 1;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      align-items: stretch;
+    }
+
+    .stack {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .title-slide {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 70px;
+      align-items: center;
+    }
+
+    .title-panel {
+      position: relative;
+      z-index: 1;
+    }
+
+    .objective-list,
+    .bullet-list {
+      display: grid;
+      gap: 17px;
+      margin-top: 34px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .objective-list li,
+    .bullet-list li {
+      position: relative;
+      padding-left: 34px;
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1.32;
+    }
+
+    .objective-list li::before,
+    .bullet-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 14px;
+      height: 14px;
+      border: 4px solid var(--blue);
+      border-radius: 50%;
+      background: var(--paper);
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 10px 34px rgba(23, 32, 51, 0.08);
+    }
+
+    .lesson-card {
+      padding: 34px;
+    }
+
+    .callout {
+      border-left: 8px solid var(--blue);
+      padding: 26px 28px;
+      background: #f1f6ff;
+    }
+
+    .exercise {
+      border-color: rgba(211, 139, 22, 0.34);
+      background: #fff8ed;
+    }
+
+    .exercise .tag {
+      color: #8a5700;
+      background: rgba(211, 139, 22, 0.14);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      color: var(--blue);
+      background: rgba(37, 99, 235, 0.1);
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .code-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      border-radius: 20px;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      box-shadow: 0 22px 52px rgba(16, 24, 40, 0.22);
+    }
+
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 62px;
+      padding: 0 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--code-dim);
+      font-family: var(--font-mono);
+      font-size: 18px;
+    }
+
+    .copy-btn {
+      min-height: 38px;
+      padding: 4px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      color: var(--code-ink);
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+    }
+
+    .copy-btn:focus-visible,
+    .nav-btn:focus-visible {
+      outline: 4px solid rgba(37, 99, 235, 0.34);
+      outline-offset: 3px;
+    }
+
+    pre {
+      margin: 0;
+      padding: 28px 30px;
+      white-space: pre-wrap;
+      color: var(--code-ink);
+      font-family: var(--font-mono);
+      font-size: 25px;
+      line-height: 1.34;
+      tab-size: 4;
+    }
+
+    .compact-code pre {
+      font-size: 23px;
+      line-height: 1.32;
+    }
+
+    .mini-code pre {
+      font-size: 21px;
+      line-height: 1.28;
+    }
+
+    .output {
+      margin-top: 18px;
+      border-radius: 16px;
+      background: #ecfdf5;
+      border: 1px solid #bce9d7;
+      color: #075d43;
+      font-family: var(--font-mono);
+      font-size: 23px;
+      line-height: 1.34;
+      padding: 18px 22px;
+      white-space: pre-wrap;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .concept {
+      min-height: 132px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    .concept strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: 27px;
+    }
+
+    .concept span {
+      color: var(--muted);
+      font-size: 23px;
+      line-height: 1.32;
+    }
+
+    .pair-board {
+      display: grid;
+      gap: 22px;
+      padding: 34px;
+      align-self: center;
+    }
+
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 72px 1fr;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 76px;
+      padding: 10px 22px;
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      font-family: var(--font-mono);
+      font-size: 27px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .pill.key {
+      border-color: rgba(37, 99, 235, 0.34);
+      background: #eff6ff;
+      color: #1742a0;
+    }
+
+    .pill.value {
+      border-color: rgba(15, 159, 110, 0.34);
+      background: #ecfdf5;
+      color: #06724f;
+    }
+
+    .arrow {
+      color: var(--muted);
+      font-size: 42px;
+      text-align: center;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 26px;
+      margin-top: 28px;
+    }
+
+    .method {
+      min-height: 220px;
+      padding: 28px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .method h3 {
+      margin-bottom: 18px;
+    }
+
+    .method code,
+    .inline-code {
+      padding: 2px 7px;
+      border-radius: 8px;
+      background: #edf2fb;
+      color: #1742a0;
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+    }
+
+    .svg-wrap {
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      min-height: 600px;
+    }
+
+    .short-visual {
+      min-height: 330px;
+    }
+
+    svg text {
+      font-family: var(--font-body);
+      fill: var(--ink);
+    }
+
+    .footer {
+      position: absolute;
+      left: 84px;
+      right: 84px;
+      bottom: 36px;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 18px;
+    }
+
+    .nav {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border: 1px solid rgba(215, 222, 233, 0.8);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 14px 40px rgba(23, 32, 51, 0.12);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-btn {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: #172033;
+      color: #fff;
+      cursor: pointer;
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    .counter {
+      min-width: 78px;
+      text-align: center;
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .slide-map {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .map-item {
+      min-height: 126px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    .map-item b {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--blue);
+      font-family: var(--font-mono);
+      font-size: 20px;
+    }
+
+    .map-item span {
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .diagram-label {
+      font-family: var(--font-mono);
+      font-size: 21px;
+      fill: var(--muted);
+    }
+
+    .caption {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 24px;
+      line-height: 1.36;
+    }
+
+    .lab-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.14fr 0.86fr;
+      gap: 34px;
+      align-items: stretch;
+    }
+
+    .exercise-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .exercise-item {
+      padding: 22px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid rgba(211, 139, 22, 0.32);
+    }
+
+    .exercise-item h3 {
+      margin-bottom: 8px;
+      color: #805100;
+      font-size: 28px;
+    }
+
+    .exercise-item p {
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.32;
+    }
+
+    @media print {
+      html,
+      body {
+        overflow: visible;
+        background: #fff;
+      }
+
+      .deck-viewport {
+        position: static;
+        display: block;
+        overflow: visible;
+        background: #fff;
+      }
+
+      #stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        box-shadow: none;
+        overflow: visible;
+      }
+
+      .slide,
+      .slide.active {
+        position: relative;
+        display: grid !important;
+        width: 1920px;
+        height: 1080px;
+        page-break-after: always;
+        box-shadow: none;
+      }
+
+      .nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck-viewport" aria-live="polite">
+    <main id="stage">
+      <section class="slide title-slide active" data-screen-label="01 Title">
+        <div class="title-panel">
+          <p class="kicker">Chapter 10 teaching deck</p>
+          <h1>Python Dictionaries</h1>
+          <p class="lead">Store, find, and change data with key-value pairs.</p>
+          <ul class="objective-list">
+            <li>Build dictionaries with <span class="inline-code">{}</span> and <span class="inline-code">dict()</span>.</li>
+            <li>Access, update, add, and delete items safely.</li>
+            <li>Use conditionals, loops, nesting, and comprehension.</li>
+          </ul>
+        </div>
+        <div class="card pair-board">
+          <div class="pair">
+            <div class="pill key">"apple"</div>
+            <div class="arrow">-&gt;</div>
+            <div class="pill value">2</div>
+          </div>
+          <div class="pair">
+            <div class="pill key">"banana"</div>
+            <div class="arrow">-&gt;</div>
+            <div class="pill value">3</div>
+          </div>
+          <div class="pair">
+            <div class="pill key">"orange"</div>
+            <div class="arrow">-&gt;</div>
+            <div class="pill value">4</div>
+          </div>
+          <p class="caption">Think of a dictionary as a lookup table: each key points to one associated value.</p>
+        </div>
+        <div class="footer"><span>Python beginners</span><span>1 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="02 Basics">
+        <div class="stack">
+          <p class="kicker">10.1 dictionary basics</p>
+          <h2>Keys identify values.</h2>
+          <p class="lead">A dictionary is a container object whose items are key-value pairs.</p>
+          <div class="concept-grid">
+            <div class="concept"><strong>Type</strong><span>The Python type is <span class="inline-code">dict</span>.</span></div>
+            <div class="concept"><strong>Keys</strong><span>Keys cannot be duplicated inside the same dictionary.</span></div>
+            <div class="concept"><strong>Values</strong><span>Values are the data you look up by key.</span></div>
+            <div class="concept"><strong>Pattern</strong><span><span class="inline-code">key: value</span> pairs are separated by commas.</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card">
+            <div class="code-head"><span>example.py</span></div>
+            <pre>days = {"Sunday": 1, "Monday": 2, "Tuesday": 3}
+
+print(type(days))
+print(days["Sunday"])</pre>
+          </div>
+          <div class="output">&lt;class 'dict'&gt;
+1</div>
+          <div class="card svg-wrap short-visual">
+            <svg width="620" height="280" viewBox="0 0 620 280" role="img" aria-label="Three keys each connect to one value">
+              <rect x="24" y="34" width="180" height="64" rx="16" fill="#eff6ff" stroke="#93b4ff" stroke-width="3"/>
+              <rect x="24" y="108" width="180" height="64" rx="16" fill="#eff6ff" stroke="#93b4ff" stroke-width="3"/>
+              <rect x="24" y="182" width="180" height="64" rx="16" fill="#eff6ff" stroke="#93b4ff" stroke-width="3"/>
+              <rect x="414" y="34" width="150" height="64" rx="16" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <rect x="414" y="108" width="150" height="64" rx="16" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <rect x="414" y="182" width="150" height="64" rx="16" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <path d="M212 66 H396" stroke="#64748b" stroke-width="4" marker-end="url(#arrowA)"/>
+              <path d="M212 140 H396" stroke="#64748b" stroke-width="4" marker-end="url(#arrowA)"/>
+              <path d="M212 214 H396" stroke="#64748b" stroke-width="4" marker-end="url(#arrowA)"/>
+              <defs><marker id="arrowA" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#64748b"/></marker></defs>
+              <text x="112" y="75" font-size="25" text-anchor="middle" font-family="monospace">"Sunday"</text>
+              <text x="112" y="149" font-size="25" text-anchor="middle" font-family="monospace">"Monday"</text>
+              <text x="112" y="223" font-size="25" text-anchor="middle" font-family="monospace">"Tuesday"</text>
+              <text x="489" y="75" font-size="26" text-anchor="middle" font-family="monospace">1</text>
+              <text x="489" y="149" font-size="26" text-anchor="middle" font-family="monospace">2</text>
+              <text x="489" y="223" font-size="26" text-anchor="middle" font-family="monospace">3</text>
+              <text class="diagram-label" x="112" y="25" text-anchor="middle">keys</text>
+              <text class="diagram-label" x="489" y="25" text-anchor="middle">values</text>
+            </svg>
+          </div>
+        </div>
+        <div class="footer"><span>One key selects one stored value</span><span>2 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="03 Creation">
+        <div class="stack">
+          <p class="kicker">10.2 dictionary creation</p>
+          <h2>Create dictionaries two main ways.</h2>
+          <p class="lead">Use curly braces for literals, or call <span class="inline-code">dict()</span> when converting pairs, keyword arguments, or another dictionary.</p>
+          <div class="method-grid">
+            <div class="method">
+              <span class="tag">literal</span>
+              <h3><span class="inline-code">{}</span> and key-value pairs</h3>
+              <p class="small">Best when you can write the dictionary directly.</p>
+            </div>
+            <div class="method">
+              <span class="tag">constructor</span>
+              <h3><span class="inline-code">dict()</span></h3>
+              <p class="small">Best when data arrives as pairs or keyword arguments.</p>
+            </div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card">
+            <div class="code-head"><span>creation.py</span></div>
+            <pre>empty_a = {}
+empty_b = dict()
+
+menu = {"pizza": 2, "pasta": 3, "drink": 4}
+
+fruit_pairs = [("apple", 2), ("banana", 3)]
+fruit_count = dict(fruit_pairs)
+
+more_fruit = dict(apple=2, banana=3)</pre>
+          </div>
+          <div class="card svg-wrap short-visual">
+            <svg width="690" height="270" viewBox="0 0 690 270" role="img" aria-label="Two creation routes produce dictionaries">
+              <rect x="22" y="60" width="220" height="92" rx="18" fill="#eff6ff" stroke="#93b4ff" stroke-width="3"/>
+              <rect x="22" y="176" width="220" height="58" rx="14" fill="#eff6ff" stroke="#93b4ff" stroke-width="3"/>
+              <rect x="448" y="90" width="210" height="110" rx="20" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <path d="M254 106 C330 106 360 120 432 128" stroke="#64748b" stroke-width="4" fill="none" marker-end="url(#arrowB)"/>
+              <path d="M254 205 C334 200 362 178 432 166" stroke="#64748b" stroke-width="4" fill="none" marker-end="url(#arrowB)"/>
+              <defs><marker id="arrowB" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#64748b"/></marker></defs>
+              <text x="132" y="112" font-size="24" text-anchor="middle" font-family="monospace">{key: value}</text>
+              <text x="132" y="213" font-size="24" text-anchor="middle" font-family="monospace">dict(...)</text>
+              <text x="553" y="140" font-size="28" text-anchor="middle" font-family="monospace">{"apple": 2}</text>
+              <text x="553" y="175" font-size="22" text-anchor="middle" fill="#06724f">dictionary object</text>
+            </svg>
+          </div>
+        </div>
+        <div class="footer"><span>Curly braces and dict() are both chapter-supported creation paths</span><span>3 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="04 Access Items">
+        <div class="stack">
+          <p class="kicker">10.3 dictionary operations</p>
+          <h2>Access values by key.</h2>
+          <p class="lead">Square brackets are direct. <span class="inline-code">get()</span> is forgiving because it can return <span class="inline-code">None</span> or a default value when the key is missing.</p>
+          <div class="concept-grid">
+            <div class="concept"><strong><span class="inline-code">dict[key]</span></strong><span>Use when the key should exist.</span></div>
+            <div class="concept"><strong><span class="inline-code">dict.get(key)</span></strong><span>Use when the key may be missing.</span></div>
+            <div class="concept"><strong>Default</strong><span><span class="inline-code">get(key, -1)</span> can return a chosen fallback.</span></div>
+            <div class="concept"><strong>Case matters</strong><span><span class="inline-code">"Jaya"</span> and <span class="inline-code">"jaya"</span> are different keys.</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card">
+            <div class="code-head"><span>access.py</span></div>
+            <pre>fruit = {"apple": 2, "banana": 3, "orange": 4}
+
+print(fruit["banana"])
+print(fruit.get("apple"))
+print(fruit.get("pineapple", -1))</pre>
+          </div>
+          <div class="output">3
+2
+-1</div>
+          <div class="card lesson-card callout">
+            <h3>Teaching checkpoint</h3>
+            <p class="caption">Ask students which line is safer if they are not sure the key exists.</p>
+          </div>
+        </div>
+        <div class="footer"><span>Direct lookup vs safe lookup</span><span>4 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="05 Keys Values Items">
+        <div class="stack">
+          <p class="kicker">10.3 dictionary operations</p>
+          <h2>Look at keys, values, or whole items.</h2>
+          <p class="lead">Dictionaries provide view objects through <span class="inline-code">keys()</span>, <span class="inline-code">values()</span>, and <span class="inline-code">items()</span>. Convert to <span class="inline-code">list()</span> when a list is needed.</p>
+          <div class="card svg-wrap">
+            <svg width="720" height="360" viewBox="0 0 720 360" role="img" aria-label="Dictionary can expose keys values and items">
+              <rect x="52" y="42" width="250" height="276" rx="24" fill="#f8fafc" stroke="#d7dee9" stroke-width="3"/>
+              <text x="177" y="82" font-size="28" text-anchor="middle" font-family="monospace">codes</text>
+              <text x="176" y="140" font-size="25" text-anchor="middle" font-family="monospace">"a": 97</text>
+              <text x="176" y="197" font-size="25" text-anchor="middle" font-family="monospace">"b": 98</text>
+              <text x="176" y="254" font-size="25" text-anchor="middle" font-family="monospace">"c": 99</text>
+              <rect x="420" y="48" width="220" height="64" rx="16" fill="#eff6ff" stroke="#93b4ff" stroke-width="3"/>
+              <rect x="420" y="148" width="220" height="64" rx="16" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <rect x="420" y="248" width="220" height="64" rx="16" fill="#fff8ed" stroke="#f0c27d" stroke-width="3"/>
+              <path d="M318 132 C365 104 374 82 404 80" stroke="#64748b" stroke-width="4" fill="none" marker-end="url(#arrowC)"/>
+              <path d="M318 182 C368 182 376 180 404 180" stroke="#64748b" stroke-width="4" fill="none" marker-end="url(#arrowC)"/>
+              <path d="M318 232 C365 260 374 280 404 280" stroke="#64748b" stroke-width="4" fill="none" marker-end="url(#arrowC)"/>
+              <defs><marker id="arrowC" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#64748b"/></marker></defs>
+              <text x="530" y="88" font-size="24" text-anchor="middle" font-family="monospace">keys()</text>
+              <text x="530" y="188" font-size="24" text-anchor="middle" font-family="monospace">values()</text>
+              <text x="530" y="288" font-size="24" text-anchor="middle" font-family="monospace">items()</text>
+            </svg>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card">
+            <div class="code-head"><span>views.py</span></div>
+            <pre>codes = {"a": 97, "b": 98, "c": 99}
+
+print(codes.keys())
+print(list(codes.keys()))
+print(codes.values())
+print(codes.items())</pre>
+          </div>
+          <div class="output">dict_keys(['a', 'b', 'c'])
+['a', 'b', 'c']
+dict_values([97, 98, 99])
+dict_items([('a', 97), ('b', 98), ('c', 99)])</div>
+        </div>
+        <div class="footer"><span>View objects expose the dictionary from different angles</span><span>5 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="06 Mutability">
+        <div class="stack">
+          <p class="kicker">10.3 dictionary operations</p>
+          <h2>Dictionaries are mutable.</h2>
+          <p class="lead">After creation, you can add items, update existing items, and remove items.</p>
+          <div class="concept-grid">
+            <div class="concept"><strong>Add</strong><span><span class="inline-code">stock["pear"] = 5</span></span></div>
+            <div class="concept"><strong>Update</strong><span><span class="inline-code">stock["apple"] = 1</span></span></div>
+            <div class="concept"><strong>Merge updates</strong><span><span class="inline-code">stock.update({...})</span></span></div>
+            <div class="concept"><strong>Delete</strong><span><span class="inline-code">del</span> or <span class="inline-code">pop()</span></span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card compact-code">
+            <div class="code-head"><span>mutability.py</span></div>
+            <pre>stock = {"apple": 2, "banana": 3}
+
+stock["pineapple"] = 1
+stock["apple"] = 1
+stock.update({"cherry": 0})
+
+deleted_value = stock.pop("banana")
+del stock["cherry"]
+
+print(deleted_value)
+print(stock)</pre>
+          </div>
+          <div class="output">3
+{'apple': 1, 'pineapple': 1}</div>
+        </div>
+        <div class="footer"><span>Mutable means the same dictionary object can change</span><span>6 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="07 Conditionals">
+        <div class="stack">
+          <p class="kicker">10.4 conditionals</p>
+          <h2>Ask membership questions.</h2>
+          <p class="lead">Conditionals can check whether a dictionary contains a key, a value, or a full key-value item.</p>
+          <div class="card svg-wrap">
+            <svg width="705" height="395" viewBox="0 0 705 395" role="img" aria-label="Membership checks return true or false">
+              <rect x="38" y="50" width="300" height="286" rx="24" fill="#f8fafc" stroke="#d7dee9" stroke-width="3"/>
+              <text x="188" y="96" font-size="25" text-anchor="middle" font-family="monospace">fruit_count</text>
+              <text x="188" y="160" font-size="24" text-anchor="middle" font-family="monospace">"apple": 2</text>
+              <text x="188" y="215" font-size="24" text-anchor="middle" font-family="monospace">"orange": 5</text>
+              <text x="188" y="270" font-size="24" text-anchor="middle" font-family="monospace">"pomegranate": 1</text>
+              <rect x="438" y="60" width="226" height="70" rx="18" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <rect x="438" y="162" width="226" height="70" rx="18" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <rect x="438" y="264" width="226" height="70" rx="18" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <text x="551" y="104" font-size="25" text-anchor="middle" font-family="monospace">key? True</text>
+              <text x="551" y="206" font-size="25" text-anchor="middle" font-family="monospace">item? True</text>
+              <text x="551" y="308" font-size="25" text-anchor="middle" font-family="monospace">value test? True</text>
+            </svg>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card">
+            <div class="code-head"><span>membership.py</span></div>
+            <pre>fruit_count = {
+    "apple": 2,
+    "orange": 5,
+    "pomegranate": 1
+}
+
+print("apple" in fruit_count.keys())
+print(("orange", 5) in fruit_count.items())
+print(fruit_count["pomegranate"] &gt; 0)</pre>
+          </div>
+          <div class="output">True
+True
+True</div>
+          <p class="caption">Beginner note: <span class="inline-code">in</span> asks a yes/no question and returns a Boolean.</p>
+        </div>
+        <div class="footer"><span>Membership checks prepare students for if-statements</span><span>7 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="08 Looping">
+        <div class="stack">
+          <p class="kicker">10.4 looping</p>
+          <h2>Loop through a dictionary.</h2>
+          <p class="lead">A <span class="inline-code">for</span> loop can visit keys, values, or key-value pairs.</p>
+          <div class="concept-grid">
+            <div class="concept"><strong>Default loop</strong><span><span class="inline-code">for key in dictionary:</span></span></div>
+            <div class="concept"><strong>Keys</strong><span><span class="inline-code">dictionary.keys()</span></span></div>
+            <div class="concept"><strong>Values</strong><span><span class="inline-code">dictionary.values()</span></span></div>
+            <div class="concept"><strong>Pairs</strong><span><span class="inline-code">dictionary.items()</span></span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card compact-code">
+            <div class="code-head"><span>looping.py</span></div>
+            <pre>zip_codes = {
+    "Berkeley": 94709,
+    "Santa Cruz": 95064,
+    "Mountain View": 94030
+}
+
+for city, code in zip_codes.items():
+    print(city, code)</pre>
+          </div>
+          <div class="output">Berkeley 94709
+Santa Cruz 95064
+Mountain View 94030</div>
+          <div class="card lesson-card callout">
+            <h3>Visual explanation</h3>
+            <p class="caption">Each loop round gives the next item to the loop variables: first <span class="inline-code">city</span>, then <span class="inline-code">code</span>.</p>
+          </div>
+        </div>
+        <div class="footer"><span>Use items() when both key and value matter</span><span>8 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="09 Nested Dictionaries">
+        <div class="stack">
+          <p class="kicker">10.5 nested dictionaries</p>
+          <h2>Values can be dictionaries.</h2>
+          <p class="lead">A nested dictionary stores another dictionary as a value. Access a nested value with the outer key, then the inner key.</p>
+          <div class="card svg-wrap">
+            <svg width="720" height="430" viewBox="0 0 720 430" role="img" aria-label="Department dictionary contains employee dictionaries">
+              <rect x="38" y="38" width="644" height="354" rx="28" fill="#f8fafc" stroke="#d7dee9" stroke-width="3"/>
+              <text x="360" y="84" font-size="27" text-anchor="middle" font-family="monospace">company_org_chart</text>
+              <rect x="86" y="124" width="164" height="196" rx="20" fill="#eff6ff" stroke="#93b4ff" stroke-width="3"/>
+              <rect x="278" y="124" width="164" height="196" rx="20" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <rect x="470" y="124" width="164" height="196" rx="20" fill="#fff8ed" stroke="#f0c27d" stroke-width="3"/>
+              <text x="168" y="166" font-size="24" text-anchor="middle" font-family="monospace">Marketing</text>
+              <text x="360" y="166" font-size="24" text-anchor="middle" font-family="monospace">Sales</text>
+              <text x="552" y="166" font-size="24" text-anchor="middle" font-family="monospace">Engineering</text>
+              <text x="168" y="228" font-size="20" text-anchor="middle" font-family="monospace">ID234</text>
+              <text x="168" y="258" font-size="20" text-anchor="middle">Jane Smith</text>
+              <text x="360" y="220" font-size="20" text-anchor="middle" font-family="monospace">ID123 Bob</text>
+              <text x="360" y="256" font-size="20" text-anchor="middle" font-family="monospace">ID122 David</text>
+              <text x="552" y="220" font-size="20" text-anchor="middle" font-family="monospace">ID303 Radhika</text>
+              <text x="552" y="256" font-size="20" text-anchor="middle" font-family="monospace">ID321 Maryam</text>
+            </svg>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card compact-code">
+            <div class="code-head"><span>nested.py</span></div>
+            <pre>company_org_chart = {
+    "Marketing": {"ID234": "Jane Smith"},
+    "Sales": {
+        "ID123": "Bob Johnson",
+        "ID122": "David Lee"
+    },
+    "Engineering": {
+        "ID303": "Radhika Potlapally",
+        "ID321": "Maryam Samimi"
+    }
+}
+
+print(company_org_chart["Sales"]["ID122"])</pre>
+          </div>
+          <div class="output">David Lee</div>
+        </div>
+        <div class="footer"><span>Outer key first, inner key second</span><span>9 / 12</span></div>
+      </section>
+
+      <section class="slide two-col" data-screen-label="10 Comprehension">
+        <div class="stack">
+          <p class="kicker">10.5 dictionary comprehension</p>
+          <h2>Create a dictionary from an iterable.</h2>
+          <p class="lead">Dictionary comprehension transforms each element into a key-value pair.</p>
+          <div class="card svg-wrap">
+            <svg width="720" height="360" viewBox="0 0 720 360" role="img" aria-label="Iterable elements transform into dictionary entries">
+              <rect x="32" y="120" width="150" height="92" rx="20" fill="#eff6ff" stroke="#93b4ff" stroke-width="3"/>
+              <rect x="286" y="104" width="168" height="124" rx="20" fill="#fff8ed" stroke="#f0c27d" stroke-width="3"/>
+              <rect x="560" y="120" width="132" height="92" rx="20" fill="#ecfdf5" stroke="#8be1c5" stroke-width="3"/>
+              <path d="M194 166 H270" stroke="#64748b" stroke-width="4" marker-end="url(#arrowD)"/>
+              <path d="M466 166 H544" stroke="#64748b" stroke-width="4" marker-end="url(#arrowD)"/>
+              <defs><marker id="arrowD" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#64748b"/></marker></defs>
+              <text x="107" y="157" font-size="23" text-anchor="middle" font-family="monospace">numbers</text>
+              <text x="107" y="188" font-size="23" text-anchor="middle" font-family="monospace">[1..5]</text>
+              <text x="370" y="146" font-size="22" text-anchor="middle" font-family="monospace">x: x**2</text>
+              <text x="370" y="180" font-size="20" text-anchor="middle">for each x</text>
+              <text x="370" y="211" font-size="20" text-anchor="middle">if even</text>
+              <text x="626" y="161" font-size="23" text-anchor="middle" font-family="monospace">{2: 4,</text>
+              <text x="626" y="193" font-size="23" text-anchor="middle" font-family="monospace">4: 16}</text>
+              <text class="diagram-label" x="107" y="88" text-anchor="middle">iterable</text>
+              <text class="diagram-label" x="370" y="76" text-anchor="middle">key/value expressions</text>
+              <text class="diagram-label" x="626" y="88" text-anchor="middle">dict</text>
+            </svg>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="code-card">
+            <div class="code-head"><span>comprehension.py</span></div>
+            <pre>numbers = [1, 2, 3, 4, 5]
+
+squares = {
+    x: x**2
+    for x in numbers
+    if x % 2 == 0
+}
+
+print(squares)</pre>
+          </div>
+          <div class="output">{2: 4, 4: 16}</div>
+          <p class="caption">Syntax pattern: <span class="inline-code">{key_expression: value_expression for element in iterable}</span></p>
+        </div>
+        <div class="footer"><span>Comprehension is concise creation, not a replacement for every loop</span><span>10 / 12</span></div>
+      </section>
+
+      <section class="slide lab-grid" data-screen-label="11 Runnable Example Cars">
+        <div class="stack">
+          <p class="kicker">Runnable example 1</p>
+          <h2>Build and change a car dictionary.</h2>
+          <p class="lead">This complete Python snippet follows the chapter practice: create, add, update, delete, and print.</p>
+          <div class="code-card compact-code">
+            <div class="code-head"><span>car_dictionary.py</span><button class="copy-btn" type="button" data-copy-target="code-cars">Copy code</button></div>
+            <pre id="code-cars">cars = {}
+
+cars["Mustang"] = 10
+cars["Volt"] = 3
+print(cars)
+
+cars["Mustang"] = 2
+del cars["Volt"]
+print(cars)</pre>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="card lesson-card">
+            <span class="tag">expected output</span>
+            <div class="output">{'Mustang': 10, 'Volt': 3}
+{'Mustang': 2}</div>
+          </div>
+          <div class="card lesson-card exercise">
+            <span class="tag">classroom prompt</span>
+            <h3>Predict before running</h3>
+            <p class="caption">Which line creates a new key, and which line changes the value for an existing key?</p>
+          </div>
+          <div class="card lesson-card">
+            <h3>Teacher move</h3>
+            <p class="caption">Ask students to replace <span class="inline-code">del cars["Volt"]</span> with <span class="inline-code">cars.pop("Volt")</span> and compare the result.</p>
+          </div>
+        </div>
+        <div class="footer"><span>Complete code students can run in Python</span><span>11 / 12</span></div>
+      </section>
+
+      <section class="slide lab-grid" data-screen-label="12 Runnable Example Exercises">
+        <div class="stack">
+          <p class="kicker">Runnable example 2 + practice</p>
+          <h2>Count characters with a dictionary.</h2>
+          <p class="lead">Loop through a string and use membership checks to update counts.</p>
+          <div class="code-card mini-code">
+            <div class="code-head"><span>character_count.py</span><button class="copy-btn" type="button" data-copy-target="code-count">Copy code</button></div>
+            <pre id="code-count">string_value = "This is a string"
+char_count = {}
+
+for character in string_value:
+    if character in char_count:
+        char_count[character] += 1
+    else:
+        char_count[character] = 1
+
+print(char_count)</pre>
+          </div>
+          <div class="output">{'T': 1, 'h': 1, 'i': 3, 's': 3, ' ': 3, 'a': 1, 't': 1, 'r': 1, 'n': 1, 'g': 1}</div>
+        </div>
+        <div class="stack">
+          <div class="card lesson-card exercise">
+            <span class="tag">exercise set</span>
+            <div class="exercise-list">
+              <div class="exercise-item">
+                <h3>1. Personal info dictionary</h3>
+                <p>Create <span class="inline-code">my_info</span> with keys <span class="inline-code">"first name"</span>, <span class="inline-code">"last name"</span>, and <span class="inline-code">"age"</span>. Print it.</p>
+              </div>
+              <div class="exercise-item">
+                <h3>2. Even and odd buckets</h3>
+                <p>Given <span class="inline-code">[3, 5, 6, 1]</span>, create <span class="inline-code">{"even": [6], "odd": [3, 5, 1]}</span>.</p>
+              </div>
+              <div class="exercise-item">
+                <h3>Exit ticket</h3>
+                <p>When should you choose <span class="inline-code">items()</span> instead of <span class="inline-code">keys()</span>?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span>Source practice adapted from Chapter 10 exercises</span><span>12 / 12</span></div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="nav" aria-label="Slide controls">
+    <button class="nav-btn" type="button" id="prev" aria-label="Previous slide">&lt;</button>
+    <div class="counter" id="counter">1 / 12</div>
+    <button class="nav-btn" type="button" id="next" aria-label="Next slide">&gt;</button>
+  </nav>
+
+  <script>
+    (() => {
+      const stage = document.getElementById("stage");
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const counter = document.getElementById("counter");
+      const storageKey = "python-dictionaries-deck-slide";
+      let index = Math.min(Math.max(Number(localStorage.getItem(storageKey)) || 0, 0), slides.length - 1);
+
+      function resizeStage() {
+        const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        stage.style.transform = `scale(${scale})`;
+        stage.style.left = `${(window.innerWidth - 1920 * scale) / 2}px`;
+        stage.style.top = `${(window.innerHeight - 1080 * scale) / 2}px`;
+      }
+
+      function showSlide(nextIndex) {
+        index = (nextIndex + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("active", slideIndex === index);
+        });
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        localStorage.setItem(storageKey, String(index));
+      }
+
+      document.getElementById("prev").addEventListener("click", () => showSlide(index - 1));
+      document.getElementById("next").addEventListener("click", () => showSlide(index + 1));
+
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight" || event.key === " " || event.key === "PageDown") {
+          event.preventDefault();
+          showSlide(index + 1);
+        }
+        if (event.key === "ArrowLeft" || event.key === "PageUp") {
+          event.preventDefault();
+          showSlide(index - 1);
+        }
+        if (event.key === "Home") {
+          event.preventDefault();
+          showSlide(0);
+        }
+        if (event.key === "End") {
+          event.preventDefault();
+          showSlide(slides.length - 1);
+        }
+      });
+
+      document.querySelectorAll("[data-copy-target]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const target = document.getElementById(button.dataset.copyTarget);
+          if (!target) return;
+          try {
+            await navigator.clipboard.writeText(target.textContent.trim());
+            const original = button.textContent;
+            button.textContent = "Copied";
+            window.setTimeout(() => {
+              button.textContent = original;
+            }, 1200);
+          } catch {
+            button.textContent = "Select code";
+          }
+        });
+      });
+
+      window.addEventListener("resize", resizeStage);
+      resizeStage();
+      showSlide(index);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "report": "本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/index.html",
+  "cases": 17,
+  "agents": [
+    "workbuddy",
+    "manus_lite",
+    "pptmaster",
+    "codex_glm52",
+    "openclaw",
+    "opendesign",
+    "openagents"
+  ],
+  "fresh_cells": 40,
+  "historical_cells": 20,
+  "reference_cells": 0,
+  "blocked_cells": 0,
+  "blocked_by_agent": {
+    "WorkBuddy": 0,
+    "Manus 1.6 Lite": 0,
+    "Codex（ppt master）": 0,
+    "Codex（ppt master glm5.2）": 0,
+    "OpenClaw（ppt master glm5.2）": 0,
+    "OpenDesign": 0,
+    "OpenAgents（ppt master glm5.2）": 0
+  },
+  "missing_cells": 45
+}

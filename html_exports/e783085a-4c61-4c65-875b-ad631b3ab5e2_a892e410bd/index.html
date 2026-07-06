@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iPhone 16 Pro Launch Deck</title>
+  <style>
+    :root {
+      --bg: oklch(8% 0.012 260);
+      --surface: oklch(14% 0.012 260);
+      --fg: oklch(96% 0.004 255);
+      --muted: oklch(72% 0.014 255);
+      --border: oklch(29% 0.012 255);
+      --accent: oklch(70% 0.13 235);
+      --gold: oklch(76% 0.09 72);
+      --copper: oklch(67% 0.11 54);
+      --green: oklch(73% 0.13 155);
+      --warn: oklch(76% 0.14 80);
+
+      --accent-soft: color-mix(in oklch, var(--accent) 18%, transparent);
+      --accent-line: color-mix(in oklch, var(--accent) 55%, var(--border));
+      --titanium: color-mix(in oklch, var(--fg) 58%, var(--gold));
+      --shadow: 0 36px 90px color-mix(in oklch, black 62%, transparent);
+
+      --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+      --scale: 1;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 12%, color-mix(in oklch, var(--surface) 78%, transparent), transparent 42%),
+        var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    svg { display: block; }
+
+    .viewport {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .stage {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      transform: scale(var(--scale));
+      transform-origin: center;
+      background:
+        linear-gradient(120deg, color-mix(in oklch, var(--surface) 48%, var(--bg)), var(--bg) 62%),
+        var(--bg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      width: 1920px;
+      height: 1080px;
+      padding: 72px 86px 74px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 82% 22%, var(--accent-soft), transparent 30%),
+        linear-gradient(140deg, color-mix(in oklch, var(--surface) 84%, var(--bg)), var(--bg) 70%);
+    }
+
+    .slide.active {
+      display: grid;
+      animation: slideFade 240ms ease-out;
+    }
+
+    @keyframes slideFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 26px;
+      border: 1px solid color-mix(in oklch, var(--border) 74%, transparent);
+      border-radius: 28px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .slide-footer {
+      position: absolute;
+      left: 86px;
+      right: 86px;
+      bottom: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: color-mix(in oklch, var(--muted) 78%, transparent);
+      font-family: var(--font-mono);
+      font-size: 18px;
+      letter-spacing: 0.01em;
+    }
+
+    .kicker {
+      margin: 0 0 22px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 21px;
+      line-height: 1.25;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 680;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    h1 {
+      font-size: 112px;
+      line-height: 0.96;
+      max-width: 990px;
+    }
+
+    h2 {
+      font-size: 76px;
+      line-height: 1.02;
+      max-width: 880px;
+    }
+
+    h3 {
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.34;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    .lead {
+      margin-top: 28px;
+      max-width: 840px;
+      font-size: 35px;
+      line-height: 1.24;
+      color: color-mix(in oklch, var(--fg) 78%, var(--muted));
+    }
+
+    .small {
+      font-size: 23px;
+      line-height: 1.36;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .grid {
+      display: grid;
+      gap: 30px;
+    }
+
+    .two-col {
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      align-items: center;
+    }
+
+    .three-col {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card {
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, color-mix(in oklch, var(--surface) 92%, transparent), color-mix(in oklch, var(--surface) 54%, transparent));
+      padding: 28px;
+    }
+
+    .glass {
+      border: 1px solid color-mix(in oklch, var(--accent-line) 68%, var(--border));
+      background:
+        linear-gradient(160deg, color-mix(in oklch, var(--accent-soft) 60%, var(--surface)), color-mix(in oklch, var(--surface) 62%, transparent));
+      box-shadow: inset 0 1px 0 color-mix(in oklch, white 16%, transparent);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 9px 15px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--fg);
+      background: color-mix(in oklch, var(--surface) 74%, transparent);
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .rule {
+      height: 1px;
+      background: var(--border);
+      margin: 30px 0;
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--fg);
+      font-family: var(--font-display);
+      font-size: 64px;
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 23px;
+      line-height: 1.28;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      margin-top: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 28px var(--accent-soft);
+    }
+
+    .feature-row p {
+      font-size: 27px;
+      line-height: 1.28;
+    }
+
+    .device-scene {
+      position: relative;
+      min-height: 720px;
+    }
+
+    .phone-pair {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .phone-svg {
+      width: 760px;
+      height: 760px;
+      filter: drop-shadow(0 42px 70px color-mix(in oklch, black 70%, transparent));
+      overflow: visible;
+    }
+
+    .ring {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2.5;
+      opacity: 0.5;
+    }
+
+    .screen-arc {
+      fill: none;
+      stroke: var(--copper);
+      stroke-width: 7;
+      stroke-linecap: round;
+      opacity: 0.95;
+      filter: drop-shadow(0 0 14px color-mix(in oklch, var(--copper) 74%, transparent));
+    }
+
+    .chip-visual,
+    .camera-visual,
+    .display-visual {
+      width: 100%;
+      height: 100%;
+      min-height: 540px;
+    }
+
+    .slide-title-row {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .callout {
+      max-width: 440px;
+      border-left: 2px solid var(--accent);
+      padding-left: 24px;
+      color: color-mix(in oklch, var(--fg) 82%, var(--muted));
+      font-size: 27px;
+      line-height: 1.28;
+    }
+
+    .table-wrap {
+      margin-top: 36px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      background: color-mix(in oklch, var(--surface) 80%, transparent);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 24px;
+      line-height: 1.25;
+      font-variant-numeric: tabular-nums;
+    }
+
+    th, td {
+      padding: 22px 26px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    th {
+      color: var(--fg);
+      background: color-mix(in oklch, var(--surface) 86%, var(--bg));
+      font-family: var(--font-mono);
+      font-size: 19px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    td {
+      color: color-mix(in oklch, var(--fg) 82%, var(--muted));
+    }
+
+    td:first-child {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 21px;
+      white-space: nowrap;
+    }
+
+    .creative-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 42px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .creative-panel {
+      position: relative;
+      height: 650px;
+      border: 1px solid var(--border);
+      border-radius: 38px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 68% 28%, color-mix(in oklch, var(--copper) 32%, transparent), transparent 30%),
+        radial-gradient(circle at 28% 70%, color-mix(in oklch, var(--accent) 26%, transparent), transparent 34%),
+        linear-gradient(145deg, color-mix(in oklch, var(--surface) 92%, black), var(--bg));
+    }
+
+    .lens-stack {
+      position: absolute;
+      left: 72px;
+      top: 66px;
+      display: grid;
+      gap: 28px;
+    }
+
+    .lens {
+      width: 142px;
+      height: 142px;
+      border-radius: 50%;
+      border: 8px solid color-mix(in oklch, var(--titanium) 64%, var(--surface));
+      background:
+        radial-gradient(circle at 36% 30%, color-mix(in oklch, white 72%, transparent) 0 8%, transparent 9%),
+        radial-gradient(circle at 54% 58%, color-mix(in oklch, var(--accent) 66%, black), black 42%, color-mix(in oklch, var(--surface) 88%, black) 43% 100%);
+      box-shadow: inset 0 0 18px black, 0 12px 32px color-mix(in oklch, black 50%, transparent);
+    }
+
+    .creative-line {
+      position: absolute;
+      right: 64px;
+      top: 104px;
+      width: 520px;
+      height: 392px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .timeline .card {
+      min-height: 154px;
+      padding: 22px;
+    }
+
+    .timeline strong {
+      color: var(--fg);
+      font-size: 25px;
+      line-height: 1.1;
+    }
+
+    .timeline p {
+      margin-top: 10px;
+      font-size: 21px;
+      line-height: 1.28;
+    }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 42px;
+      align-items: start;
+    }
+
+    .price {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 32px;
+    }
+
+    .price-card {
+      min-height: 246px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .price-card .model {
+      color: var(--fg);
+      font-size: 31px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+
+    .price-card .amount {
+      color: var(--fg);
+      font-family: var(--font-display);
+      font-size: 70px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .finish-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 20px;
+      white-space: nowrap;
+    }
+
+    .swatch::before {
+      content: "";
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: var(--surface);
+    }
+
+    .swatch.black::before { background: oklch(18% 0.006 250); }
+    .swatch.natural::before { background: oklch(73% 0.016 88); }
+    .swatch.white::before { background: oklch(92% 0.004 90); }
+    .swatch.desert::before { background: oklch(65% 0.065 60); }
+
+    .controls {
+      position: fixed;
+      right: 22px;
+      bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+      color: var(--fg);
+    }
+
+    .nav-btn, .counter {
+      min-width: 64px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--surface) 86%, transparent);
+      backdrop-filter: blur(12px);
+      font-family: var(--font-mono);
+      font-size: 18px;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .counter {
+      min-width: 82px;
+      color: var(--muted);
+    }
+
+    @media print {
+      body { overflow: visible; background: var(--bg); }
+      .viewport { display: block; width: auto; height: auto; overflow: visible; }
+      .stage { width: 1920px; height: auto; transform: none !important; border: 0; box-shadow: none; }
+      .slide { position: relative; display: grid !important; page-break-after: always; }
+      .controls { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport" aria-label="iPhone 16 Pro launch deck">
+    <main class="stage" id="stage">
+      <section class="slide active" data-screen-label="01 Launch Thesis" aria-label="Launch thesis">
+        <div class="grid two-col" style="height: 100%;">
+          <div style="align-self: center;">
+            <p class="kicker">Product launch deck</p>
+            <h1>iPhone 16 Pro enters the Apple Intelligence era.</h1>
+            <p class="lead">A18 Pro, larger Pro displays, Camera Control, pro camera upgrades, and a major battery-life step define the new lineup.</p>
+            <div class="feature-list" style="grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 800px;">
+              <span class="pill">A18 Pro</span>
+              <span class="pill">Apple Intelligence</span>
+              <span class="pill">Camera Control</span>
+              <span class="pill">48MP pro cameras</span>
+            </div>
+          </div>
+          <div class="device-scene" aria-hidden="true">
+            <div class="phone-pair">
+              <svg class="phone-svg" viewBox="0 0 760 760" role="img" aria-label="Editable iPhone Pro silhouettes">
+                <defs>
+                  <linearGradient id="desertBody" x1="0%" x2="100%" y1="0%" y2="100%">
+                    <stop offset="0%" stop-color="var(--titanium)" />
+                    <stop offset="55%" stop-color="var(--copper)" />
+                    <stop offset="100%" stop-color="color-mix(in oklch, var(--surface) 70%, black)" />
+                  </linearGradient>
+                  <linearGradient id="frontBody" x1="0%" x2="100%" y1="0%" y2="100%">
+                    <stop offset="0%" stop-color="color-mix(in oklch, var(--surface) 40%, black)" />
+                    <stop offset="100%" stop-color="black" />
+                  </linearGradient>
+                </defs>
+                <g transform="translate(110 58) rotate(-5 180 340)">
+                  <rect x="0" y="0" width="310" height="620" rx="58" fill="url(#desertBody)" stroke="color-mix(in oklch, var(--fg) 38%, var(--border))" stroke-width="4" />
+                  <rect x="22" y="22" width="266" height="576" rx="45" fill="none" stroke="color-mix(in oklch, white 12%, transparent)" stroke-width="2" />
+                  <rect x="34" y="38" width="172" height="172" rx="42" fill="color-mix(in oklch, var(--surface) 64%, transparent)" stroke="var(--border)" stroke-width="2" />
+                  <circle cx="84" cy="88" r="38" fill="black" stroke="var(--titanium)" stroke-width="9" />
+                  <circle cx="154" cy="88" r="38" fill="black" stroke="var(--titanium)" stroke-width="9" />
+                  <circle cx="84" cy="158" r="38" fill="black" stroke="var(--titanium)" stroke-width="9" />
+                  <circle cx="154" cy="158" r="38" fill="black" stroke="var(--titanium)" stroke-width="9" />
+                  <circle cx="84" cy="88" r="12" fill="color-mix(in oklch, var(--accent) 62%, black)" />
+                  <circle cx="154" cy="88" r="12" fill="color-mix(in oklch, var(--accent) 62%, black)" />
+                  <circle cx="84" cy="158" r="12" fill="color-mix(in oklch, var(--accent) 62%, black)" />
+                  <circle cx="154" cy="158" r="12" fill="color-mix(in oklch, var(--accent) 62%, black)" />
+                  <circle cx="218" cy="121" r="18" fill="color-mix(in oklch, var(--fg) 40%, transparent)" />
+                  <rect x="-18" y="410" width="14" height="108" rx="7" fill="var(--titanium)" />
+                </g>
+                <g transform="translate(368 88) rotate(4 175 320)">
+                  <rect x="0" y="0" width="330" height="650" rx="62" fill="url(#frontBody)" stroke="color-mix(in oklch, var(--fg) 42%, var(--border))" stroke-width="4" />
+                  <rect x="20" y="20" width="290" height="610" rx="48" fill="black" />
+                  <path class="screen-arc" d="M68 458 C182 356 234 250 282 86" />
+                  <path class="screen-arc" d="M62 502 C178 482 244 548 282 618" opacity="0.75" />
+                  <ellipse cx="165" cy="48" rx="66" ry="21" fill="color-mix(in oklch, var(--surface) 8%, black)" />
+                  <circle cx="198" cy="48" r="8" fill="var(--accent)" />
+                </g>
+                <circle class="ring" cx="532" cy="382" r="298" />
+                <circle class="ring" cx="532" cy="382" r="236" opacity="0.28" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer"><span>Source: supplied PDF only</span><span>01 / 09</span></footer>
+      </section>
+
+      <section class="slide" data-screen-label="02 Positioning Pillars" aria-label="Product positioning pillars">
+        <div class="slide-title-row">
+          <div>
+            <p class="kicker">Positioning</p>
+            <h2>The Pro story is intelligence plus creative capture.</h2>
+          </div>
+          <p class="callout">Apple frames the lineup as the most advanced Pro iPhone family, built around a faster chip, personal intelligence, and new capture controls.</p>
+        </div>
+        <div class="grid three-col" style="margin-top: 66px;">
+          <div class="card glass">
+            <h3>Personal intelligence</h3>
+            <div class="rule"></div>
+            <p>Writing Tools, notification summaries, Priority Messages, richer Siri, and privacy architecture via Private Cloud Compute.</p>
+          </div>
+          <div class="card">
+            <h3>Pro creation system</h3>
+            <div class="rule"></div>
+            <p>Camera Control, 48MP Fusion, 48MP Ultra Wide, 5x Telephoto on both models, 4K120 fps Dolby Vision, and studio-quality mics.</p>
+          </div>
+          <div class="card">
+            <h3>Hardware headroom</h3>
+            <div class="rule"></div>
+            <p>A18 Pro adds CPU, GPU, Neural Engine, memory bandwidth, ISP, thermal, and battery improvements behind the experience.</p>
+          </div>
+        </div>
+        <div class="grid three-col" style="margin-top: 42px;">
+          <div class="metric"><strong>6.3"</strong><span>iPhone 16 Pro display size listed in the PDF.</span></div>
+          <div class="metric"><strong>6.9"</strong><span>iPhone 16 Pro Max, described as the largest iPhone display ever.</span></div>
+          <div class="metric"><strong>4</strong><span>Finishes: black, natural, white, and desert titanium.</span></div>
+        </div>
+        <footer class="slide-footer"><span>Positioning distilled from product-introduction and design sections</span><span>02 / 09</span></footer>
+      </section>
+
+      <section class="slide" data-screen-label="03 Apple Intelligence" aria-label="Apple Intelligence">
+        <div class="grid two-col" style="height: 100%;">
+          <div style="align-self: center;">
+            <p class="kicker">Apple Intelligence</p>
+            <h2>Generative models, personal context, privacy controls.</h2>
+            <p class="lead">The PDF positions Apple Intelligence as a personal intelligence system that understands context, works across apps, and protects user data.</p>
+            <div class="feature-list">
+              <div class="feature-row"><span class="dot"></span><p>Writing Tools rewrite, proofread, summarize, and adjust tone across places users write.</p></div>
+              <div class="feature-row"><span class="dot"></span><p>Notes and Phone can record, transcribe, and summarize audio, with call participants notified when recording starts.</p></div>
+              <div class="feature-row"><span class="dot"></span><p>Summaries, Priority Messages, and richer Siri help users prioritize and complete everyday tasks.</p></div>
+            </div>
+          </div>
+          <div class="card glass" style="align-self: center; padding: 42px;">
+            <svg class="chip-visual" viewBox="0 0 760 650" role="img" aria-label="Editable Apple Intelligence architecture diagram">
+              <defs>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="8" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+              </defs>
+              <rect x="236" y="184" width="288" height="220" rx="46" fill="color-mix(in oklch, var(--surface) 82%, black)" stroke="var(--accent-line)" stroke-width="3" filter="url(#glow)" />
+              <text x="380" y="282" text-anchor="middle" fill="var(--fg)" font-family="var(--font-display)" font-size="42" font-weight="700">Private</text>
+              <text x="380" y="328" text-anchor="middle" fill="var(--fg)" font-family="var(--font-display)" font-size="42" font-weight="700">Cloud Compute</text>
+              <circle cx="132" cy="138" r="78" fill="color-mix(in oklch, var(--accent) 18%, transparent)" stroke="var(--accent-line)" stroke-width="2" />
+              <text x="132" y="130" text-anchor="middle" fill="var(--fg)" font-family="var(--font-mono)" font-size="24">on-device</text>
+              <text x="132" y="162" text-anchor="middle" fill="var(--muted)" font-family="var(--font-mono)" font-size="19">processing</text>
+              <circle cx="630" cy="138" r="78" fill="color-mix(in oklch, var(--accent) 18%, transparent)" stroke="var(--accent-line)" stroke-width="2" />
+              <text x="630" y="130" text-anchor="middle" fill="var(--fg)" font-family="var(--font-mono)" font-size="24">server</text>
+              <text x="630" y="162" text-anchor="middle" fill="var(--muted)" font-family="var(--font-mono)" font-size="19">models</text>
+              <circle cx="132" cy="504" r="78" fill="color-mix(in oklch, var(--surface) 90%, transparent)" stroke="var(--border)" stroke-width="2" />
+              <text x="132" y="496" text-anchor="middle" fill="var(--fg)" font-family="var(--font-mono)" font-size="24">apps</text>
+              <text x="132" y="528" text-anchor="middle" fill="var(--muted)" font-family="var(--font-mono)" font-size="19">actions</text>
+              <circle cx="630" cy="504" r="78" fill="color-mix(in oklch, var(--surface) 90%, transparent)" stroke="var(--border)" stroke-width="2" />
+              <text x="630" y="496" text-anchor="middle" fill="var(--fg)" font-family="var(--font-mono)" font-size="24">context</text>
+              <text x="630" y="528" text-anchor="middle" fill="var(--muted)" font-family="var(--font-mono)" font-size="19">relevance</text>
+              <path d="M200 170 C254 190 258 216 236 232" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" />
+              <path d="M560 170 C506 190 502 216 524 232" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" />
+              <path d="M206 470 C264 428 278 404 268 384" fill="none" stroke="var(--border)" stroke-width="4" stroke-linecap="round" />
+              <path d="M554 470 C496 428 482 404 492 384" fill="none" stroke="var(--border)" stroke-width="4" stroke-linecap="round" />
+              <text x="380" y="94" text-anchor="middle" fill="var(--muted)" font-family="var(--font-mono)" font-size="22">first features via free software update</text>
+              <text x="380" y="584" text-anchor="middle" fill="var(--muted)" font-family="var(--font-mono)" font-size="22">more features roll out later</text>
+            </svg>
+          </div>
+        </div>
+        <footer class="slide-footer"><span>Includes Writing Tools, summaries, Siri, Private Cloud Compute, and later feature roadmap</span><span>03 / 09</span></footer>
+      </section>
+
+      <section class="slide" data-screen-label="04 A18 Pro Chip" aria-label="A18 Pro chip">
+        <div class="grid two-col" style="height: 100%;">
+          <div style="align-self: center;">
+            <p class="kicker">A18 Pro</p>
+            <h2>The silicon story is efficiency, graphics, and AI headroom.</h2>
+            <div class="feature-list">
+              <div class="feature-row"><span class="dot"></span><p>Built with second-generation 3-nanometer technology and a new transistor architecture.</p></div>
+              <div class="feature-row"><span class="dot"></span><p>New 16-core Neural Engine powers on-device Apple Intelligence performance.</p></div>
+              <div class="feature-row"><span class="dot"></span><p>New ISP and video encoder process 2x the data for faster video encoding and pro workflows.</p></div>
+            </div>
+          </div>
+          <div class="card" style="align-self: center; padding: 40px;">
+            <svg class="chip-visual" viewBox="0 0 760 650" role="img" aria-label="Editable A18 Pro chip visual">
+              <rect x="160" y="105" width="440" height="440" rx="58" fill="color-mix(in oklch, var(--surface) 86%, black)" stroke="var(--accent-line)" stroke-width="4" />
+              <rect x="210" y="155" width="340" height="340" rx="38" fill="color-mix(in oklch, var(--bg) 70%, black)" stroke="var(--border)" stroke-width="2" />
+              <text x="380" y="308" text-anchor="middle" fill="var(--fg)" font-family="var(--font-display)" font-size="76" font-weight="720">A18</text>
+              <text x="380" y="372" text-anchor="middle" fill="var(--accent)" font-family="var(--font-display)" font-size="64" font-weight="720">Pro</text>
+              <g stroke="var(--border)" stroke-width="3">
+                <path d="M160 165 H90" /><path d="M160 225 H90" /><path d="M160 285 H90" /><path d="M160 345 H90" /><path d="M160 405 H90" /><path d="M160 465 H90" />
+                <path d="M600 165 H670" /><path d="M600 225 H670" /><path d="M600 285 H670" /><path d="M600 345 H670" /><path d="M600 405 H670" /><path d="M600 465 H670" />
+                <path d="M220 105 V35" /><path d="M280 105 V35" /><path d="M340 105 V35" /><path d="M400 105 V35" /><path d="M460 105 V35" /><path d="M520 105 V35" />
+                <path d="M220 545 V615" /><path d="M280 545 V615" /><path d="M340 545 V615" /><path d="M400 545 V615" /><path d="M460 545 V615" /><path d="M520 545 V615" />
+              </g>
+              <circle cx="90" cy="285" r="8" fill="var(--accent)" />
+              <circle cx="670" cy="345" r="8" fill="var(--accent)" />
+            </svg>
+            <div class="grid three-col" style="margin-top: 22px;">
+              <div class="metric"><strong>+17%</strong><span>Total system memory bandwidth.</span></div>
+              <div class="metric"><strong>+20%</strong><span>GPU faster than prior generation.</span></div>
+              <div class="metric"><strong>2x</strong><span>Hardware-accelerated ray tracing.</span></div>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer"><span>Source facts from Industry-Leading Performance and Power Efficiency section</span><span>04 / 09</span></footer>
+      </section>
+
+      <section class="slide" data-screen-label="05 Displays and Design" aria-label="Larger displays and durable design">
+        <div class="grid two-col" style="height: 100%;">
+          <div style="align-self: center;">
+            <p class="kicker">Displays + design</p>
+            <h2>Larger screens, thinner borders, stronger materials.</h2>
+            <p class="lead">The Pro models move to 6.3-inch and 6.9-inch Super Retina XDR displays, with Always-On and ProMotion technologies.</p>
+            <div class="feature-list">
+              <div class="feature-row"><span class="dot"></span><p>Thinnest borders of any Apple product, according to the PDF.</p></div>
+              <div class="feature-row"><span class="dot"></span><p>Titanium body is positioned as strong, lightweight, and industry-leading in durability.</p></div>
+              <div class="feature-row"><span class="dot"></span><p>Latest-generation Ceramic Shield is listed as 2x tougher than glass on any other smartphone.</p></div>
+            </div>
+          </div>
+          <div class="card glass" style="align-self: center;">
+            <svg class="display-visual" viewBox="0 0 780 650" role="img" aria-label="Editable display size comparison">
+              <rect x="80" y="130" width="255" height="430" rx="46" fill="black" stroke="var(--titanium)" stroke-width="8" />
+              <rect x="103" y="153" width="209" height="384" rx="34" fill="color-mix(in oklch, var(--surface) 22%, black)" stroke="color-mix(in oklch, var(--accent) 32%, transparent)" stroke-width="2" />
+              <ellipse cx="208" cy="180" rx="44" ry="14" fill="var(--surface)" opacity="0.55" />
+              <path d="M135 432 C210 328 254 230 292 178" fill="none" stroke="var(--copper)" stroke-width="6" stroke-linecap="round" />
+              <text x="207" y="610" text-anchor="middle" fill="var(--fg)" font-family="var(--font-display)" font-size="54" font-weight="700">6.3"</text>
+              <text x="207" y="642" text-anchor="middle" fill="var(--muted)" font-family="var(--font-mono)" font-size="19">iPhone 16 Pro</text>
+              <rect x="430" y="70" width="295" height="500" rx="54" fill="black" stroke="var(--titanium)" stroke-width="8" />
+              <rect x="455" y="95" width="245" height="450" rx="40" fill="color-mix(in oklch, var(--surface) 22%, black)" stroke="color-mix(in oklch, var(--accent) 32%, transparent)" stroke-width="2" />
+              <ellipse cx="578" cy="125" rx="48" ry="15" fill="var(--surface)" opacity="0.55" />
+              <path d="M494 430 C576 328 636 220 680 124" fill="none" stroke="var(--copper)" stroke-width="6" stroke-linecap="round" />
+              <text x="578" y="610" text-anchor="middle" fill="var(--fg)" font-family="var(--font-display)" font-size="54" font-weight="700">6.9"</text>
+              <text x="578" y="642" text-anchor="middle" fill="var(--muted)" font-family="var(--font-mono)" font-size="19">iPhone 16 Pro Max</text>
+              <path d="M360 320 H400" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" />
+              <path d="M391 310 L403 320 L391 330" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" />
+            </svg>
+          </div>
+        </div>
+        <footer class="slide-footer"><span>Display measurement footnote in PDF notes actual viewable area is less</span><span>05 / 09</span></footer>
+      </section>
+
+      <section class="slide" data-screen-label="06 Camera Control" aria-label="Camera Control">
+        <div class="slide-title-row">
+          <div>
+            <p class="kicker">Camera Control</p>
+            <h2>A new control surface for capture and visual intelligence.</h2>
+          </div>
+          <p class="callout">The control combines hardware gestures with software previews: click, light press, touch, slide, frame, and adjust.</p>
+        </div>
+        <div class="grid two-col" style="margin-top: 48px; align-items: center;">
+          <div class="card glass">
+            <svg class="camera-visual" viewBox="0 0 800 510" role="img" aria-label="Editable Camera Control interaction diagram">
+              <rect x="100" y="74" width="250" height="365" rx="50" fill="black" stroke="var(--titanium)" stroke-width="7" />
+              <rect x="124" y="98" width="202" height="317" rx="35" fill="color-mix(in oklch, var(--surface) 18%, black)" />
+              <rect x="346" y="222" width="20" height="108" rx="10" fill="var(--accent)" />
+              <circle cx="356" cy="276" r="56" fill="none" stroke="var(--accent)" stroke-width="3" opacity="0.45" />
+              <path d="M392 276 H700" stroke="var(--border)" stroke-width="3" />
+              <g font-family="var(--font-mono)" font-size="24" fill="var(--fg)">
+                <text x="418" y="170">click</text>
+                <text x="418" y="250">light press</text>
+                <text x="418" y="330">slide</text>
+                <text x="418" y="410">hold</text>
+              </g>
+              <g font-family="var(--font-body)" font-size="22" fill="var(--muted)">
+                <text x="546" y="170">launch camera, take photo</text>
+                <text x="546" y="250">lock focus/exposure later</text>
+                <text x="546" y="330">adjust zoom, exposure, depth</text>
+                <text x="546" y="410">visual intelligence later</text>
+              </g>
+              <circle cx="393" cy="162" r="6" fill="var(--accent)" />
+              <circle cx="393" cy="242" r="6" fill="var(--accent)" />
+              <circle cx="393" cy="322" r="6" fill="var(--accent)" />
+              <circle cx="393" cy="402" r="6" fill="var(--accent)" />
+            </svg>
+          </div>
+          <div class="grid" style="gap: 20px;">
+            <div class="card">
+              <h3>Hardware stack</h3>
+              <p class="small" style="margin-top: 12px;">Tactile switch, high-precision force sensor, and capacitive sensor enable click, light-press, and touch interactions.</p>
+            </div>
+            <div class="card">
+              <h3>Composition controls</h3>
+              <p class="small" style="margin-top: 12px;">A new camera preview lets users frame shots and adjust zoom, exposure, or depth of field by sliding a finger.</p>
+            </div>
+            <div class="card">
+              <h3>Visual intelligence</h3>
+              <p class="small" style="margin-top: 12px;">Later, users can pull up place details, add event information, identify objects, or use Google and ChatGPT gateways.</p>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer"><span>Camera Control section, including later two-stage shutter and visual intelligence updates</span><span>06 / 09</span></footer>
+      </section>
+
+      <section class="slide" data-screen-label="07 Pro Camera Creativity" aria-label="Pro camera creativity use cases">
+        <div class="creative-grid">
+          <div class="creative-panel" aria-hidden="true">
+            <div class="lens-stack">
+              <div class="lens"></div>
+              <div class="lens"></div>
+              <div class="lens"></div>
+            </div>
+            <svg class="creative-line" viewBox="0 0 520 392" role="img" aria-label="Editable creativity path">
+              <path d="M28 302 C110 86 278 82 454 54" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" />
+              <path d="M62 344 C188 226 270 274 436 174" fill="none" stroke="var(--copper)" stroke-width="7" stroke-linecap="round" opacity="0.82" />
+              <circle cx="456" cy="54" r="34" fill="color-mix(in oklch, var(--accent) 38%, transparent)" stroke="var(--accent)" stroke-width="3" />
+              <circle cx="436" cy="174" r="24" fill="color-mix(in oklch, var(--copper) 38%, transparent)" stroke="var(--copper)" stroke-width="3" />
+              <g font-family="var(--font-mono)" fill="var(--fg)" font-size="25">
+                <text x="184" y="72">macro</text>
+                <text x="284" y="238">color</text>
+                <text x="42" y="382">motion</text>
+              </g>
+            </svg>
+            <div style="position: absolute; left: 300px; bottom: 66px; width: 460px;">
+              <p class="kicker" style="margin-bottom: 12px;">Creative system</p>
+              <h3 style="font-size: 54px;">Shoot, slow, mix, style, reverse.</h3>
+            </div>
+          </div>
+          <div style="align-self: center;">
+            <p class="kicker">Pro camera capabilities</p>
+            <h2>Creativity expands from lens to edit.</h2>
+            <p class="lead">The new camera system connects higher-resolution capture, faster video, spatial media, audio remixing, and real-time photographic styles.</p>
+            <div class="timeline">
+              <div class="card"><strong>48MP Fusion</strong><p>Faster quad-pixel sensor enables 4K120 fps Dolby Vision and zero shutter lag for 48MP ProRAW or HEIF.</p></div>
+              <div class="card"><strong>48MP Ultra Wide</strong><p>Autofocus and high-resolution macro, wider-angle, and close-up photography.</p></div>
+              <div class="card"><strong>5x Telephoto</strong><p>Available on both Pro models for farther-away action.</p></div>
+              <div class="card"><strong>Audio Mix</strong><p>Adjust sound after capture for voice focus, studio feel, or spatial placement.</p></div>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer"><span>Visually expressive slide; all camera objects are editable CSS/SVG, not screenshots</span><span>07 / 09</span></footer>
+      </section>
+
+      <section class="slide" data-screen-label="08 Battery Environment" aria-label="Battery durability and environment">
+        <div class="slide-title-row">
+          <div>
+            <p class="kicker">Battery + environment</p>
+            <h2>Efficiency is positioned as performance and responsibility.</h2>
+          </div>
+          <p class="callout">The PDF ties battery-life gains to internal design, iOS 18 power management, larger batteries, and the efficiency of A18 Pro.</p>
+        </div>
+        <div class="grid three-col" style="margin-top: 58px;">
+          <div class="card glass">
+            <div class="metric"><strong>best</strong><span>iPhone 16 Pro Max is described as offering the best battery life on iPhone ever.</span></div>
+          </div>
+          <div class="card">
+            <div class="metric"><strong>+20%</strong><span>Mechanical architecture improves heat dissipation and efficiency for sustained performance.</span></div>
+          </div>
+          <div class="card">
+            <div class="metric"><strong>100%</strong><span>Apple facilities run on renewable electricity, including data centers powering Apple Intelligence.</span></div>
+          </div>
+        </div>
+        <div class="table-wrap" style="margin-top: 46px;">
+          <table aria-label="Environment and durability facts">
+            <thead>
+              <tr><th>Area</th><th>Source-supported fact</th><th>Launch implication</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Recycled content</td><td>More than 25% recycled content overall.</td><td>Environment message is built into the product story, not a footnote.</td></tr>
+              <tr><td>Metals</td><td>100% recycled aluminum in the internal structural frame and 80% or more recycled steel across multiple components.</td><td>Durability and materials can be explained together.</td></tr>
+              <tr><td>Battery materials</td><td>Battery uses 100% recycled cobalt and over 95% recycled lithium, with source allocation footnoted.</td><td>Battery improvement pairs with a clearer materials story.</td></tr>
+              <tr><td>Packaging</td><td>Entirely fiber-based packaging, moving Apple closer to removing plastic from packaging by next year.</td><td>Channel materials can emphasize lower-plastic packaging.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <footer class="slide-footer"><span>Includes durability, battery-life, recycled-content, and packaging facts from the PDF</span><span>08 / 09</span></footer>
+      </section>
+
+      <section class="slide" data-screen-label="09 Pricing and Availability" aria-label="Pricing and pre-order call to action">
+        <div class="cta-grid">
+          <div>
+            <p class="kicker">Pricing + pre-order</p>
+            <h2>Pro starts at $999. Pro Max starts at $1,199.</h2>
+            <p class="lead">The PDF supports a launch CTA around September 13 pre-orders and September 20 availability across more than 58 countries and regions.</p>
+            <div class="price">
+              <div class="card price-card glass">
+                <span class="model">iPhone 16 Pro</span>
+                <span class="amount">$999</span>
+                <p class="small">or $41.62 per month in the U.S.</p>
+              </div>
+              <div class="card price-card">
+                <span class="model">iPhone 16 Pro Max</span>
+                <span class="amount">$1,199</span>
+                <p class="small">or $49.95 per month in the U.S.</p>
+              </div>
+            </div>
+            <div class="finish-row" aria-label="Available finishes">
+              <span class="swatch black">black titanium</span>
+              <span class="swatch natural">natural titanium</span>
+              <span class="swatch white">white titanium</span>
+              <span class="swatch desert">desert titanium</span>
+            </div>
+          </div>
+          <div>
+            <div class="table-wrap" style="margin-top: 6px;">
+              <table aria-label="Feature comparison table">
+                <thead>
+                  <tr><th>Feature</th><th>iPhone 16 Pro</th><th>iPhone 16 Pro Max</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Display</td><td>6.3-inch Super Retina XDR</td><td>6.9-inch Super Retina XDR</td></tr>
+                  <tr><td>Silicon</td><td>A18 Pro</td><td>A18 Pro</td></tr>
+                  <tr><td>Camera Control</td><td>Included</td><td>Included</td></tr>
+                  <tr><td>Pro cameras</td><td>48MP Fusion, 48MP Ultra Wide, 5x Telephoto</td><td>48MP Fusion, 48MP Ultra Wide, 5x Telephoto</td></tr>
+                  <tr><td>Battery story</td><td>Huge battery-life leap</td><td>Best battery life on iPhone ever</td></tr>
+                  <tr><td>Starting price</td><td>$999 U.S.</td><td>$1,199 U.S.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 24px;">
+              <div class="card"><h3>Pre-order</h3><p class="small" style="margin-top: 10px;">Friday, September 13 at 5 a.m. PDT in more than 58 countries and regions.</p></div>
+              <div class="card"><h3>Availability</h3><p class="small" style="margin-top: 10px;">Friday, September 20; additional markets listed for September 27.</p></div>
+            </div>
+          </div>
+        </div>
+        <footer class="slide-footer"><span>Pricing, availability, carrier/trade-in, and accessory details are all source-supported</span><span>09 / 09</span></footer>
+      </section>
+    </main>
+  </div>
+
+  <div class="controls" aria-label="Slide controls">
+    <button class="nav-btn" type="button" id="prev" aria-label="Previous slide">Prev</button>
+    <span class="counter" id="counter">01 / 09</span>
+    <button class="nav-btn" type="button" id="next" aria-label="Next slide">Next</button>
+  </div>
+
+  <script>
+    (() => {
+      const stage = document.getElementById("stage");
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const counter = document.getElementById("counter");
+      const storageKey = "case-gen-002-iphone16pro-slide";
+      let current = Number(localStorage.getItem(storageKey) || 0);
+
+      function fitStage() {
+        const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        document.documentElement.style.setProperty("--scale", String(Math.max(0.1, scale)));
+      }
+
+      function show(index) {
+        current = Math.max(0, Math.min(slides.length - 1, index));
+        slides.forEach((slide, slideIndex) => {
+          slide.classList.toggle("active", slideIndex === current);
+        });
+        counter.textContent = `${String(current + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+        localStorage.setItem(storageKey, String(current));
+      }
+
+      document.getElementById("prev").addEventListener("click", () => show(current - 1));
+      document.getElementById("next").addEventListener("click", () => show(current + 1));
+      window.addEventListener("resize", fitStage);
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+          event.preventDefault();
+          show(current + 1);
+        }
+        if (event.key === "ArrowLeft" || event.key === "PageUp") {
+          event.preventDefault();
+          show(current - 1);
+        }
+        if (event.key === "Home") show(0);
+        if (event.key === "End") show(slides.length - 1);
+      });
+
+      fitStage();
+      show(current);
+      stage.setAttribute("data-ready", "true");
+    })();
+  </script>
+</body>
+</html>

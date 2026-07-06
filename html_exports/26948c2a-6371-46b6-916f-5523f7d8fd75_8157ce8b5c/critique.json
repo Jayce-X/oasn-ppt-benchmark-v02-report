@@ -1,0 +1,26 @@
+{
+  "kind": "critique-panel",
+  "score": 4,
+  "axes": {
+    "clarity": {
+      "score": 4,
+      "notes": "The 8-slide sequence moves from problem to method, pipeline, experiments, results, and discussion with source trace labels on every slide."
+    },
+    "hierarchy": {
+      "score": 4,
+      "notes": "Each slide has one dominant headline and supporting panels; quantitative slides are dense but separated into table and chart regions."
+    },
+    "typography": {
+      "score": 4,
+      "notes": "Academic serif headings and system body text remain readable on the 1920x1080 canvas; numeric tables use tabular monospace styling."
+    },
+    "motion": {
+      "score": 4,
+      "notes": "Navigation is intentionally minimal for a paper deck: keyboard controls, persistent slide position, and progress state."
+    },
+    "brand": {
+      "score": 4,
+      "notes": "The visual system is restrained, paper-like, method-first, and avoids decorative claims or non-paper content."
+    }
+  }
+}

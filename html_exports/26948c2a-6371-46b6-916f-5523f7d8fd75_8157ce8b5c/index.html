@@ -1,0 +1,1084 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Infinity-Brush ECCV 2024 Paper Brief</title>
+  <style>
+    :root {
+      --bg: oklch(97% 0.006 92);
+      --paper: oklch(99% 0.003 92);
+      --ink: oklch(17% 0.025 242);
+      --muted: oklch(47% 0.022 242);
+      --line: oklch(82% 0.014 242);
+      --soft-line: oklch(90% 0.009 242);
+      --blue: oklch(54% 0.13 242);
+      --teal: oklch(58% 0.12 184);
+      --pink: oklch(69% 0.12 15);
+      --green: oklch(61% 0.12 145);
+      --amber: oklch(72% 0.13 78);
+      --violet: oklch(58% 0.13 292);
+      --font-display: "Iowan Old Style", Charter, Georgia, serif;
+      --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      --font-mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 16% 12%, color-mix(in oklch, var(--blue) 10%, transparent), transparent 30%),
+        linear-gradient(135deg, oklch(18% 0.02 245), oklch(10% 0.015 250));
+      color: var(--ink);
+      font-family: var(--font-body);
+      overflow: hidden;
+    }
+
+    .viewport {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .frame {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: top left;
+      background: var(--paper);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      grid-template-rows: auto 1fr auto;
+      padding: 70px 88px 54px;
+      background:
+        linear-gradient(90deg, color-mix(in oklch, var(--blue) 4%, transparent), transparent 42%),
+        var(--paper);
+    }
+
+    .slide.active { display: grid; }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 32px;
+      border: 1px solid var(--soft-line);
+      pointer-events: none;
+    }
+
+    header, main, footer { position: relative; z-index: 1; }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      font-family: var(--font-mono);
+      font-size: 19px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 640;
+      line-height: 0.98;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    h1 { max-width: 1300px; font-size: 88px; }
+    h2 { max-width: 1240px; font-size: 66px; }
+    h3 { font-size: 34px; line-height: 1.12; }
+
+    .slide-id {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    main {
+      min-height: 0;
+      padding: 40px 0 26px;
+    }
+
+    footer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: end;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      font-family: var(--font-mono);
+      font-size: 17px;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+
+    .trace strong { color: var(--ink); font-weight: 650; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .section-label::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      background: var(--blue);
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 1180px;
+      font-size: 36px;
+      line-height: 1.22;
+      color: var(--ink);
+    }
+
+    .body-copy {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.36;
+      color: var(--ink);
+    }
+
+    .muted { color: var(--muted); }
+    .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+    .accent { color: var(--blue); }
+    .teal { color: var(--teal); }
+    .pink { color: var(--pink); }
+    .green { color: var(--green); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 42px;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 30px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: color-mix(in oklch, var(--paper) 82%, white);
+      padding: 28px;
+      min-height: 0;
+    }
+
+    .panel.soft {
+      background: color-mix(in oklch, var(--bg) 76%, white);
+    }
+
+    .panel h3 {
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--soft-line);
+    }
+
+    .bullets {
+      display: grid;
+      gap: 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 29px;
+      line-height: 1.28;
+    }
+
+    .bullets li {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 14px;
+    }
+
+    .bullets li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-top: 14px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .small-bullets {
+      display: grid;
+      gap: 11px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 23px;
+      line-height: 1.24;
+    }
+
+    .small-bullets li {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 10px;
+    }
+
+    .small-bullets li::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      margin-top: 10px;
+      background: var(--teal);
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .stat {
+      border-top: 3px solid var(--blue);
+      background: color-mix(in oklch, var(--blue) 4%, white);
+      padding: 22px;
+      min-height: 126px;
+    }
+
+    .stat b {
+      display: block;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+      font-size: 34px;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+    }
+
+    .stat span {
+      display: block;
+      font-size: 19px;
+      line-height: 1.25;
+      color: var(--muted);
+    }
+
+    .equation {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+      padding: 28px;
+      border: 1px solid var(--line);
+      background: white;
+      font-family: var(--font-mono);
+      font-size: 27px;
+      line-height: 1.35;
+    }
+
+    .equation .caption {
+      font-family: var(--font-body);
+      font-size: 21px;
+      color: var(--muted);
+    }
+
+    .flow {
+      width: 100%;
+      height: 100%;
+      min-height: 560px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .flow text {
+      font-family: var(--font-body);
+      fill: var(--ink);
+    }
+
+    .flow .mono-text {
+      font-family: var(--font-mono);
+      font-size: 21px;
+      fill: var(--muted);
+    }
+
+    .flow .label {
+      font-size: 26px;
+      font-weight: 650;
+    }
+
+    .flow .tiny {
+      font-size: 19px;
+      fill: var(--muted);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 20px;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .table th,
+    .table td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--soft-line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .table th {
+      border-bottom: 2px solid var(--ink);
+      font-family: var(--font-mono);
+      font-size: 17px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .table .best {
+      font-weight: 760;
+      color: var(--blue);
+    }
+
+    .table .warn {
+      color: var(--pink);
+    }
+
+    .chart {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 170px 1fr 72px;
+      gap: 16px;
+      align-items: center;
+      font-size: 20px;
+    }
+
+    .bar-track {
+      height: 20px;
+      background: color-mix(in oklch, var(--line) 54%, white);
+      border: 1px solid var(--soft-line);
+      position: relative;
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--blue);
+    }
+
+    .bar.green { background: var(--green); }
+    .bar.pink { background: var(--pink); }
+    .bar-label { font-family: var(--font-mono); color: var(--muted); text-align: right; }
+
+    .source-note {
+      margin-top: 12px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .tag {
+      border: 1px solid var(--line);
+      padding: 8px 11px;
+      font-family: var(--font-mono);
+      font-size: 17px;
+      color: var(--ink);
+      background: white;
+    }
+
+    .dataset-matrix {
+      display: grid;
+      gap: 16px;
+    }
+
+    .dataset {
+      display: grid;
+      grid-template-columns: 210px 1fr 240px;
+      gap: 18px;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: white;
+      padding: 18px;
+    }
+
+    .dataset b {
+      font-family: var(--font-display);
+      font-size: 27px;
+      line-height: 1;
+    }
+
+    .dataset p {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.24;
+      color: var(--muted);
+    }
+
+    .dataset .metric {
+      font-family: var(--font-mono);
+      font-size: 19px;
+      color: var(--blue);
+    }
+
+    .qual-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 34px;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    .qual-svg {
+      width: 100%;
+      height: 100%;
+      min-height: 540px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 18px;
+      counter-reset: q;
+    }
+
+    .question {
+      counter-increment: q;
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 16px;
+      align-items: start;
+      border-top: 1px solid var(--soft-line);
+      padding-top: 18px;
+      font-size: 25px;
+      line-height: 1.3;
+    }
+
+    .question::before {
+      content: counter(q);
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 18px;
+      color: var(--blue);
+    }
+
+    .controls {
+      position: fixed;
+      z-index: 10;
+      right: 24px;
+      bottom: 22px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 14px;
+    }
+
+    .controls button {
+      width: 38px;
+      height: 34px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      cursor: pointer;
+    }
+
+    .progress {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      height: 4px;
+      width: 100%;
+      background: rgba(255,255,255,0.14);
+      z-index: 11;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--teal);
+      transition: width 180ms ease;
+    }
+
+    @media print {
+      body {
+        background: white;
+        overflow: visible;
+      }
+      .viewport {
+        position: static;
+        display: block;
+        padding: 0;
+      }
+      .frame {
+        width: 1920px;
+        height: auto;
+        transform: none !important;
+        box-shadow: none;
+        overflow: visible;
+      }
+      .slide {
+        position: relative;
+        display: grid !important;
+        width: 1920px;
+        height: 1080px;
+        page-break-after: always;
+      }
+      .controls,
+      .progress {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport" aria-live="polite">
+    <div class="frame" id="frame">
+      <section class="slide active" data-screen-label="01 Title">
+        <header>
+          <div>
+            <p class="kicker">ECCV 2024 paper brief - CASE-GEN-005</p>
+            <h1>∞-Brush: Controllable Large Image Synthesis with Diffusion Models in Infinite Dimensions</h1>
+          </div>
+          <div class="slide-id">01 / 08</div>
+        </header>
+        <main>
+          <div class="grid-2">
+            <div>
+              <p class="lede">A method-first reading for computer vision graduate students: how ∞-Brush makes conditional diffusion operate on image functions instead of fixed pixel grids.</p>
+              <div class="tag-list">
+                <span class="tag">Function-space diffusion</span>
+                <span class="tag">Cross-attention neural operator</span>
+                <span class="tag">Large-image synthesis</span>
+                <span class="tag">Histopathology + remote sensing</span>
+              </div>
+            </div>
+            <div class="panel soft">
+              <h3>Paper identity</h3>
+              <ul class="bullets">
+                <li>Authors: Minh-Quan Le, Alexandros Graikos, Srikar Yellapragada, Rajarsi Gupta, Joel Saltz, Dimitris Samaras.</li>
+                <li>Affiliation: Stony Brook University.</li>
+                <li>Source identity in the provided PDF: 17-page LaTeX paper with code URL listed as <span class="mono">github.com/cvlab-stonybrook/infinity-brush</span>.</li>
+              </ul>
+            </div>
+          </div>
+        </main>
+        <footer>
+          <div class="trace"><strong>Trace:</strong> PDF page 1 title block, abstract, author list, code URL.</div>
+          <div>Audience: CV graduate students</div>
+        </footer>
+      </section>
+
+      <section class="slide" data-screen-label="02 Problem">
+        <header>
+          <div>
+            <p class="kicker">Research problem and motivation</p>
+            <h2>Generate controllable very large images without being trapped by a fixed training resolution.</h2>
+          </div>
+          <div class="slide-id">02 / 08</div>
+        </header>
+        <main>
+          <div class="grid-3">
+            <div class="panel">
+              <h3>Why the problem matters</h3>
+              <ul class="small-bullets">
+                <li>Digital histopathology and remote sensing need precise, controllable synthesis beyond 1024 × 1024 pixels.</li>
+                <li>The paper frames this as useful for domains where large images encode global layout plus fine local structure.</li>
+                <li>The target scale reaches 4096 × 4096 in the experiments.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Finite diffusion limit</h3>
+              <ul class="small-bullets">
+                <li>Pixel-space or latent-space conditional diffusion is designed around the resolution seen during training.</li>
+                <li>Scaling resolution makes compute grow substantially; the paper describes 4096 × 4096 training as infeasible for SDXL in its setup.</li>
+                <li>Examples named in the paper include SDXL and Matryoshka Diffusion at up to 1024 × 1024.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>Patch-based trade-off</h3>
+              <ul class="small-bullets">
+                <li>Patch methods can be more efficient by synthesizing local segments.</li>
+                <li>The downside stated by the paper: weak long-range spatial dependencies because far-away patches do not sufficiently affect each other.</li>
+                <li>∞-Brush tries to keep the whole image as one function while sampling only sparse coordinates for training.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="stat-row">
+            <div class="stat"><b>4096²</b><span>largest resolution claimed in the paper's controllable synthesis experiments.</span></div>
+            <div class="stat"><b>1024²</b><span>upper resolution named for SDXL / Matryoshka-style finite models in the paper narrative.</span></div>
+            <div class="stat"><b>0.4%</b><span>approximate sampled pixel fraction used from full 4096² images during ∞-Brush training.</span></div>
+            <div class="stat"><b>16M</b><span>approximate point count N for 4096 × 4096 if every coordinate were attended to.</span></div>
+          </div>
+        </main>
+        <footer>
+          <div class="trace"><strong>Trace:</strong> PDF pages 1-4 introduction and related work; page 9 complexity discussion.</div>
+          <div>Problem: controllability + scale + global structure</div>
+        </footer>
+      </section>
+
+      <section class="slide" data-screen-label="03 Key Idea">
+        <header>
+          <div>
+            <p class="kicker">Key method idea</p>
+            <h2>Represent an image as a function; condition the denoiser in function space.</h2>
+          </div>
+          <div class="slide-id">03 / 08</div>
+        </header>
+        <main>
+          <div class="grid-2">
+            <div class="panel soft">
+              <h3>What changes conceptually?</h3>
+              <ul class="bullets">
+                <li>The dataset is written as pairs <span class="mono">(u<sub>k</sub>, e<sub>k</sub>)</span>, where <span class="mono">u</span> is an image function and <span class="mono">e</span> is a control component.</li>
+                <li>Instead of training on every pixel, ∞-Brush samples coordinates <span class="mono">x = {x<sup>(i)</sup>}</span> and observes the function values there.</li>
+                <li>The same learned function-space model can be queried at arbitrary coordinate meshes during inference.</li>
+              </ul>
+            </div>
+            <div class="equation">
+              <div><span class="muted">Data:</span> D = {(u<sub>k</sub>, e<sub>k</sub>)}</div>
+              <div><span class="muted">Forward:</span> Q(u<sub>t</sub>|u<sub>0</sub>) = N(√α&#772;<sub>t</sub>Au<sub>0</sub>, (1 - α&#772;<sub>t</sub>)ACA<sup>T</sup>)</div>
+              <div><span class="muted">Reverse:</span> P<sub>θ</sub>(u<sub>t-1</sub>|u<sub>t</sub>, e) = N(m<sub>θ</sub>(u<sub>t</sub>, e, t), AC<sub>θ</sub>(u<sub>t</sub>, e, t)A<sup>T</sup>)</div>
+              <div><span class="muted">Training target:</span> predict noise with ξ<sub>θ</sub>(√α&#772;<sub>t</sub>Au<sub>0</sub> + √(1 - α&#772;<sub>t</sub>)Aξ, e, t)</div>
+              <div class="caption">These are compact readings of equations (9), (10), and (14); the deck uses them to explain the method, not to re-prove the theorem.</div>
+            </div>
+          </div>
+        </main>
+        <footer>
+          <div class="trace"><strong>Trace:</strong> PDF pages 4-8 notation, conditional diffusion formulation, Proposition 1, Theorem 1.</div>
+          <div>Core abstraction: image-as-function</div>
+        </footer>
+      </section>
+
+      <section class="slide" data-screen-label="04 Pipeline Redraw">
+        <header>
+          <div>
+            <p class="kicker">Editable SVG reconstruction of Fig. 2</p>
+            <h2>∞-Brush denoises sparse point samples, injects three condition streams, then aggregates on a grid.</h2>
+          </div>
+          <div class="slide-id">04 / 08</div>
+        </header>
+        <main>
+          <svg class="flow" viewBox="0 0 1680 620" role="img" aria-label="Editable reconstruction of the Infinity-Brush conditional denoiser pipeline">
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L8,3 L0,6 Z" fill="oklch(35% 0.03 242)"></path>
+              </marker>
+              <pattern id="histology" width="36" height="36" patternUnits="userSpaceOnUse">
+                <rect width="36" height="36" fill="oklch(94% 0.045 15)"></rect>
+                <circle cx="8" cy="9" r="8" fill="none" stroke="oklch(69% 0.12 15)" stroke-width="2"></circle>
+                <circle cx="25" cy="22" r="10" fill="none" stroke="oklch(75% 0.10 340)" stroke-width="2"></circle>
+                <path d="M0 30 C12 22, 20 38, 36 26" fill="none" stroke="oklch(62% 0.11 15)" stroke-width="2"></path>
+              </pattern>
+              <pattern id="gridDots" width="22" height="22" patternUnits="userSpaceOnUse">
+                <rect width="22" height="22" fill="oklch(96% 0.01 242)"></rect>
+                <circle cx="11" cy="11" r="2" fill="oklch(54% 0.13 242)"></circle>
+              </pattern>
+              <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(0,0,0,0.16)"></feDropShadow>
+              </filter>
+            </defs>
+
+            <text x="74" y="92" class="mono-text">Noisy function u in H</text>
+            <rect x="72" y="118" width="120" height="120" fill="url(#histology)" stroke="oklch(69% 0.12 15)" stroke-width="2"></rect>
+            <g fill="oklch(54% 0.13 242)">
+              <circle cx="240" cy="140" r="4"></circle><circle cx="274" cy="164" r="4"></circle>
+              <circle cx="236" cy="211" r="4"></circle><circle cx="298" cy="225" r="4"></circle>
+              <circle cx="285" cy="120" r="4"></circle>
+            </g>
+            <text x="226" y="260" class="tiny">random coordinate subset</text>
+
+            <line x1="195" y1="178" x2="332" y2="178" stroke="oklch(35% 0.03 242)" stroke-width="3" marker-end="url(#arrow)"></line>
+            <rect x="335" y="132" width="172" height="92" rx="10" fill="oklch(88% 0.04 242)" stroke="oklch(54% 0.13 242)" stroke-width="2" filter="url(#softShadow)"></rect>
+            <text x="366" y="168" class="label">Sparse</text>
+            <text x="366" y="199" class="label">neural op</text>
+
+            <line x1="508" y1="178" x2="578" y2="178" stroke="oklch(35% 0.03 242)" stroke-width="3" marker-end="url(#arrow)"></line>
+            <rect x="582" y="118" width="250" height="120" rx="10" fill="oklch(86% 0.05 145)" stroke="oklch(56% 0.12 145)" stroke-width="2" filter="url(#softShadow)"></rect>
+            <text x="624" y="161" class="label">Cross-attention</text>
+            <text x="627" y="196" class="label">neural operator</text>
+
+            <line x1="834" y1="178" x2="910" y2="178" stroke="oklch(35% 0.03 242)" stroke-width="3" marker-end="url(#arrow)"></line>
+            <rect x="914" y="132" width="186" height="92" rx="10" fill="oklch(96% 0.004 242)" stroke="oklch(68% 0.035 242)" stroke-width="2" filter="url(#softShadow)"></rect>
+            <text x="951" y="168" class="label">Self-attn</text>
+            <text x="934" y="199" class="label">neural op</text>
+
+            <line x1="1102" y1="178" x2="1192" y2="178" stroke="oklch(35% 0.03 242)" stroke-width="3" marker-end="url(#arrow)"></line>
+            <rect x="1196" y="136" width="98" height="82" rx="8" fill="oklch(91% 0.07 78)" stroke="oklch(72% 0.13 78)" stroke-width="2"></rect>
+            <text x="1224" y="170" class="label">kNN</text>
+            <text x="1218" y="199" class="tiny">linear interp.</text>
+
+            <path d="M1248 220 C1250 336, 1060 370, 940 398" fill="none" stroke="oklch(35% 0.03 242)" stroke-width="3" marker-end="url(#arrow)"></path>
+            <rect x="504" y="388" width="636" height="112" rx="10" fill="url(#gridDots)" stroke="oklch(78% 0.04 330)" stroke-width="2"></rect>
+            <text x="682" y="450" class="label">Grid-level UNO aggregates global information</text>
+            <text x="690" y="484" class="tiny">regular grid after sparse-to-grid interpolation</text>
+            <path d="M1141 445 C1265 418, 1396 328, 1434 236" fill="none" stroke="oklch(35% 0.03 242)" stroke-width="3" marker-end="url(#arrow)"></path>
+
+            <rect x="1440" y="118" width="120" height="120" fill="url(#histology)" stroke="oklch(58% 0.12 184)" stroke-width="2"></rect>
+            <text x="1412" y="92" class="mono-text">Denoised function s in H</text>
+
+            <g>
+              <text x="354" y="40" class="tiny">timestep t</text>
+              <rect x="365" y="56" width="82" height="28" rx="6" fill="oklch(90% 0.045 292)" stroke="oklch(58% 0.13 292)"></rect>
+              <text x="384" y="77" class="tiny">encoder</text>
+              <line x1="406" y1="84" x2="406" y2="126" stroke="oklch(35% 0.03 242)" stroke-width="2" marker-end="url(#arrow)"></line>
+            </g>
+            <g>
+              <text x="626" y="40" class="tiny">condition e</text>
+              <rect x="635" y="56" width="86" height="28" rx="6" fill="oklch(90% 0.045 292)" stroke="oklch(58% 0.13 292)"></rect>
+              <text x="654" y="77" class="tiny">encoder</text>
+              <line x1="678" y1="84" x2="678" y2="114" stroke="oklch(35% 0.03 242)" stroke-width="2" marker-end="url(#arrow)"></line>
+            </g>
+            <g>
+              <text x="936" y="40" class="tiny">coordinate c in R^{Nxd}</text>
+              <rect x="978" y="56" width="86" height="28" rx="6" fill="oklch(90% 0.045 292)" stroke="oklch(58% 0.13 292)"></rect>
+              <text x="997" y="77" class="tiny">encoder</text>
+              <line x1="1021" y1="84" x2="1021" y2="126" stroke="oklch(35% 0.03 242)" stroke-width="2" marker-end="url(#arrow)"></line>
+            </g>
+
+            <rect x="598" y="292" width="452" height="58" fill="oklch(98% 0.006 92)" stroke="oklch(82% 0.014 242)" stroke-width="2"></rect>
+            <text x="620" y="329" class="mono-text">sparse level = fine details; grid level = global structure</text>
+          </svg>
+        </main>
+        <footer>
+          <div class="trace"><strong>Trace:</strong> Reconstructed from PDF page 9, Fig. 2 caption and Section 4.2 text.</div>
+          <div>Diagram is editable SVG, not a screenshot</div>
+        </footer>
+      </section>
+
+      <section class="slide" data-screen-label="05 Cross-Attention Operator">
+        <header>
+          <div>
+            <p class="kicker">The operator that makes conditioning scalable</p>
+            <h2>Move conditioning to sparse function samples with linear complexity in N.</h2>
+          </div>
+          <div class="slide-id">05 / 08</div>
+        </header>
+        <main>
+          <div class="grid-2">
+            <div class="panel soft">
+              <h3>Inputs to cross-attention</h3>
+              <ul class="bullets">
+                <li><span class="mono">L = 3</span> condition streams: diffusion timestep <span class="mono">t</span>, condition embedding <span class="mono">e</span>, and coordinate embedding <span class="mono">c</span>.</li>
+                <li>Queries come from sparse point evaluations; keys and values come from each conditional embedding stream.</li>
+                <li>The paper's key implementation detail: multiply normalized keys and values pointwise before the query dot product.</li>
+              </ul>
+            </div>
+            <div>
+              <div class="equation">
+                <div>Vanilla attention: <span class="pink">O(N²d)</span></div>
+                <div>Cross-attention neural operator: <span class="green">O((N + ΣN<sub>l</sub>)d²)</span></div>
+                <div>Why it matters: at 4096 × 4096, <span class="mono">N ≈ 16M</span> if every coordinate is represented.</div>
+                <div class="caption">The paper states that the proposed operator is linear with respect to the number of points N.</div>
+              </div>
+              <div class="chart" style="margin-top: 24px;">
+                <div class="bar-row"><span>Naive attention</span><div class="bar-track"><div class="bar pink" style="width: 100%;"></div></div><span class="bar-label">N²</span></div>
+                <div class="bar-row"><span>∞-Brush operator</span><div class="bar-track"><div class="bar green" style="width: 31%;"></div></div><span class="bar-label">linear</span></div>
+                <div class="source-note">Scale sketch, not a measured runtime chart. Complexity classes are from Eq. 15 discussion.</div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <footer>
+          <div class="trace"><strong>Trace:</strong> PDF page 9, Eq. 15 and paragraph immediately below Fig. 2.</div>
+          <div>Method focus: conditioning where fine detail lives</div>
+        </footer>
+      </section>
+
+      <section class="slide" data-screen-label="06 Experimental Setup">
+        <header>
+          <div>
+            <p class="kicker">Experimental setup</p>
+            <h2>Three domains test conditioning, very-large synthesis, and scalability.</h2>
+          </div>
+          <div class="slide-id">06 / 08</div>
+        </header>
+        <main>
+          <div class="grid-2">
+            <div class="dataset-matrix">
+              <div class="dataset">
+                <b>CelebA-HQ</b>
+                <p>30k images at 1024 × 1024. Used as a testbed for the cross-attention neural operator with blonde / non-blonde hair conditioning.</p>
+                <div class="metric">CLIP FID</div>
+              </div>
+              <div class="dataset">
+                <b>TCGA-BRCA</b>
+                <p>Breast cancer histopathology: 57k patches at 4096 × 4096 and 976k patches at 1024 × 1024. Conditioning via Quilt embeddings from 256 × 256 resized images.</p>
+                <div class="metric">CLIP FID + Crop FID</div>
+              </div>
+              <div class="dataset">
+                <b>NAIP</b>
+                <p>35k satellite image patches at 1024 × 1024 from Chesapeake Land Cover. Conditioning via DINO embeddings from ViT-B/16 trained on resized images.</p>
+                <div class="metric">CLIP FID + Crop FID</div>
+              </div>
+            </div>
+            <div class="panel soft">
+              <h3>Implementation details to remember</h3>
+              <ul class="bullets">
+                <li>All ∞-Brush models are trained from scratch.</li>
+                <li>Each training iteration samples <span class="mono">256 × 256 = 65,536</span> pixels from the image.</li>
+                <li>Training uses Adam with learning rate <span class="mono">5e-5</span>, EMA rate <span class="mono">0.995</span>, DDIM with 50 inference steps.</li>
+                <li>Reported ∞-Brush training uses 4 NVIDIA A100 GPUs, batch size 20 per GPU.</li>
+              </ul>
+            </div>
+          </div>
+        </main>
+        <footer>
+          <div class="trace"><strong>Trace:</strong> PDF pages 10-11, Section 5.1 and 5.2.</div>
+          <div>Metrics: CLIP FID for global structure; Crop FID for fine detail</div>
+        </footer>
+      </section>
+
+      <section class="slide" data-screen-label="07 Quantitative Results">
+        <header>
+          <div>
+            <p class="kicker">Main quantitative results</p>
+            <h2>∞-Brush improves global structure scores, with a local-detail trade-off.</h2>
+          </div>
+          <div class="slide-id">07 / 08</div>
+        </header>
+        <main>
+          <div class="grid-2">
+            <div class="panel">
+              <h3>4096 × 4096 TCGA-BRCA</h3>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Method</th>
+                    <th>Training config.</th>
+                    <th>CLIP FID ↓</th>
+                    <th>Crop FID ↓</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Graikos et al. [10]</td>
+                    <td>976k patches of 1024 × 1024</td>
+                    <td>2.75</td>
+                    <td class="best">11.30</td>
+                  </tr>
+                  <tr>
+                    <td>∞-Brush</td>
+                    <td>256 × 256 pixels of 57k full-size images</td>
+                    <td class="best">2.63</td>
+                    <td>14.76</td>
+                  </tr>
+                  <tr>
+                    <td>∞-Brush without cross-attn neural operator</td>
+                    <td>ablation</td>
+                    <td class="warn">3.81</td>
+                    <td class="warn">16.28</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="source-note">The paper interprets lower CLIP FID as better global structure and lower Crop FID as better fine detail.</div>
+            </div>
+            <div>
+              <div class="panel soft">
+                <h3>Scalability signal</h3>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Method</th>
+                      <th>Params.</th>
+                      <th>1024² epoch</th>
+                      <th>4096² epoch</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>SDXL</td><td>3.5B</td><td>140 hr</td><td>1000 hr estimated; currently infeasible</td></tr>
+                    <tr><td>Graikos et al.</td><td>860M</td><td>45 hr</td><td>300 hr</td></tr>
+                    <tr><td>∞-Brush</td><td class="best">450M</td><td class="best">12 hr</td><td class="best">12 hr</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="chart" style="margin-top: 22px;">
+                <div class="section-label">1024 × 1024 CLIP FID from Table 3</div>
+                <div class="bar-row"><span>BRCA SDXL</span><div class="bar-track"><div class="bar pink" style="width: 62%;"></div></div><span class="bar-label">6.64</span></div>
+                <div class="bar-row"><span>BRCA ∞-Brush</span><div class="bar-track"><div class="bar green" style="width: 35%;"></div></div><span class="bar-label">3.74</span></div>
+                <div class="bar-row"><span>NAIP SDXL</span><div class="bar-track"><div class="bar pink" style="width: 100%;"></div></div><span class="bar-label">10.90</span></div>
+                <div class="bar-row"><span>NAIP ∞-Brush</span><div class="bar-track"><div class="bar green" style="width: 58%;"></div></div><span class="bar-label">6.32</span></div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <footer>
+          <div class="trace"><strong>Trace:</strong> PDF pages 12-14, Tables 2-4 and Section 5.3 discussion.</div>
+          <div>No invented baselines; all numbers copied from paper tables</div>
+        </footer>
+      </section>
+
+      <section class="slide" data-screen-label="08 Qualitative + Discussion">
+        <header>
+          <div>
+            <p class="kicker">Qualitative reading, limitations, discussion</p>
+            <h2>Figure 4 supports the global-structure story; limitations point to local detail and initialization.</h2>
+          </div>
+          <div class="slide-id">08 / 08</div>
+        </header>
+        <main>
+          <div class="qual-grid">
+            <svg class="qual-svg" viewBox="0 0 900 610" role="img" aria-label="Editable figure-based explanation of synthetic and reference image comparison">
+              <defs>
+                <marker id="arrowQual" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="oklch(35% 0.03 242)"></path>
+                </marker>
+                <pattern id="tissueA" width="46" height="46" patternUnits="userSpaceOnUse">
+                  <rect width="46" height="46" fill="oklch(95% 0.035 15)"></rect>
+                  <circle cx="12" cy="14" r="12" fill="white" stroke="oklch(70% 0.10 15)" stroke-width="2"></circle>
+                  <circle cx="34" cy="33" r="14" fill="white" stroke="oklch(68% 0.10 340)" stroke-width="2"></circle>
+                  <path d="M0 42 C18 20, 27 48, 46 24" fill="none" stroke="oklch(56% 0.11 20)" stroke-width="3"></path>
+                </pattern>
+                <pattern id="tissueB" width="42" height="42" patternUnits="userSpaceOnUse">
+                  <rect width="42" height="42" fill="oklch(91% 0.05 320)"></rect>
+                  <circle cx="11" cy="12" r="5" fill="oklch(45% 0.12 285)"></circle>
+                  <circle cx="30" cy="20" r="6" fill="oklch(50% 0.13 290)"></circle>
+                  <path d="M0 34 C16 8, 25 45, 42 14" fill="none" stroke="white" stroke-width="4" opacity="0.7"></path>
+                </pattern>
+                <pattern id="satA" width="44" height="44" patternUnits="userSpaceOnUse">
+                  <rect width="44" height="44" fill="oklch(78% 0.06 150)"></rect>
+                  <path d="M-6 34 L50 8" stroke="oklch(52% 0.06 150)" stroke-width="9"></path>
+                  <path d="M2 5 L45 50" stroke="oklch(56% 0.08 230)" stroke-width="5"></path>
+                  <rect x="22" y="16" width="12" height="9" fill="oklch(70% 0.10 75)"></rect>
+                </pattern>
+              </defs>
+              <text x="36" y="58" font-family="var(--font-mono)" font-size="22" fill="oklch(47% 0.022 242)">Figure-based explanation reconstructed from Fig. 4</text>
+              <text x="42" y="130" font-family="var(--font-display)" font-size="38" fill="oklch(17% 0.025 242)">Single 256 × 256 embedding</text>
+              <rect x="44" y="162" width="126" height="126" fill="url(#tissueA)" stroke="oklch(82% 0.014 242)" stroke-width="2"></rect>
+              <line x1="178" y1="225" x2="318" y2="225" stroke="oklch(35% 0.03 242)" stroke-width="4" marker-end="url(#arrowQual)"></line>
+              <rect x="326" y="146" width="202" height="158" fill="url(#tissueA)" stroke="oklch(69% 0.12 15)" stroke-width="5"></rect>
+              <text x="348" y="337" font-family="var(--font-mono)" font-size="20" fill="oklch(47% 0.022 242)">Synthetic 4096</text>
+              <rect x="566" y="146" width="202" height="158" fill="url(#tissueA)" stroke="oklch(54% 0.13 242)" stroke-width="5" opacity="0.92"></rect>
+              <text x="592" y="337" font-family="var(--font-mono)" font-size="20" fill="oklch(47% 0.022 242)">Reference 4096</text>
+              <rect x="326" y="382" width="94" height="86" fill="url(#tissueA)" stroke="oklch(69% 0.12 15)" stroke-width="4"></rect>
+              <rect x="434" y="382" width="94" height="86" fill="url(#tissueB)" stroke="oklch(69% 0.12 15)" stroke-width="4"></rect>
+              <text x="332" y="500" font-family="var(--font-mono)" font-size="18" fill="oklch(47% 0.022 242)">Synthetic 1024 crops</text>
+              <rect x="566" y="382" width="94" height="86" fill="url(#tissueA)" stroke="oklch(54% 0.13 242)" stroke-width="4"></rect>
+              <rect x="674" y="382" width="94" height="86" fill="url(#tissueB)" stroke="oklch(54% 0.13 242)" stroke-width="4"></rect>
+              <text x="576" y="500" font-family="var(--font-mono)" font-size="18" fill="oklch(47% 0.022 242)">Reference 1024 crops</text>
+              <text x="42" y="558" font-family="var(--font-body)" font-size="25" fill="oklch(17% 0.025 242)">Claim in paper: generated images preserve global structures of the reference image.</text>
+            </svg>
+            <div class="panel soft">
+              <h3>Limitations stated by the paper</h3>
+              <ul class="small-bullets">
+                <li>Images have better global structure consistency, but are not better than other methods in local details.</li>
+                <li>The paper hypothesizes that ∞-Brush has fewer parameters than Graikos et al. and is trained from scratch.</li>
+                <li>No infinite-dimensional pre-trained models are available for initialization in their setup.</li>
+                <li>Future work: local neural operators for fine details and transfer from finite-dimensional diffusion models.</li>
+              </ul>
+              <div class="question-list" style="margin-top: 26px;">
+                <div class="question">Can conditioning with a single global embedding explain the worse Crop FID?</div>
+                <div class="question">What local neural operator would preserve the function-space scalability?</div>
+                <div class="question">Which pretraining signal would transfer cleanly from finite to infinite-dimensional diffusion?</div>
+              </div>
+            </div>
+          </div>
+        </main>
+        <footer>
+          <div class="trace"><strong>Trace:</strong> PDF page 12 Fig. 4 caption and discussion; page 14 Limitations and Conclusion.</div>
+          <div>End: discussion questions for seminar use</div>
+        </footer>
+      </section>
+    </div>
+  </div>
+
+  <div class="controls" aria-label="Slide controls">
+    <button type="button" id="prev" aria-label="Previous slide">‹</button>
+    <span id="counter">1 / 8</span>
+    <button type="button" id="next" aria-label="Next slide">›</button>
+  </div>
+  <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+  <script>
+    (() => {
+      const frame = document.getElementById("frame");
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const counter = document.getElementById("counter");
+      const progress = document.getElementById("progress");
+      const storageKey = "infinity-brush-eccv1041-slide";
+      let current = Number.parseInt(localStorage.getItem(storageKey) || "0", 10);
+      if (!Number.isFinite(current) || current < 0 || current >= slides.length) current = 0;
+
+      function fit() {
+        const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        frame.style.transform = `scale(${scale})`;
+        frame.parentElement.style.width = `${1920 * scale}px`;
+        frame.parentElement.style.height = `${1080 * scale}px`;
+      }
+
+      function show(index) {
+        current = Math.max(0, Math.min(slides.length - 1, index));
+        slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+        counter.textContent = `${current + 1} / ${slides.length}`;
+        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        localStorage.setItem(storageKey, String(current));
+      }
+
+      function step(delta) {
+        show(current + delta);
+      }
+
+      document.getElementById("prev").addEventListener("click", () => step(-1));
+      document.getElementById("next").addEventListener("click", () => step(1));
+      window.addEventListener("resize", fit);
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+          event.preventDefault();
+          step(1);
+        }
+        if (event.key === "ArrowLeft" || event.key === "PageUp" || event.key === "Backspace") {
+          event.preventDefault();
+          step(-1);
+        }
+        if (event.key === "Home") show(0);
+        if (event.key === "End") show(slides.length - 1);
+      });
+
+      fit();
+      show(current);
+    })();
+  </script>
+</body>
+</html>
