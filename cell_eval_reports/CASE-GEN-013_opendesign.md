@@ -7,9 +7,9 @@
 
 Strong concave-mirror technical explainer with clear ray diagrams and learning sequence. Scored on the OpenDesign source artifact rather than repeatedly penalizing the report PPTX screenshot wrapper.
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/opendesign/CASE-GEN-013/opendesign_CASE-GEN-013.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/opendesign/CASE-GEN-013/opendesign_CASE-GEN-013.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/opendesign_v02/CASE-GEN-013/CASE-GEN-013_opendesign_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/opendesign_v02/CASE-GEN-013/CASE-GEN-013_opendesign_montage.png`
 
 ## 打分项结果
 

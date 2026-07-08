@@ -7,11 +7,11 @@
 
 OpenClaw 使用 GLM5.2 驱动 ppt-master 正式流程完成了 9 页 iPhone 16 Pro 产品发布 PPT：Apple Intelligence、A18 Pro、Camera Control、显示屏、相机、电池、设计环保、价格/上市信息和功能对比均来自 Apple 来源；PPT 使用源 PDF 图片素材和可编辑 DrawingML 文本/形状/规格表，并在预算内产出有效 PPTX。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/openclaw/CASE-GEN-002/openclaw_CASE-GEN-002.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/openclaw/CASE-GEN-002/openclaw_CASE-GEN-002.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/openclaw/CASE-GEN-002/CASE-GEN-002_openclaw_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/openclaw/CASE-GEN-002/CASE-GEN-002_openclaw_montage.png`
 
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/logs/openclaw_pptmaster/CASE-GEN-002_run.json`
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/logs/openclaw_pptmaster/CASE-GEN-002_run.json`
 
 ## 打分项结果
 

@@ -7,9 +7,9 @@
 
 通过局部字体修改：第 8 页非标题文本增大 2pt，标题不变，文本仍可编辑，页数/内容保持稳定。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/manus_lite/CASE-EDIT-006/manus_lite_CASE-EDIT-006.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/manus_lite/CASE-EDIT-006/manus_lite_CASE-EDIT-006.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-006/manus_lite/CASE-EDIT-006_manus_lite_before_after.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-006/manus_lite/CASE-EDIT-006_manus_lite_before_after.png`
 
 ## 打分项结果
 

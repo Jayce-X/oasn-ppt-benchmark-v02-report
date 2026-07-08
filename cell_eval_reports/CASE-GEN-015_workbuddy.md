@@ -7,9 +7,9 @@
 
 通过全部 v0.2 自注意力检查：10 页 PPT、Q/K/V 公式、玩具维度、热力图、流程图、causal mask，以及可编辑形状/表格。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-015/workbuddy_CASE-GEN-015.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-015/workbuddy_CASE-GEN-015.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-015/CASE-GEN-015_workbuddy_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-015/CASE-GEN-015_workbuddy_montage.png`
 
 ## 打分项结果
 

@@ -7,9 +7,9 @@
 
 通过全部 v0.2 热泵检查：9 页 PPT、组件/状态/模式/COP 覆盖、清晰流向图，以及原生可编辑形状/箭头。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-014/workbuddy_CASE-GEN-014.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-014/workbuddy_CASE-GEN-014.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-014/CASE-GEN-014_workbuddy_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-014/CASE-GEN-014_workbuddy_montage.png`
 
 ## 打分项结果
 

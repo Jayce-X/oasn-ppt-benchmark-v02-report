@@ -7,9 +7,9 @@
 
 通过全部 v0.2 实验复盘检查：使用来源数据、没有无依据显著性主张、决策框架清晰，并包含多个原生图表。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-017/workbuddy_CASE-GEN-017.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-017/workbuddy_CASE-GEN-017.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-017/CASE-GEN-017_workbuddy_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-017/CASE-GEN-017_workbuddy_montage.png`
 
 ## 打分项结果
 

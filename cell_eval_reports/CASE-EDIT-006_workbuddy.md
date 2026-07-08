@@ -7,9 +7,9 @@
 
 使用历史产物，不是本轮 v0.2 新跑。为了横向比较，分数已按当前用例的满分重新折算。
 
-产出：`本地运行目录/test_runs/workbuddy_ppt_benchmark_20260701/CASE-EDIT-006/workbuddy_CASE-EDIT-006.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/workbuddy_ppt_benchmark_20260701/CASE-EDIT-006/workbuddy_CASE-EDIT-006.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-006/workbuddy/CASE-EDIT-006_workbuddy_before_after.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-006/workbuddy/CASE-EDIT-006_workbuddy_before_after.png`
 
 ## 打分项结果
 

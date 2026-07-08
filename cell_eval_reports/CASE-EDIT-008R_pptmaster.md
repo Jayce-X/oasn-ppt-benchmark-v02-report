@@ -1,17 +1,15 @@
 # CASE-EDIT-008R 详细评分 - Codex（ppt master）
 
-状态：正式原生编辑流程新跑结果
+状态：正式流程新跑结果
 分数：8/8
 
 ## 摘要
 
 正式 ppt-master 原生编辑完成了这个用例：目标修改生效，修改后的对象仍可编辑，非目标页面和元素也保持稳定。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/CASE-EDIT-008R/pptmaster_CASE-EDIT-008R.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/CASE-EDIT-008R/pptmaster_CASE-EDIT-008R.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-008R/pptmaster/CASE-EDIT-008R_pptmaster_before_after.png`
-
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/official_runs/20260703_110830/projects/pptmaster_v02_case_edit_008r_20260703_110830_ppt169_20260703/official_native_edit_receipt.md`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-008R/pptmaster/CASE-EDIT-008R_pptmaster_before_after.png`
 
 ## 打分项结果
 

@@ -7,7 +7,7 @@
 
 CASE-GEN-014：已尝试运行 Manus lite，但在等待窗口内没有拿到可下载的最终 PPTX。
 
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/logs/manus_lite/CASE-GEN-014_socket_responses.json`
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/logs/manus_lite/CASE-GEN-014_socket_responses.json`
 
 ## 打分项结果
 

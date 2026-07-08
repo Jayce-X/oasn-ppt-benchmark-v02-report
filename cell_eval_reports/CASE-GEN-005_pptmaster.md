@@ -7,11 +7,11 @@
 
 正式 ppt-master 流程通过了这个用例的全部检查。内容能回到来源，结构完整；这个用例要求的视觉、图表和可编辑对象也都达标。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/CASE-GEN-005/pptmaster_CASE-GEN-005.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/CASE-GEN-005/pptmaster_CASE-GEN-005.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/pptmaster/CASE-GEN-005/CASE-GEN-005_pptmaster_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/pptmaster/CASE-GEN-005/CASE-GEN-005_pptmaster_montage.png`
 
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/official_runs/20260703_110830/projects/pptmaster_v02_case_gen_005_20260703_110830_ppt169_20260703/official_workflow_receipt.md`
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/official_runs/20260703_110830/projects/pptmaster_v02_case_gen_005_20260703_110830_ppt169_20260703/official_workflow_receipt.md`
 
 ## 打分项结果
 

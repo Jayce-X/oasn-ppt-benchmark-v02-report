@@ -7,9 +7,9 @@
 
 通过全部 v0.2 增长指标检查：只使用来源数据、高管叙事、KPI/漏斗/月度/渠道/CAC/留存计算，以及原生图表。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-016/workbuddy_CASE-GEN-016.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-016/workbuddy_CASE-GEN-016.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-016/CASE-GEN-016_workbuddy_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-016/CASE-GEN-016_workbuddy_montage.png`
 
 ## 打分项结果
 

@@ -7,9 +7,9 @@
 
 内容大体基于来源，PPTX 里也有可编辑对象。扣分点是页数不对：题目要求 10 页，但实际给了 11 页；最后一页还比较拥挤。
 
-产出：`本地运行目录/test_runs/ppt_case1_multi_agent_20260702_215551/agents/workbuddy/workbuddy_CASE-GEN-001.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_case1_multi_agent_20260702_215551/agents/workbuddy/workbuddy_CASE-GEN-001.pptx`
 
-截图：`本地运行目录/test_runs/ppt_case1_multi_agent_20260702_215551/report/screenshots/workbuddy/montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_case1_multi_agent_20260702_215551/report/screenshots/workbuddy/montage.png`
 
 ## 打分项结果
 

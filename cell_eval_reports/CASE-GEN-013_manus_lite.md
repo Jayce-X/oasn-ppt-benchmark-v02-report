@@ -7,7 +7,7 @@
 
 CASE-GEN-013：已尝试运行 Manus lite，但运行中遇到额度/积分限制，没有产出最终 PPTX。
 
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/logs/manus_lite/CASE-GEN-013_socket_responses.json`
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/logs/manus_lite/CASE-GEN-013_socket_responses.json`
 
 ## 打分项结果
 

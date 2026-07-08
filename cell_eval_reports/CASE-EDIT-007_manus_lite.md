@@ -7,9 +7,9 @@
 
 通过文本转图表编辑：第 8 页来源文本数据被转换为带标记点的原生可编辑折线图，2013-2017 数值正确，标签可读，并在编辑预算内输出有效 PPTX。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/manus_lite/CASE-EDIT-007/manus_lite_CASE-EDIT-007.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/manus_lite/CASE-EDIT-007/manus_lite_CASE-EDIT-007.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-007/manus_lite/CASE-EDIT-007_manus_lite_before_after.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-007/manus_lite/CASE-EDIT-007_manus_lite_before_after.png`
 
 ## 打分项结果
 

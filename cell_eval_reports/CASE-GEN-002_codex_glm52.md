@@ -7,11 +7,11 @@
 
 Codex 使用 GLM5.2 驱动 ppt-master 正式流程完成 9 页 iPhone 16 Pro 产品发布 PPT：产品事实、发布叙事、Apple 图片素材、规格对比和可编辑文本/形状/媒体布局均达标。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/codex_glm52/CASE-GEN-002/codex_glm52_CASE-GEN-002.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/codex_glm52/CASE-GEN-002/codex_glm52_CASE-GEN-002.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/codex_glm52/CASE-GEN-002/CASE-GEN-002_codex_glm52_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/codex_glm52/CASE-GEN-002/CASE-GEN-002_codex_glm52_montage.png`
 
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/logs/codex_glm52_pptmaster/CASE-GEN-002_run.json`
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/logs/codex_glm52_pptmaster/CASE-GEN-002_run.json`
 
 ## 打分项结果
 

@@ -7,11 +7,11 @@
 
 正式 ppt-master 原生编辑完成了这个用例：目标修改生效，修改后的对象仍可编辑，非目标页面和元素也保持稳定。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/CASE-MT-012/pptmaster_CASE-MT-012.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/CASE-MT-012/pptmaster_CASE-MT-012.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-MT-012/pptmaster/CASE-MT-012_pptmaster_before_after.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-MT-012/pptmaster/CASE-MT-012_pptmaster_before_after.png`
 
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/official_runs/20260703_110830/projects/pptmaster_v02_case_mt_012_20260703_110830_ppt169_20260703/official_native_edit_receipt.md`
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/pptmaster/official_runs/20260703_110830/projects/pptmaster_v02_case_mt_012_20260703_110830_ppt169_20260703/official_native_edit_receipt.md`
 
 ## 打分项结果
 

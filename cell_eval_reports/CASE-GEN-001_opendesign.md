@@ -7,9 +7,9 @@
 
 OpenDesign generated the strongest visual 10-slide HTML/SVG deck for Case 1. Its source artifact contains structured SVG/table content, so the chart/table requirement is counted; it still loses the final PPTX editability point because the report adapter rasterized slides.
 
-产出：`本地运行目录/test_runs/ppt_case1_multi_agent_20260702_215551/agents/opendesign/opendesign_CASE-GEN-001.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_case1_multi_agent_20260702_215551/agents/opendesign/opendesign_CASE-GEN-001.pptx`
 
-截图：`本地运行目录/test_runs/ppt_case1_multi_agent_20260702_215551/report/screenshots/opendesign/montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_case1_multi_agent_20260702_215551/report/screenshots/opendesign/montage.png`
 
 ## 打分项结果
 

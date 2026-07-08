@@ -7,9 +7,9 @@
 
 通过全部 v0.2 仪表盘要求：3 页 PPT、第 1 页仪表盘、基于来源的 KPI/图表数值、建议、品牌约束，以及原生可编辑 PowerPoint 对象。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-EDIT-008R/workbuddy_CASE-EDIT-008R.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-EDIT-008R/workbuddy_CASE-EDIT-008R.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-008R/workbuddy/CASE-EDIT-008R_workbuddy_before_after.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-008R/workbuddy/CASE-EDIT-008R_workbuddy_before_after.png`
 
 ## 打分项结果
 

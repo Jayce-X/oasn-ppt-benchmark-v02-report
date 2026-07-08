@@ -7,11 +7,11 @@
 
 OpenClaw 使用 GLM5.2 驱动 ppt-master 正式流程完成了 10 页 Fancy's Foods 投资人路演：产品、市场、竞争、分销、制造、财务、风险和合作诉求都能回到 PDF 依据；页面中包含多处由可编辑 DrawingML 文本/形状组成的数据图和表格，并在 20 分钟预算内产出有效 PPTX。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/openclaw/CASE-GEN-001/openclaw_CASE-GEN-001.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/openclaw/CASE-GEN-001/openclaw_CASE-GEN-001.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/openclaw/CASE-GEN-001/CASE-GEN-001_openclaw_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/openclaw/CASE-GEN-001/CASE-GEN-001_openclaw_montage.png`
 
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/logs/openclaw_pptmaster/CASE-GEN-001_run.json`
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/logs/openclaw_pptmaster/CASE-GEN-001_run.json`
 
 ## 打分项结果
 

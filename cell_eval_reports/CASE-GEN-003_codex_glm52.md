@@ -1,12 +1,52 @@
 # CASE-GEN-003 详细评分 - Codex（ppt master glm5.2）
 
-状态：缺失
-分数：缺失
+状态：正式流程新跑结果
+分数：6/6
 
 ## 摘要
 
-当前只要求 Codex GLM5.2 对照组跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行
+Codex 使用 GLM5.2 驱动 ppt-master 正式流程完成 Python 字典课堂课件：章节概念、代码示例、学习递进、练习和可编辑对象均达标。
+
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/codex_glm52/CASE-GEN-003/codex_glm52_CASE-GEN-003.pptx`
+
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/codex_glm52/CASE-GEN-003/CASE-GEN-003_codex_glm52_montage.png`
+
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/logs/codex_glm52_pptmaster/CASE-GEN-003_run.json`
 
 ## 打分项结果
 
-这个单元格没有逐项打分记录；表格里只展示已有的用例总分，或展示缺失/失败状态。
+### G-006（事实依据）: 通过
+
+课程 PPT 是否使用给定来源概念和有效 Python 语法准确解释 Python 字典？
+
+通过。
+
+### G-007（事实依据）: 通过
+
+PPT 是否避免偏题或无来源支持的 Python 内容，并让例子扎根于字典课程？
+
+通过。
+
+### C-003（覆盖度）: 通过
+
+课程 PPT 是否覆盖从基础、例子、练习到学习者检查的字典课程路径？
+
+通过。
+
+### N-003（叙事）: 通过
+
+课程 PPT 是否从概念到例子再到练习逐步推进，让学习者能跟上？
+
+通过。
+
+### V-004（视觉）: 通过
+
+课程 PPT 是否为定义、代码、例子和练习使用可读的教学布局？
+
+通过。
+
+### E-003（可编辑性）: 通过
+
+课程文本、代码片段、例子和练习是否作为结构化 PowerPoint 对象可编辑？
+
+通过。

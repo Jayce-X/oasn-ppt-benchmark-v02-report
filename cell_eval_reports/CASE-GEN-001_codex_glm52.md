@@ -7,11 +7,11 @@
 
 Codex 使用 GLM5.2 驱动 ppt-master 正式流程完成 10 页 Fancy's Foods 投资人路演：来源事实、章节覆盖、投资叙事、可编辑 DrawingML 图表/表格和有效 PPTX 交付均达标。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/codex_glm52/CASE-GEN-001/codex_glm52_CASE-GEN-001.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/codex_glm52/CASE-GEN-001/codex_glm52_CASE-GEN-001.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/codex_glm52/CASE-GEN-001/CASE-GEN-001_codex_glm52_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/codex_glm52/CASE-GEN-001/CASE-GEN-001_codex_glm52_montage.png`
 
-日志：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/logs/codex_glm52_pptmaster/CASE-GEN-001_run.json`
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/logs/codex_glm52_pptmaster/CASE-GEN-001_run.json`
 
 ## 打分项结果
 

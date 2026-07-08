@@ -7,9 +7,9 @@
 
 这份 Case 1 来自较早的 ppt-master SVG 流程，能看到来源、设计规格、SVG 输出和最终 PPTX，但标准导出/备份证据不完整。视觉上也偏弱：没有使用图片和图标，风格过于空，且第 7 页有文字溢出/裁切。所以它被标成“正式流程前结果”，不和后续正式批量结果混在一起。
 
-产出：`本地运行目录/test_runs/ppt_case1_multi_agent_20260702_215551/agents/pptmaster/pptmaster_CASE-GEN-001.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_case1_multi_agent_20260702_215551/agents/pptmaster/pptmaster_CASE-GEN-001.pptx`
 
-截图：`本地运行目录/test_runs/ppt_case1_multi_agent_20260702_215551/report/screenshots/pptmaster/montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_case1_multi_agent_20260702_215551/report/screenshots/pptmaster/montage.png`
 
 ## 打分项结果
 

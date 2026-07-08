@@ -1,11 +1,13 @@
 # CASE-GEN-013 详细评分 - Codex（ppt master glm5.2）
 
-状态：缺失
-分数：缺失
+状态：无 PPTX
+分数：无 PPTX
 
 ## 摘要
 
-当前只要求 Codex GLM5.2 对照组跑 CASE-GEN-001 和 CASE-GEN-002；该用例尚未运行
+已尝试运行，runner 正常返回，但目标路径没有最终 PPTX。
+
+日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/logs/codex_glm52_pptmaster/CASE-GEN-013_run.json`
 
 ## 打分项结果
 

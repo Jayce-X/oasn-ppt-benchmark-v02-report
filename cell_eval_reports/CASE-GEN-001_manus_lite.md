@@ -7,9 +7,9 @@
 
 这是一份整体较强的 10 页路演 PPT，视觉完成度和来源覆盖都不错。小问题是有少量战略性表述在 PDF 中没有明确依据。
 
-产出：`本地运行目录/test_runs/ppt_case1_multi_agent_20260702_215551/agents/manus_lite/manus_lite_CASE-GEN-001.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_case1_multi_agent_20260702_215551/agents/manus_lite/manus_lite_CASE-GEN-001.pptx`
 
-截图：`本地运行目录/test_runs/ppt_case1_multi_agent_20260702_215551/report/screenshots/manus_lite/montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_case1_multi_agent_20260702_215551/report/screenshots/manus_lite/montage.png`
 
 ## 打分项结果
 

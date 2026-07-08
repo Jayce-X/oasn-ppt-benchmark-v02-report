@@ -1,27 +1,31 @@
 {
-  "report": "本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/index.html",
+  "report": "/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/index.html",
   "cases": 17,
   "agents": [
-    "workbuddy",
-    "manus_lite",
     "pptmaster",
     "codex_glm52",
+    "openai_cli",
     "openclaw",
+    "openclaw_gpt55_high",
+    "workbuddy",
+    "manus_lite",
     "opendesign",
     "openagents"
   ],
-  "fresh_cells": 40,
+  "fresh_cells": 69,
   "historical_cells": 20,
   "reference_cells": 0,
   "blocked_cells": 0,
   "blocked_by_agent": {
-    "WorkBuddy": 0,
-    "Manus 1.6 Lite": 0,
     "Codex（ppt master）": 0,
     "Codex（ppt master glm5.2）": 0,
+    "OpenAI/Codex CLI（ppt master glm5.2）": 0,
     "OpenClaw（ppt master glm5.2）": 0,
+    "OpenClaw（ppt master gpt-5.5 extra high）": 0,
+    "WorkBuddy": 0,
+    "Manus 1.6 Lite": 0,
     "OpenDesign": 0,
     "OpenAgents（ppt master glm5.2）": 0
   },
-  "missing_cells": 45
+  "missing_cells": 27
 }

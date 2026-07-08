@@ -7,9 +7,9 @@
 
 OpenAgents 产出了一份完整的 10 页 Fancy's Foods 投资人路演 PPT，来源依据、章节覆盖、原生图表/表格和叙事都基本达标。但它的视觉表现更像表格化的数据报告，不像高完成度的投资人路演，因此从 10/10 下调为 9/10。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/openagents/CASE-GEN-001/openagents_CASE-GEN-001.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/openagents/CASE-GEN-001/openagents_CASE-GEN-001.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/openagents/CASE-GEN-001/CASE-GEN-001_openagents_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/openagents/CASE-GEN-001/CASE-GEN-001_openagents_montage.png`
 
 ## 打分项结果
 

@@ -7,9 +7,9 @@
 
 通过全部 v0.2 凹面镜检查：8 页 PPT、基于来源的定义/方程/情形、可编辑光线图，并且没有纯截图图示。
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-013/workbuddy_CASE-GEN-013.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/workbuddy/CASE-GEN-013/workbuddy_CASE-GEN-013.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-013/CASE-GEN-013_workbuddy_montage.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/rendered_outputs/workbuddy/CASE-GEN-013/CASE-GEN-013_workbuddy_montage.png`
 
 ## 打分项结果
 

@@ -7,9 +7,9 @@
 
 Strong dashboard artifact with clear KPI/chart hierarchy and source-derived metrics. Scored on the OpenDesign source artifact rather than repeatedly penalizing the report PPTX screenshot wrapper.
 
-产出：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/agents/opendesign/CASE-EDIT-008R/opendesign_CASE-EDIT-008R.pptx`
+产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/opendesign/CASE-EDIT-008R/opendesign_CASE-EDIT-008R.pptx`
 
-截图：`本地运行目录/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-008R/opendesign/CASE-EDIT-008R_opendesign_before_after.png`
+截图：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/report/assets/evidence/edit_before_after/CASE-EDIT-008R/opendesign/CASE-EDIT-008R_opendesign_before_after.png`
 
 ## 打分项结果
 
