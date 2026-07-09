@@ -5,12 +5,12 @@
     "pptmaster",
     "codex_glm52",
     "openai_cli",
+    "openagents",
     "openclaw",
     "openclaw_gpt55_high",
     "workbuddy",
     "manus_lite",
-    "opendesign",
-    "openagents"
+    "opendesign"
   ],
   "fresh_cells": 69,
   "historical_cells": 20,
@@ -20,12 +20,12 @@
     "Codex（ppt master）": 0,
     "Codex（ppt master glm5.2）": 0,
     "OpenAI/Codex CLI（ppt master glm5.2）": 0,
+    "openai sdk": 0,
     "OpenClaw（ppt master glm5.2）": 0,
     "OpenClaw（ppt master gpt-5.5 extra high）": 0,
     "WorkBuddy": 0,
     "Manus 1.6 Lite": 0,
-    "OpenDesign": 0,
-    "OpenAgents（ppt master glm5.2）": 0
+    "OpenDesign": 0
   },
   "missing_cells": 27
 }

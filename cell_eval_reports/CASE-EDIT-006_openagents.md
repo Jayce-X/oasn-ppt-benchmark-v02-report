@@ -1,11 +1,11 @@
-# CASE-EDIT-006 详细评分 - OpenAgents（ppt master glm5.2）
+# CASE-EDIT-006 详细评分 - openai sdk
 
 状态：缺失
 分数：缺失
 
 ## 摘要
 
-OpenAgents 批次未提供该用例产物
+openai sdk 批次未提供该用例产物
 
 ## 打分项结果
 

@@ -1,11 +1,11 @@
 # CASE-GEN-005 详细评分 - OpenAI/Codex CLI（ppt master glm5.2）
 
-状态：远端完成记录
-分数：远端完成记录
+状态：远端验证通过
+分数：远端验证通过
 
 ## 摘要
 
-OpenAI/Codex CLI + GLM5.2 adapter 在 compute02 sandbox 完成该用例；耗时 22分15秒，生成 8 页，文件大小 10,305,015 bytes。本机目前只有测试报告，没有导回 PPTX/截图，因此尚未按 v0.2 rubric 正式评分。远端产物路径：/workspace/ppt_benchmark_current/outputs/CASE-GEN-005/codex_glm52_CASE-GEN-005.pptx。
+远端验证通过：OpenAI/Codex CLI + GLM5.2 adapter 在 compute02 sandbox 产出非空、可打开 PPTX；耗时 22分15秒，生成 8 页，文件大小 10,305,015 bytes。远端产物路径：/workspace/ppt_benchmark_current/outputs/CASE-GEN-005/codex_glm52_CASE-GEN-005.pptx。本机尚未导入 PPTX/截图，因此这列只记录功能验证结果，不计入正式 v0.2 评分。
 
 日志：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_master_codex_cli_benchmark5_20260708/test_report.md`
 

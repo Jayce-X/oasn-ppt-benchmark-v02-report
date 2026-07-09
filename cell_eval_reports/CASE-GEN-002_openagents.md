@@ -1,11 +1,11 @@
-# CASE-GEN-002 详细评分 - OpenAgents（ppt master glm5.2）
+# CASE-GEN-002 详细评分 - openai sdk
 
 状态：v0.2 新跑结果
 分数：5/8
 
 ## 摘要
 
-OpenAgents 的 Apple 发布 PPT 视觉完成度不错，文本和形状也可以在 PowerPoint 里编辑。主要扣分点是：有些产品参数和能力描述在 Apple PDF 中找不到依据；规格/功能对比也不是原生可编辑表格，部分数值无法回到来源核对。
+openai sdk 的 Apple 发布 PPT 视觉完成度不错，文本和形状也可以在 PowerPoint 里编辑。主要扣分点是：有些产品参数和能力描述在 Apple PDF 中找不到依据；规格/功能对比也不是原生可编辑表格，部分数值无法回到来源核对。
 
 产出：`/Users/weixiang/Desktop/clawlink2/test_runs/ppt_v02_multi_agent_20260703/agents/openagents/CASE-GEN-002/openagents_CASE-GEN-002.pptx`
 
